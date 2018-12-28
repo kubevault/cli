@@ -38,12 +38,15 @@ from os.path import expandvars, join, dirname
 libbuild.REPO_ROOT = libbuild.GOPATH + '/src/github.com/kubevault/cli'
 BUILD_METADATA = libbuild.metadata(libbuild.REPO_ROOT)
 libbuild.BIN_MATRIX = {
-    'kubevault-vault': {
+    'kubectl-vault': {
         'type': 'go',
         'go_version': True,
         'use_cgo': False,
         'distro': {
-            'linux': ['amd64']
+            'alpine': ['amd64'],
+            'darwin': ['386', 'amd64'],
+            'linux': ['arm', '386', 'amd64'],
+            'windows': ['386', 'amd64']
         }
     }
 }
@@ -95,15 +98,16 @@ def gen():
 
 def build_cmd(name):
     cfg = libbuild.BIN_MATRIX[name]
-    entrypoint='*.go'
+    entrypoint = 'cmd/{}/*.go'.format(name)
     compress = libbuild.ENV in ['prod']
+    upx= False
     if cfg['type'] == 'go':
         if 'distro' in cfg:
             for goos, archs in cfg['distro'].items():
                 for goarch in archs:
-                    libbuild.go_build(name, goos, goarch, entrypoint, compress)
+                    libbuild.go_build(name, goos, goarch, entrypoint, compress, upx)
         else:
-            libbuild.go_build(name, libbuild.GOHOSTOS, libbuild.GOHOSTARCH, entrypoint, compress)
+            libbuild.go_build(name, libbuild.GOHOSTOS, libbuild.GOHOSTARCH, entrypoint, compress, upx)
 
 
 def build_cmds():
