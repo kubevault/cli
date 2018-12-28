@@ -45,7 +45,7 @@ func NewRootCmd() *cobra.Command {
 	flags.BoolVar(&cli.EnableAnalytics, "analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
 	flag.Set("stderrthreshold", "ERROR")
 
-	rootCmd.AddCommand(NewCmdGet(matchVersionKubeConfigFlags))
+	rootCmd.AddCommand(NewCmdVault(matchVersionKubeConfigFlags))
 	rootCmd.AddCommand(v.NewCmdVersion())
 	return rootCmd
 }

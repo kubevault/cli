@@ -1,5 +1,5 @@
 hash: 1663ba3b20ea8f2418ec485a6efff8b685f5feaab27fa1f91e2692af8c6a529a
-updated: 2018-12-18T01:30:04.543822302-08:00
+updated: 2018-12-28T16:01:19.021150964+06:00
 imports:
 - name: github.com/appscode/go
   version: 584aaa73af837f112c0a471be398ea837341c330
@@ -15,15 +15,19 @@ imports:
   - sets
   - types
   - version
+- name: github.com/appscode/go-version
+  version: 7aba545c679b0f45679eeb406dc662d2c8a04c26
 - name: github.com/appscode/jsonpatch
   version: 5af499cf01c842bfdd7761a433fc90525ccd6836
 - name: github.com/appscode/kutil
-  version: d9fb2e606bf2c196a8cd8cff13097f531d686a44
+  version: 6546fe6e8bde14cda08b0415f926cbed47d66e6a
   subpackages:
   - apiextensions/v1beta1
+  - discovery
   - meta
   - tools/analytics
   - tools/cli
+  - tools/clusterid
 - name: github.com/Azure/go-ansiterm
   version: d6e3b3328b783f23731bc4d058875b0371ff8109
   subpackages:
@@ -90,7 +94,7 @@ imports:
 - name: github.com/go-openapi/jsonreference
   version: 13c6e3589ad90f49bd3e3bbe2c2cb3d7a4142272
 - name: github.com/go-openapi/spec
-  version: 1de3e0542de65ad8d75452a595886fdd0befb363
+  version: 7abd5745472fff5eb3685386d5fb8bf38683154d
 - name: github.com/go-openapi/swag
   version: f3f9494671f93fcff853e3c6e9e948b3eb71e590
 - name: github.com/gogo/protobuf
@@ -117,7 +121,7 @@ imports:
 - name: github.com/google/btree
   version: 7d79101e329e5a3adf994758c578dab82b90c017
 - name: github.com/google/go-cmp
-  version: 2248b49eaa8e1c8c0963ee77b40841adbc19d4ca
+  version: 97aa668b73e764ccdd786bc3ccd2edffe621150e
   subpackages:
   - cmp
   - cmp/internal/diff
@@ -164,7 +168,7 @@ imports:
   - apis/kubedb/v1alpha1
   - client/clientset/versioned/scheme
 - name: github.com/kubevault/operator
-  version: cd6e8c2cee69abf9bb0dd3755eea0e15e82b4b7b
+  version: 611020ff684d9c573cad51ff8b8873df5998eef5
   subpackages:
   - apis
   - apis/catalog
@@ -178,6 +182,8 @@ imports:
   - apis/policy
   - apis/policy/v1alpha1
   - client/clientset/versioned/scheme
+  - client/clientset/versioned/typed/engine/v1alpha1
+  - client/clientset/versioned/typed/engine/v1alpha1/util
 - name: github.com/mailru/easyjson
   version: 2f5df55504ebc322e4d52d34df6a1f5b503bf26d
   subpackages:
@@ -189,7 +195,7 @@ imports:
 - name: github.com/mitchellh/go-wordwrap
   version: ad45545899c7b13c020ea92b2072220eefad42b8
 - name: github.com/mitchellh/mapstructure
-  version: 53818660ed4955e899c0bcafa97299a388bd7c8e
+  version: 3536a929edddb9a5b34bd6861dc4a9647cb459fe
 - name: github.com/modern-go/concurrent
   version: bacd9c7ef1dd9b15be4a9909b8ac7a4e313eec94
 - name: github.com/modern-go/reflect2
@@ -212,7 +218,8 @@ imports:
 - name: github.com/russross/blackfriday
   version: 05f3235734ad95d0016f6a23902f06461fcf567a
 - name: github.com/sergi/go-diff
-  version: 97b2266dfe4bd4ea1b81a463322f04f8b724801e
+  version: 24e2351369ec4949b2ed0dc5c477afdd4c4034e8
+  repo: https://github.com/sergi/go-diff
   subpackages:
   - diffmatchpatch
 - name: github.com/sirupsen/logrus
@@ -226,11 +233,12 @@ imports:
 - name: github.com/spf13/pflag
   version: 298182f68c66c05229eb03ac171abe6e309ee79a
 - name: github.com/yudai/gojsondiff
-  version: 7b1b7adf999dab73a6eb02669c3d82dbb27a3dd6
+  version: 0525c875b75ca60b9e67ddc44496aa16f21066b0
   subpackages:
   - formatter
 - name: github.com/yudai/golcs
   version: d1c525dea8ce39ea9a783d33cf08932305373f2c
+  repo: https://github.com/yudai/golcs
 - name: golang.org/x/crypto
   version: de0752318171da717af4ce24d0a2e8626afaeb11
   subpackages:
@@ -401,7 +409,7 @@ imports:
   - third_party/forked/golang/netutil
   - third_party/forked/golang/reflect
 - name: k8s.io/apiserver
-  version: 70f523ccd088c9dca12de68b719d9b29f8e8c7d2
+  version: 419ab4faf457be27411fc8125ed110a03be373e8
   repo: https://github.com/kmodules/apiserver.git
   vcs: git
   subpackages:
@@ -652,7 +660,7 @@ imports:
   - exec
   - pointer
 - name: kmodules.xyz/custom-resources
-  version: 6d398bd2d81b1d6a811ad026c1dd24f1564a1f3c
+  version: b4ef1fe08b7a09681a676c1b697cf66fd74b7ed4
   repo: https://github.com/kmodules/custom-resources.git
   vcs: git
   subpackages:
