@@ -24,13 +24,13 @@ func GetDefaultValueForStatusSubresource(clientGetter genericclioptions.RESTClie
 
 	kc, err := kubernetes.NewForConfig(cfg)
 	if err != nil {
-		glog.Errorln("failed to create kubernetes client from rest config", err)
+		glog.Errorln("failed to create Kubernetes client from rest config", err)
 		return false
 	}
 
 	resp, err := discovery.CheckAPIVersion(kc.Discovery(), ">=1.11.0")
 	if err != nil {
-		glog.Errorln("failed to check kubernetes api version", err)
+		glog.Errorln("failed to check Kubernetes api version", err)
 		return false
 	}
 	return resp
