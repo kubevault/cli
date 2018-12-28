@@ -15,10 +15,14 @@ import (
 	appcatscheme "kmodules.xyz/custom-resources/client/clientset/versioned/scheme"
 )
 
+var (
+	EnableStatusSubresource bool
+)
+
 func NewRootCmd() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:               "vault [command]",
-		Short:             `vault by AppsCode - KubeVault cli`,
+		Short:             `KubeVault cli by AppsCode`,
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
 			cli.SendAnalytics(c, v.Version.Version)
@@ -44,8 +48,10 @@ func NewRootCmd() *cobra.Command {
 	flag.CommandLine.Parse([]string{})
 	flags.BoolVar(&cli.EnableAnalytics, "analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
 	flag.Set("stderrthreshold", "ERROR")
+	flags.BoolVar(&EnableStatusSubresource, "enable-status-subresource", GetDefaultValueForStatusSubresource(matchVersionKubeConfigFlags), "If true, uses sub resource for crds.")
 
-	rootCmd.AddCommand(NewCmdVault(matchVersionKubeConfigFlags))
+	rootCmd.AddCommand(NewCmdApprove(matchVersionKubeConfigFlags))
+	rootCmd.AddCommand(NewCmdDeny(matchVersionKubeConfigFlags))
 	rootCmd.AddCommand(v.NewCmdVersion())
 	return rootCmd
 }
