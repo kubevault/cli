@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/appscode/kutil/discovery"
 	"github.com/golang/glog"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/kubernetes"
+	"kmodules.xyz/client-go/discovery"
 )
 
 func Fatal(err error) {
