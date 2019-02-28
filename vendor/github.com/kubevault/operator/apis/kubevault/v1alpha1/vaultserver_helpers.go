@@ -3,10 +3,10 @@ package v1alpha1
 import (
 	"fmt"
 
-	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
-	meta_util "github.com/appscode/kutil/meta"
 	"github.com/kubevault/operator/apis"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
+	meta_util "kmodules.xyz/client-go/meta"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
@@ -109,6 +109,16 @@ func (v VaultServer) IsValid() error {
 	return nil
 }
 
+func (v VaultServer) StatsServiceName() string {
+	return v.Name + "-stats"
+}
+
+func (v VaultServer) StatsLabels() map[string]string {
+	labels := v.OffshootLabels()
+	labels["feature"] = "stats"
+	return labels
+}
+
 func (v VaultServer) StatsService() mona.StatsAccessor {
 	return &vaultServerStatsService{&v}
 }
@@ -122,7 +132,7 @@ func (e vaultServerStatsService) GetNamespace() string {
 }
 
 func (e vaultServerStatsService) ServiceName() string {
-	return e.OffshootName()
+	return e.StatsServiceName()
 }
 
 func (e vaultServerStatsService) ServiceMonitorName() string {
