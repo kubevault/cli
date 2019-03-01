@@ -17,7 +17,7 @@ Please pick a version of KubeVault cli that matches your Kubernetes installation
 
 | KubeVault cli Version                                                    | Docs                                                           | Kubernetes Version |
 |--------------------------------------------------------------------------|----------------------------------------------------------------|--------------------|
-| [0.1.0](https://github.com/kubevault/cli/releases/tag/0.1.0) (uses CRD)  | [User Guide](https://github.com/kubevault/docs/tree/0.1.0)       | 1.12.x+            |
+| [0.2.0](https://github.com/kubevault/cli/releases/tag/0.2.0) (uses CRD)  | [User Guide](https://github.com/kubevault/docs/tree/0.2.0)       | 1.12.x+            |
 
 ## Installation
 
