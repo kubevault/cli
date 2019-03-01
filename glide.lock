@@ -1,5 +1,5 @@
-hash: 80efb6ca21aa0a078eedf8b88196b4afcc71463ed84e58b4206665e5a90a2986
-updated: 2019-02-28T08:44:31.528603756-08:00
+hash: 142e308520fb6e66bea1b005954538d690d2586f45282592a2c60f557f71befd
+updated: 2019-02-28T23:20:58.487238552-08:00
 imports:
 - name: github.com/appscode/go
   version: 52eaa8008e2e5fe8df77ac6fb2fd45e3ea2ae47c
@@ -132,7 +132,7 @@ imports:
   - client/clientset/versioned/typed/authorization/v1alpha1
   - client/clientset/versioned/typed/authorization/v1alpha1/util
 - name: github.com/kubevault/operator
-  version: e3c713de837b384cfcabd27e82b63c4b7457675e
+  version: 061259e8b85ffc9faaa3a7012d15d26f7e70b33e
   subpackages:
   - apis
   - apis/catalog
