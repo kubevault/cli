@@ -1,6 +1,13 @@
 # Change Log
 
-## [0.1.0](https://github.com/kubevault/cli/tree/0.1.0) (2019-02-22)
+## [0.2.0](https://github.com/kubevault/cli/tree/0.2.0) (2019-02-28)
+[Full Changelog](https://github.com/kubevault/cli/compare/0.1.0...0.2.0)
+
+**Merged pull requests:**
+
+- Update Kubernetes client libraries to 1.13.0 [\#5](https://github.com/kubevault/cli/pull/5) ([tamalsaha](https://github.com/tamalsaha))
+
+## [0.1.0](https://github.com/kubevault/cli/tree/0.1.0) (2019-02-28)
 **Merged pull requests:**
 
 - Fix build script [\#4](https://github.com/kubevault/cli/pull/4) ([tamalsaha](https://github.com/tamalsaha))
