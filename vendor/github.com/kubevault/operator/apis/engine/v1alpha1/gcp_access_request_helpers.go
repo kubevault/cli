@@ -6,12 +6,12 @@ import (
 	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 )
 
-func (d AWSAccessKeyRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (d GCPAccessKeyRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crdutils.NewCustomResourceDefinition(crdutils.Config{
 		Group:         SchemeGroupVersion.Group,
-		Plural:        ResourceAWSAccessKeyRequests,
-		Singular:      ResourceAWSAccessKeyRequest,
-		Kind:          ResourceKindAWSAccessKeyRequest,
+		Plural:        ResourceGCPAccessKeyRequests,
+		Singular:      ResourceGCPAccessKeyRequest,
+		Kind:          ResourceKindGCPAccessKeyRequest,
 		Categories:    []string{"vault", "appscode", "all"},
 		ResourceScope: string(apiextensions.NamespaceScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
@@ -22,15 +22,17 @@ func (d AWSAccessKeyRequest) CustomResourceDefinition() *apiextensions.CustomRes
 			},
 		},
 		Labels: crdutils.Labels{
-			LabelsMap: map[string]string{"app": "vault"},
+			LabelsMap: map[string]string{
+				"app": "vault",
+			},
 		},
-		SpecDefinitionName:      "github.com/kubevault/operator/apis/kubevault/v1alpha1.AWSAccessKeyRequest",
+		SpecDefinitionName:      "github.com/kubevault/operator/apis/kubevault/v1alpha1.GCPAccessKeyRequest",
 		EnableValidation:        true,
 		GetOpenAPIDefinitions:   GetOpenAPIDefinitions,
 		EnableStatusSubresource: apis.EnableStatusSubresource,
 	})
 }
 
-func (d AWSAccessKeyRequest) IsValid() error {
+func (d GCPAccessKeyRequest) IsValid() error {
 	return nil
 }
