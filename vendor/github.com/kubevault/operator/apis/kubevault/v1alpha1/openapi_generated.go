@@ -42,6 +42,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubevault/operator/apis/kubevault/v1alpha1.AzureKeyVault":           schema_operator_apis_kubevault_v1alpha1_AzureKeyVault(ref),
 		"github.com/kubevault/operator/apis/kubevault/v1alpha1.AzureSpec":               schema_operator_apis_kubevault_v1alpha1_AzureSpec(ref),
 		"github.com/kubevault/operator/apis/kubevault/v1alpha1.BackendStorageSpec":      schema_operator_apis_kubevault_v1alpha1_BackendStorageSpec(ref),
+		"github.com/kubevault/operator/apis/kubevault/v1alpha1.ConsulSpec":              schema_operator_apis_kubevault_v1alpha1_ConsulSpec(ref),
 		"github.com/kubevault/operator/apis/kubevault/v1alpha1.DynamoDBSpec":            schema_operator_apis_kubevault_v1alpha1_DynamoDBSpec(ref),
 		"github.com/kubevault/operator/apis/kubevault/v1alpha1.EtcdSpec":                schema_operator_apis_kubevault_v1alpha1_EtcdSpec(ref),
 		"github.com/kubevault/operator/apis/kubevault/v1alpha1.FileSpec":                schema_operator_apis_kubevault_v1alpha1_FileSpec(ref),
@@ -359,6 +360,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec":                            schema_kmodulesxyz_monitoring_agent_api_api_v1_AgentSpec(ref),
 		"kmodules.xyz/monitoring-agent-api/api/v1.PrometheusSpec":                       schema_kmodulesxyz_monitoring_agent_api_api_v1_PrometheusSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings":                     schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v1.IONiceSettings":                               schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v1.NiceSettings":                                 schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ObjectMeta":                                   schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref),
 		"kmodules.xyz/offshoot-api/api/v1.PodRuntimeSettings":                           schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.PodSpec":                                      schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref),
@@ -751,11 +754,141 @@ func schema_operator_apis_kubevault_v1alpha1_BackendStorageSpec(ref common.Refer
 							Ref: ref("github.com/kubevault/operator/apis/kubevault/v1alpha1.SwiftSpec"),
 						},
 					},
+					"consul": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubevault/operator/apis/kubevault/v1alpha1.ConsulSpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubevault/operator/apis/kubevault/v1alpha1.AzureSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.DynamoDBSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.EtcdSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.FileSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.GcsSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.InmemSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.MySQLSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.PostgreSQLSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.S3Spec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.SwiftSpec"},
+			"github.com/kubevault/operator/apis/kubevault/v1alpha1.AzureSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.ConsulSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.DynamoDBSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.EtcdSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.FileSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.GcsSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.InmemSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.MySQLSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.PostgreSQLSpec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.S3Spec", "github.com/kubevault/operator/apis/kubevault/v1alpha1.SwiftSpec"},
+	}
+}
+
+func schema_operator_apis_kubevault_v1alpha1_ConsulSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ref: https://www.vaultproject.io/docs/configuration/storage/consul.html\n\nConsulSpec defines the configuration to set up consul as backend storage in vault",
+				Properties: map[string]spec.Schema{
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the address of the Consul agent to communicate with. This can be an IP address, DNS record, or unix socket.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"checkTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the check interval used to send health check information back to Consul. This is specified using a label suffix like \"30s\" or \"1h\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"consistencyMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Consul consistency mode. Possible values are \"default\" or \"strong\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"disableRegistration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies whether Vault should register itself with Consul. Possible values are \"true\" or \"false\"",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxParallel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of concurrent requests to Consul.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the path in Consul's key-value store where Vault data will be stored.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"scheme": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the scheme to use when communicating with Consul. This can be set to \"http\" or \"https\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"service": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the service to register in Consul.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"serviceTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a comma-separated list of tags to attach to the service registration in Consul.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"serviceAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a service-specific address to set on the service registration in Consul. If unset, Vault will use what it knows to be the HA redirect address - which is usually desirable. Setting this parameter to \"\" will tell Consul to leverage the configuration of the node the service is registered on dynamically.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"aclTokenSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name that contains ACL token with permission to read and write from the path in Consul's key-value store. secret data:\n\t- aclToken:<value>",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sessionTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the minimum allowed session TTL. Consul server has a lower limit of 10s on the session TTL by default.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lockWaitTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the wait time before a lock lock acquisition is made. This affects the minimum time it takes to cancel a lock acquisition.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for consul communication Secret data:\n\t- ca.crt\n\t- client.crt\n - client.key",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsMinVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the minimum TLS version to use. Accepted values are \"tls10\", \"tls11\" or \"tls12\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsSkipVerify": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies if the TLS host verification should be disabled. It is highly discouraged that you disable this option.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{},
 	}
 }
 
@@ -892,7 +1025,7 @@ func schema_operator_apis_kubevault_v1alpha1_EtcdSpec(ref common.ReferenceCallba
 					},
 					"tlsSecretName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for etcd communication",
+							Description: "Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for etcd communication secret data:\n\t- ca.crt\n - client.crt\n - client.key",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -9621,7 +9754,7 @@ func schema_k8sio_api_core_v1_PodSpec(ref common.ReferenceCallback) common.OpenA
 					},
 					"enableServiceLinks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EnableServiceLinks indicates whether information about services should be injected into pod's environment variables, matching the syntax of Docker links.",
+							Description: "EnableServiceLinks indicates whether information about services should be injected into pod's environment variables, matching the syntax of Docker links. Optional: Defaults to true.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -16006,11 +16139,67 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref common.
 							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
 						},
 					},
+					"nice": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Settings to configure `nice` to throttle the load on cpu. More info: http://kennystechtalk.blogspot.com/2015/04/throttling-cpu-usage-with-linux-cgroups.html More info: https://oakbytes.wordpress.com/2012/06/06/linux-scheduler-cfs-and-nice/",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.NiceSettings"),
+						},
+					},
+					"ionice": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Settings to configure `ionice` to throttle the load on disk. More info: http://kennystechtalk.blogspot.com/2015/04/throttling-cpu-usage-with-linux-cgroups.html More info: https://oakbytes.wordpress.com/2012/06/06/linux-scheduler-cfs-and-nice/",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.IONiceSettings"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext"},
+			"k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "kmodules.xyz/offshoot-api/api/v1.IONiceSettings", "kmodules.xyz/offshoot-api/api/v1.NiceSettings"},
+	}
+}
+
+func schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "https://linux.die.net/man/1/ionice",
+				Properties: map[string]spec.Schema{
+					"class": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"classData": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "https://linux.die.net/man/1/nice",
+				Properties: map[string]spec.Schema{
+					"adjustment": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{},
 	}
 }
 
@@ -16180,6 +16369,13 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Properties: map[string]spec.Schema{
+					"serviceAccountName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"args": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell",

@@ -37,6 +37,12 @@ var (
 		Reason:  "KubectlApprove",
 		Message: "This was approved by kubectl vault approve databaseaccessrequest",
 	}
+
+	gcpApprovedCond = engineapi.GCPAccessKeyRequestCondition{
+		Type:    engineapi.AccessApproved,
+		Reason:  "KubectlApprove",
+		Message: "This was approved by kubectl vault approve gcpaccesskeyrequest",
+	}
 )
 
 func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
@@ -70,6 +76,8 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 		resourceName = engineapi.ResourceAWSAccessKeyRequest
 	case dbapi.ResourceDatabaseAccessRequest, dbapi.ResourceDatabaseAccessRequests:
 		resourceName = dbapi.ResourceDatabaseAccessRequest
+	case engineapi.ResourceGCPAccessKeyRequest, engineapi.ResourceGCPAccessKeyRequests:
+		resourceName = engineapi.ResourceGCPAccessKeyRequest
 	case "":
 		resourceName = ""
 	default:
@@ -130,6 +138,13 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 				cond = dbApprovedCond
 			}
 			err2 = UpdateDBAccessRequestCondition(dbClient, obj, cond)
+		case *engineapi.GCPAccessKeyRequest:
+			obj := info.Object.(*engineapi.GCPAccessKeyRequest)
+			cond := gcpDeniedCond
+			if isApproveReq {
+				cond = gcpApprovedCond
+			}
+			err2 = UpdateGCPAccessKeyRequest(engineClient, obj, cond)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -158,6 +173,20 @@ func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsA
 
 func UpdateDBAccessRequestCondition(c dbcs.AuthorizationV1alpha1Interface, dbAR *dbapi.DatabaseAccessRequest, cond dbapi.DatabaseAccessRequestCondition) error {
 	_, err := dbutil.UpdateDatabaseAccessRequestStatus(c, dbAR, func(in *dbapi.DatabaseAccessRequestStatus) *dbapi.DatabaseAccessRequestStatus {
+		for _, cond := range in.Conditions {
+			if cond.Type == cond.Type {
+				return in
+			}
+		}
+		cond.LastUpdateTime = metav1.Now()
+		in.Conditions = append(in.Conditions, cond)
+		return in
+	}, EnableStatusSubresource)
+	return err
+}
+
+func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR *engineapi.GCPAccessKeyRequest, cond engineapi.GCPAccessKeyRequestCondition) error {
+	_, err := engineutil.UpdateGCPAccessKeyRequestStatus(c, gcpAKR, func(in *engineapi.GCPAccessKeyRequestStatus) *engineapi.GCPAccessKeyRequestStatus {
 		for _, cond := range in.Conditions {
 			if cond.Type == cond.Type {
 				return in

@@ -23,6 +23,12 @@ var (
 		Reason:  "KubectlDeny",
 		Message: "This was denied by kubectl vault deny databaseaccessrequest",
 	}
+
+	gcpDeniedCond = engineapi.GCPAccessKeyRequestCondition{
+		Type:    engineapi.AccessDenied,
+		Reason:  "KubectlDeny",
+		Message: "This was denied by kubectl vault deny gcpaccesskeyrequest",
+	}
 )
 
 func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {

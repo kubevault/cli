@@ -30,7 +30,7 @@ import:
 - package: github.com/kubedb/apimachinery
   version: 0.9.0
 - package: github.com/kubevault/operator
-  version: 0.2.0
+  version: master
 - package: github.com/mailru/easyjson
   version: 2f5df55504ebc322e4d52d34df6a1f5b503bf26d
 - package: github.com/mitchellh/mapstructure
