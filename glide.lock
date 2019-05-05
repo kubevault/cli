@@ -1,8 +1,8 @@
-hash: 1ca7c7b6cc99021703db7b4ec3b5efeb89965cb44946da53878236c300994d96
-updated: 2019-04-23T09:24:15.743293047-07:00
+hash: 66b914a42d6dab93d12802478d0e7ad8838979f05631374691899c163d5dc370
+updated: 2019-05-05T01:04:24.628304652-07:00
 imports:
 - name: github.com/appscode/go
-  version: 50c98d5fbcddac827713a481a7e34a26df5e4b57
+  version: 60025f1135c977fecd189c12dbfa259d837d7a18
   subpackages:
   - analytics
   - context
@@ -133,7 +133,7 @@ imports:
   - client/clientset/versioned/typed/authorization/v1alpha1
   - client/clientset/versioned/typed/authorization/v1alpha1/util
 - name: github.com/kubevault/operator
-  version: 0d3229f681df002f290b4266cb5e5d25ef5c7d57
+  version: 3dec868ef48a2854964fc89da6eab7b456181661
   subpackages:
   - apis
   - apis/catalog
@@ -466,7 +466,7 @@ imports:
   subpackages:
   - exec
 - name: kmodules.xyz/client-go
-  version: 5dcc4cecf4c96d58e0624cd41311f3a4663db7d7
+  version: 85881479d87957cf3eab9424ec86bcc67dbfbac6
   subpackages:
   - apiextensions/v1beta1
   - discovery
