@@ -1,9 +1,9 @@
 package v1alpha1
 
 import (
-	crdutils "github.com/appscode/kutil/apiextensions/v1beta1"
 	"github.com/kubedb/apimachinery/apis"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	crdutils "kmodules.xyz/client-go/apiextensions/v1beta1"
 )
 
 var _ apis.ResourceInfo = &PostgresVersion{}
@@ -31,7 +31,7 @@ func (p PostgresVersion) CustomResourceDefinition() *apiextensions.CustomResourc
 		Singular:      ResourceSingularPostgresVersion,
 		Kind:          ResourceKindPostgresVersion,
 		ShortNames:    []string{ResourceCodePostgresVersion},
-		Categories:    []string{"datastore", "kubedb", "appscode", "all"},
+		Categories:    []string{"datastore", "kubedb", "appscode"},
 		ResourceScope: string(apiextensions.ClusterScoped),
 		Versions: []apiextensions.CustomResourceDefinitionVersion{
 			{

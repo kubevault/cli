@@ -45,6 +45,10 @@ type PostgresSpec struct {
 	// Archive for wal files
 	Archiver *PostgresArchiverSpec `json:"archiver,omitempty"`
 
+	// Leader election configuration
+	// +optional
+	LeaderElection *LeaderElectionConfig `json:"leaderElection,omitempty"`
+
 	// Database authentication secret
 	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty"`
 
@@ -78,6 +82,10 @@ type PostgresSpec struct {
 	// +optional
 	ServiceTemplate ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty"`
 
+	// ReplicaServiceTemplate is an optional configuration for service used to expose postgres replicas
+	// +optional
+	ReplicaServiceTemplate ofst.ServiceTemplateSpec `json:"replicaServiceTemplate,omitempty"`
+
 	// updateStrategy indicates the StatefulSetUpdateStrategy that will be
 	// employed to update Pods in the StatefulSet when a revision is made to
 	// Template.
@@ -86,45 +94,6 @@ type PostgresSpec struct {
 	// TerminationPolicy controls the delete operation for database
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty"`
-
-	// -------------------------------------------------------------------------
-
-	// If DoNotPause is true, controller will prevent to delete this Postgres object.
-	// Controller will create same Postgres object and ignore other process.
-	// +optional
-	// Deprecated: Use terminationPolicy = DoNotTerminate
-	DoNotPause bool `json:"doNotPause,omitempty"`
-
-	// NodeSelector is a selector which must be true for the pod to fit on a node
-	// +optional
-	// Deprecated: Use podTemplate.spec.nodeSelector
-	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
-
-	// Compute Resources required by the sidecar container.
-	// Deprecated: Use podTemplate.spec.resources
-	Resources *core.ResourceRequirements `json:"resources,omitempty"`
-
-	// If specified, the pod's scheduling constraints
-	// +optional
-	// Deprecated: Use podTemplate.spec.affinity
-	Affinity *core.Affinity `json:"affinity,omitempty"`
-
-	// If specified, the pod will be dispatched by specified scheduler.
-	// If not specified, the pod will be dispatched by default scheduler.
-	// +optional
-	// Deprecated: Use podTemplate.spec.schedulerName
-	SchedulerName string `json:"schedulerName,omitempty"`
-
-	// If specified, the pod's tolerations.
-	// +optional
-	// Deprecated: Use podTemplate.spec.tolerations
-	Tolerations []core.Toleration `json:"tolerations,omitempty"`
-
-	// ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec.
-	// If specified, these secrets will be passed to individual puller implementations for them to use.
-	// +optional
-	// Deprecated: Use podTemplate.spec.imagePullSecrets
-	ImagePullSecrets []core.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 }
 
 type PostgresArchiverSpec struct {

@@ -30,6 +30,8 @@ import (
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
 		"kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings": schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v1.IONiceSettings":           schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref),
+		"kmodules.xyz/offshoot-api/api/v1.NiceSettings":             schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ObjectMeta":               schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref),
 		"kmodules.xyz/offshoot-api/api/v1.PodRuntimeSettings":       schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref),
 		"kmodules.xyz/offshoot-api/api/v1.PodSpec":                  schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref),
@@ -45,6 +47,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref common.
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"resources": {
 						SchemaProps: spec.SchemaProps{
@@ -76,11 +79,67 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ContainerRuntimeSettings(ref common.
 							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
 						},
 					},
+					"nice": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Settings to configure `nice` to throttle the load on cpu. More info: http://kennystechtalk.blogspot.com/2015/04/throttling-cpu-usage-with-linux-cgroups.html More info: https://oakbytes.wordpress.com/2012/06/06/linux-scheduler-cfs-and-nice/",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.NiceSettings"),
+						},
+					},
+					"ionice": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Settings to configure `ionice` to throttle the load on disk. More info: http://kennystechtalk.blogspot.com/2015/04/throttling-cpu-usage-with-linux-cgroups.html More info: https://oakbytes.wordpress.com/2012/06/06/linux-scheduler-cfs-and-nice/",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.IONiceSettings"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext"},
+			"k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "kmodules.xyz/offshoot-api/api/v1.IONiceSettings", "kmodules.xyz/offshoot-api/api/v1.NiceSettings"},
+	}
+}
+
+func schema_kmodulesxyz_offshoot_api_api_v1_IONiceSettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "https://linux.die.net/man/1/ionice",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"class": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"classData": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_kmodulesxyz_offshoot_api_api_v1_NiceSettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "https://linux.die.net/man/1/nice",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"adjustment": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -89,12 +148,14 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref common.ReferenceCallb
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"annotations": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Type:   []string{"string"},
@@ -107,7 +168,6 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ObjectMeta(ref common.ReferenceCallb
 				},
 			},
 		},
-		Dependencies: []string{},
 	}
 }
 
@@ -115,12 +175,14 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
 							Description: "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Type:   []string{"string"},
@@ -154,7 +216,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 					"securityContext": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Security options the pod should run with. More info: https://kubernetes.io/docs/concepts/policy/security-context/ More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
-							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
+							Ref:         ref("k8s.io/api/core/v1.PodSecurityContext"),
 						},
 					},
 					"imagePullSecrets": {
@@ -241,7 +303,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -249,7 +311,15 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"serviceAccountName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"args": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell",
@@ -269,6 +339,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 							Description: "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Type:   []string{"string"},
@@ -406,6 +477,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodTemplateSpec(ref common.Reference
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "PodTemplateSpec describes the data a pod should have when created from a template",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
@@ -437,6 +509,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_RuntimeSettings(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"pod": {
 						SchemaProps: spec.SchemaProps{
@@ -461,6 +534,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref common.ReferenceCall
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "ServicePort contains information on service's port.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
@@ -487,7 +561,6 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref common.ReferenceCall
 				Required: []string{"port"},
 			},
 		},
-		Dependencies: []string{},
 	}
 }
 
@@ -496,6 +569,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref common.ReferenceCall
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "ServiceSpec describes the attributes that a user creates on a service.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"ports": {
 						VendorExtensible: spec.VendorExtensible{
@@ -592,6 +666,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "ServiceTemplateSpec describes the data a service should have when created from a template",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
