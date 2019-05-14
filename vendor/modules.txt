@@ -104,7 +104,7 @@ github.com/kubedb/apimachinery/apis/config/v1alpha1
 github.com/kubedb/apimachinery/apis/kubedb/v1alpha1
 github.com/kubedb/apimachinery/apis/catalog
 github.com/kubedb/apimachinery/apis/kubedb
-# github.com/kubevault/operator v0.0.0-20190509030635-7f32eefb5188
+# github.com/kubevault/operator v0.0.0-20190514092450-f2bcaeb9f847
 github.com/kubevault/operator/apis/engine/v1alpha1
 github.com/kubevault/operator/client/clientset/versioned/scheme
 github.com/kubevault/operator/client/clientset/versioned/typed/engine/v1alpha1

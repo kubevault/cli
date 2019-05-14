@@ -43,6 +43,12 @@ var (
 		Reason:  "KubectlApprove",
 		Message: "This was approved by kubectl vault approve gcpaccesskeyrequest",
 	}
+
+	azureApprovedCond = engineapi.AzureAccessKeyRequestCondition{
+		Type:    engineapi.AccessApproved,
+		Reason:  "KubectlApprove",
+		Message: "This was approved by kubectl vault approve azureaccesskeyrequest",
+	}
 )
 
 func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
@@ -78,6 +84,8 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 		resourceName = dbapi.ResourceDatabaseAccessRequest
 	case engineapi.ResourceGCPAccessKeyRequest, engineapi.ResourceGCPAccessKeyRequests:
 		resourceName = engineapi.ResourceGCPAccessKeyRequest
+	case engineapi.ResourceAzureAccessKeyRequest, engineapi.ResourceAzureAccessKeyRequests:
+		resourceName = engineapi.ResourceAzureAccessKeyRequest
 	case "":
 		resourceName = ""
 	default:
@@ -145,6 +153,13 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 				cond = gcpApprovedCond
 			}
 			err2 = UpdateGCPAccessKeyRequest(engineClient, obj, cond)
+		case *engineapi.AzureAccessKeyRequest:
+			obj := info.Object.(*engineapi.AzureAccessKeyRequest)
+			cond := azureDeniedCond
+			if isApproveReq {
+				cond = azureApprovedCond
+			}
+			err2 = UpdateAzureAccessKeyRequest(engineClient, obj, cond)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -187,6 +202,20 @@ func UpdateDBAccessRequestCondition(c dbcs.AuthorizationV1alpha1Interface, dbAR 
 
 func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR *engineapi.GCPAccessKeyRequest, cond engineapi.GCPAccessKeyRequestCondition) error {
 	_, err := engineutil.UpdateGCPAccessKeyRequestStatus(c, gcpAKR, func(in *engineapi.GCPAccessKeyRequestStatus) *engineapi.GCPAccessKeyRequestStatus {
+		for _, cond := range in.Conditions {
+			if cond.Type == cond.Type {
+				return in
+			}
+		}
+		cond.LastUpdateTime = metav1.Now()
+		in.Conditions = append(in.Conditions, cond)
+		return in
+	}, EnableStatusSubresource)
+	return err
+}
+
+func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR *engineapi.AzureAccessKeyRequest, cond engineapi.AzureAccessKeyRequestCondition) error {
+	_, err := engineutil.UpdateAzureAccessKeyRequestStatus(c, azureAKR, func(in *engineapi.AzureAccessKeyRequestStatus) *engineapi.AzureAccessKeyRequestStatus {
 		for _, cond := range in.Conditions {
 			if cond.Type == cond.Type {
 				return in
