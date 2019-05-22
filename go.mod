@@ -10,7 +10,7 @@ require (
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/kubedb/apimachinery v0.0.0-20190506191700-871d6b5d30ee
-	github.com/kubevault/operator v0.0.0-20190521204532-a3ded2792405
+	github.com/kubevault/operator v0.0.0-20190522102911-da03839fcb8c
 	github.com/mattn/go-isatty v0.0.8 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.4.2 // indirect
