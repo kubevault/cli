@@ -7,6 +7,7 @@ import (
 	dbapi "github.com/kubedb/apimachinery/apis/authorization/v1alpha1"
 	engineapi "github.com/kubevault/operator/apis/engine/v1alpha1"
 	"github.com/spf13/cobra"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
 )
@@ -29,6 +30,13 @@ var (
 		Reason:  "KubectlDeny",
 		Message: "This was denied by kubectl vault deny gcpaccesskeyrequest",
 	}
+
+	azureDeniedCond = engineapi.AzureAccessKeyRequestCondition{
+		Type:           engineapi.AccessDenied,
+		Reason:         "KubectlDeny",
+		Message:        "This was denied by kubectl vault deny azureaccesskeyrequest",
+		LastUpdateTime: v1.Time{},
+	}
 )
 
 func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
@@ -40,6 +48,9 @@ func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command 
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
+			}
+			if EnableStatusSubresource {
+				EnableStatusSubresource = GetDefaultValueForStatusSubresource(clientGetter)
 			}
 
 			if err := modifyStatusCondition(clientGetter, false); err != nil {
