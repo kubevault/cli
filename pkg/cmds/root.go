@@ -48,7 +48,7 @@ func NewRootCmd() *cobra.Command {
 	logs.ParseFlags()
 	flags.BoolVar(&cli.EnableAnalytics, "analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
 	flag.Set("stderrthreshold", "ERROR")
-	flags.BoolVar(&EnableStatusSubresource, "enable-status-subresource", GetDefaultValueForStatusSubresource(matchVersionKubeConfigFlags), "If true, uses sub resource for crds.")
+	flags.BoolVar(&EnableStatusSubresource, "enable-status-subresource", true, "If true, uses sub resource for crds.")
 
 	rootCmd.AddCommand(NewCmdApprove(matchVersionKubeConfigFlags))
 	rootCmd.AddCommand(NewCmdDeny(matchVersionKubeConfigFlags))

@@ -49,6 +49,9 @@ func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command 
 				ResourceName = args[0]
 				ObjectNames = args[1:]
 			}
+			if EnableStatusSubresource {
+				EnableStatusSubresource = GetDefaultValueForStatusSubresource(clientGetter)
+			}
 
 			if err := modifyStatusCondition(clientGetter, false); err != nil {
 				Fatal(err)

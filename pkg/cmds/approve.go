@@ -61,6 +61,9 @@ func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Comma
 				ResourceName = args[0]
 				ObjectNames = args[1:]
 			}
+			if EnableStatusSubresource {
+				EnableStatusSubresource = GetDefaultValueForStatusSubresource(clientGetter)
+			}
 
 			if err := modifyStatusCondition(clientGetter, true); err != nil {
 				Fatal(err)
