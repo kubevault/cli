@@ -3,35 +3,25 @@ module github.com/kubevault/cli
 go 1.12
 
 require (
-	cloud.google.com/go v0.38.0 // indirect
-	contrib.go.opencensus.io/exporter/ocagent v0.4.12 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
-	github.com/Azure/go-autorest v12.0.0+incompatible // indirect
 	github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd // indirect
 	github.com/appscode/go v0.0.0-20190424183524-60025f1135c9
-	github.com/cpuguy83/go-md2man v1.0.10 // indirect
+	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/gophercloud/gophercloud v0.0.0-20190509013533-844afee4f565 // indirect
 	github.com/kubedb/apimachinery v0.0.0-20190506191700-871d6b5d30ee
-	github.com/kubevault/operator v0.0.0-20190514092450-f2bcaeb9f847
-	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
+	github.com/kubevault/operator v0.0.0-20190521204532-a3ded2792405
+	github.com/mattn/go-isatty v0.0.8 // indirect
 	github.com/pkg/errors v0.8.1
-	github.com/spf13/cobra v0.0.3
-	golang.org/x/sync v0.0.0-20190423024810-112230192c58 // indirect
-	golang.org/x/sys v0.0.0-20190508220229-2d0786266e9c // indirect
-	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8 // indirect
-	k8s.io/apiextensions-apiserver v0.0.0-20190508224317-421cff06bf05 // indirect
+	github.com/sirupsen/logrus v1.4.2 // indirect
+	github.com/spf13/cobra v0.0.4
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
 	k8s.io/cli-runtime v0.0.0-20190508184404-b26560c459bd
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/component-base v0.0.0-20190509023737-8de8845fb642
-	k8s.io/kubernetes v1.14.1
+	k8s.io/kubernetes v1.14.2
 	kmodules.xyz/client-go v0.0.0-20190508091620-0d215c04352f
 	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
-	kmodules.xyz/monitoring-agent-api v0.0.0-20190508125842-489150794b9b // indirect
-	kmodules.xyz/objectstore-api v0.0.0-20190506085934-94c81c8acca9 // indirect
-	kmodules.xyz/offshoot-api v0.0.0-20190508142450-1c69d50f3c1c // indirect
 )
 
 replace (

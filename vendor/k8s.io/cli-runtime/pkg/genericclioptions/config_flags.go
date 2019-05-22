@@ -23,6 +23,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"runtime/debug"
 
 	"github.com/spf13/pflag"
 
@@ -115,6 +116,7 @@ func (f *ConfigFlags) ToRESTConfig() (*rest.Config, error) {
 // Returns an interactive clientConfig if the password flag is enabled,
 // or a non-interactive clientConfig otherwise.
 func (f *ConfigFlags) ToRawKubeConfigLoader() clientcmd.ClientConfig {
+	debug.PrintStack()
 	if f.usePersistentConfig {
 		return f.toRawKubePersistentConfigLoader()
 	}

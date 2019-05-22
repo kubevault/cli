@@ -31,7 +31,7 @@ github.com/docker/docker/pkg/term/windows
 # github.com/docker/spdystream v0.0.0-20181023171402-6480d4af844c
 github.com/docker/spdystream
 github.com/docker/spdystream/spdy
-# github.com/emicklei/go-restful v2.9.3+incompatible
+# github.com/emicklei/go-restful v2.9.5+incompatible
 github.com/emicklei/go-restful
 github.com/emicklei/go-restful/log
 # github.com/evanphx/json-patch v4.2.0+incompatible
@@ -104,7 +104,7 @@ github.com/kubedb/apimachinery/apis/config/v1alpha1
 github.com/kubedb/apimachinery/apis/kubedb/v1alpha1
 github.com/kubedb/apimachinery/apis/catalog
 github.com/kubedb/apimachinery/apis/kubedb
-# github.com/kubevault/operator v0.0.0-20190514092450-f2bcaeb9f847
+# github.com/kubevault/operator v0.0.0-20190521204532-a3ded2792405
 github.com/kubevault/operator/apis/engine/v1alpha1
 github.com/kubevault/operator/client/clientset/versioned/scheme
 github.com/kubevault/operator/client/clientset/versioned/typed/engine/v1alpha1
@@ -139,9 +139,9 @@ github.com/pkg/errors
 github.com/russross/blackfriday
 # github.com/sergi/go-diff v1.0.0
 github.com/sergi/go-diff/diffmatchpatch
-# github.com/sirupsen/logrus v1.4.1
+# github.com/sirupsen/logrus v1.4.2
 github.com/sirupsen/logrus
-# github.com/spf13/cobra v0.0.3
+# github.com/spf13/cobra v0.0.4
 github.com/spf13/cobra/doc
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.3
@@ -383,7 +383,7 @@ k8s.io/klog
 k8s.io/kube-openapi/pkg/common
 k8s.io/kube-openapi/pkg/util/proto
 k8s.io/kube-openapi/pkg/util/proto/validation
-# k8s.io/kubernetes v1.14.1
+# k8s.io/kubernetes v1.14.2
 k8s.io/kubernetes/pkg/kubectl/cmd/util
 k8s.io/kubernetes/pkg/kubectl/cmd/util/openapi
 k8s.io/kubernetes/pkg/kubectl/cmd/util/openapi/validation

@@ -151,7 +151,7 @@ def update_registry():
 
 
 def install():
-    die(call(libbuild.GOC + ' install ./...'))
+    die(call(libbuild.GOC + ' install  -mod=vendor ./...'))
 
 
 def default():

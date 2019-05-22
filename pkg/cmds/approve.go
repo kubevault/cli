@@ -118,12 +118,12 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 	r := builder.
 		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
 		ContinueOnError().
+		NamespaceParam(namespace).DefaultNamespace().
 		FilenameParam(false, &FilenameOptions).
 		ResourceNames(resourceName, ObjectNames...).
 		RequireObject(true).
 		Flatten().
 		Latest().
-		NamespaceParam(namespace).
 		Do()
 	err = r.Visit(func(info *resource.Info, err error) error {
 		if err != nil {

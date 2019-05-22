@@ -28,7 +28,10 @@ type AzureRole struct {
 type AzureSecretType string
 
 const (
-	AzureClientSecret = "clientSecret"
+	AzureClientSecret   = "client-secret"
+	AzureSubscriptionID = "subscription-id"
+	AzureTenantID       = "tenant-id"
+	AzureClientID       = "client-id"
 )
 
 // AzureRoleSpec contains connection information, Azure role info, etc
@@ -74,23 +77,15 @@ type AzureRoleList struct {
 
 // AzureConfig contains information to communicate with Azure
 type AzureConfig struct {
-	// The subscription id for the Azure Active Directory.
+
+	// Specifies the secret name containing Azure credentials
+	// secret.Data:
+	// 	- subscription-id: <value>, The subscription id for the Azure Active Directory.
+	//	- tenant-id: <value>, The tenant id for the Azure Active Directory.
+	//	- client-id: <value>, The OAuth2 client id to connect to Azure.
+	//	- client-secret: <value>, The OAuth2 client secret to connect to Azure.
 	// +required
-	SubscriptionID string `json:"subscriptionID"`
-
-	// The tenant id for the Azure Active Directory.
-	// +required
-	TenantID string `json:"tenantID"`
-
-	// The OAuth2 client id to connect to Azure.
-	// +optional
-	ClientID string `json:"clientID, omitempty"`
-
-	// The OAuth2 client secret to connect to Azure.
-	// This value will be provided by kubernetes secret
-	//	secret.Data:
-	//		clientSecret: <value>
-	ClientSecret string `json:"clientSecret, omitempty"`
+	CredentialSecret string `json:"credentialSecret"`
 
 	// The Azure environment.
 	// If not specified, Vault will use Azure Public Cloud.
