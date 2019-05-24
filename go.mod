@@ -5,22 +5,24 @@ go 1.12
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
 	github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd // indirect
-	github.com/appscode/go v0.0.0-20190424183524-60025f1135c9
-	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
+	github.com/OneOfOne/xxhash v1.2.5 // indirect
+	github.com/appscode/go v0.0.0-20190523031839-1468ee3a76e8
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+	github.com/gorilla/mux v1.7.2 // indirect
+	github.com/kr/pty v1.1.4 // indirect
 	github.com/kubedb/apimachinery v0.0.0-20190506191700-871d6b5d30ee
-	github.com/kubevault/operator v0.0.0-20190522102911-da03839fcb8c
-	github.com/mattn/go-isatty v0.0.8 // indirect
+	github.com/kubevault/operator v0.0.0-20190524154841-2aaf3780a15b
+	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/pkg/errors v0.8.1
-	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/spf13/cobra v0.0.4
+	gopkg.in/square/go-jose.v2 v2.2.2 // indirect
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
 	k8s.io/cli-runtime v0.0.0-20190508184404-b26560c459bd
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/component-base v0.0.0-20190509023737-8de8845fb642
 	k8s.io/kubernetes v1.14.2
-	kmodules.xyz/client-go v0.0.0-20190508091620-0d215c04352f
+	kmodules.xyz/client-go v0.0.0-20190524133821-9c8a87771aea
 	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
 )
 
