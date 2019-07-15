@@ -7,9 +7,6 @@ import (
 	dbapi "github.com/kubedb/apimachinery/apis/authorization/v1alpha1"
 	dbcs "github.com/kubedb/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1"
 	dbutil "github.com/kubedb/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1/util"
-	engineapi "github.com/kubevault/operator/apis/engine/v1alpha1"
-	enginecs "github.com/kubevault/operator/client/clientset/versioned/typed/engine/v1alpha1"
-	engineutil "github.com/kubevault/operator/client/clientset/versioned/typed/engine/v1alpha1/util"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -17,6 +14,9 @@ import (
 	"k8s.io/cli-runtime/pkg/resource"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
+	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
+	enginecs "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1"
+	engineutil "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1/util"
 )
 
 var (

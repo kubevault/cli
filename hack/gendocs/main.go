@@ -11,8 +11,8 @@ import (
 	"text/template"
 
 	"github.com/appscode/go/runtime"
-	"github.com/kubevault/cli/pkg/cmds"
 	"github.com/spf13/cobra/doc"
+	"kubevault.dev/cli/pkg/cmds"
 )
 
 const (

@@ -2,7 +2,7 @@
 set -xeou pipefail
 
 GOPATH=$(go env GOPATH)
-REPO_ROOT="$GOPATH/src/github.com/kubevault/cli"
+REPO_ROOT="$GOPATH/src/kubevault.dev/cli"
 
 export APPSCODE_ENV=prod
 
