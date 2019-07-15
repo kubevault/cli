@@ -5,11 +5,11 @@ import (
 	"os"
 
 	dbapi "github.com/kubedb/apimachinery/apis/authorization/v1alpha1"
-	engineapi "github.com/kubevault/operator/apis/engine/v1alpha1"
 	"github.com/spf13/cobra"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
+	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
 )
 
 var (

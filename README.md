@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/kubevault/cli)](https://goreportcard.com/report/github.com/kubevault/cli)
+[![Go Report Card](https://goreportcard.com/badge/kubevault.dev/cli)](https://goreportcard.com/report/kubevault.dev/cli)
 [![Build Status](https://travis-ci.org/kubevault/cli.svg?branch=master)](https://travis-ci.org/kubevault/cli)
 [![codecov](https://codecov.io/gh/kubevault/cli/branch/master/graph/badge.svg)](https://codecov.io/gh/kubevault/cli)
 [![Github All Releases](https://img.shields.io/github/downloads/kubevault/cli/total.svg)](https://github.com/kubevault/cli/releases)
