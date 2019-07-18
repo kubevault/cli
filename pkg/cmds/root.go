@@ -4,7 +4,6 @@ import (
 	"flag"
 
 	v "github.com/appscode/go/version"
-	dbscheme "github.com/kubedb/apimachinery/client/clientset/versioned/scheme"
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
@@ -13,6 +12,7 @@ import (
 	"kmodules.xyz/client-go/logs"
 	"kmodules.xyz/client-go/tools/cli"
 	appcatscheme "kmodules.xyz/custom-resources/client/clientset/versioned/scheme"
+	dbscheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 	"kubevault.dev/operator/client/clientset/versioned/scheme"
 )
 
