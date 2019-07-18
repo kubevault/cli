@@ -8,7 +8,6 @@ require (
 	github.com/appscode/go v0.0.0-20190621064509-6b292c9166e3
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/kubedb/apimachinery v0.0.0-20190506191700-871d6b5d30ee
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v0.0.5
 	k8s.io/apimachinery v0.0.0-20190508063446-a3da69d3723c
@@ -18,7 +17,8 @@ require (
 	k8s.io/kubernetes v1.14.2
 	kmodules.xyz/client-go v0.0.0-20190715080709-7162a6c90b04
 	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
-	kubevault.dev/operator v0.0.0-20190715220747-85c90e60601e
+	kubedb.dev/apimachinery v0.0.0-20190718012505-6973f90fefd0
+	kubevault.dev/operator v0.0.0-20190718164535-ca947abcfc3f
 )
 
 replace (
