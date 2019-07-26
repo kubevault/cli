@@ -5,7 +5,7 @@ go 1.12
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
 	github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd // indirect
-	github.com/appscode/go v0.0.0-20190621064509-6b292c9166e3
+	github.com/appscode/go v0.0.0-20190722173419-e454bf744023
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/pkg/errors v0.8.1
@@ -16,9 +16,9 @@ require (
 	k8s.io/component-base v0.0.0-20190509023737-8de8845fb642
 	k8s.io/kubernetes v1.14.2
 	kmodules.xyz/client-go v0.0.0-20190715080709-7162a6c90b04
-	kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
+	kmodules.xyz/custom-resources v0.0.0-20190723185639-711575c0b8a9
 	kubedb.dev/apimachinery v0.0.0-20190718012505-6973f90fefd0
-	kubevault.dev/operator v0.0.0-20190718164535-ca947abcfc3f
+	kubevault.dev/operator v0.0.0-20190726013920-b86204295e2c
 )
 
 replace (

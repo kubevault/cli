@@ -7,7 +7,7 @@ github.com/MakeNowJust/heredoc
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
-# github.com/appscode/go v0.0.0-20190621064509-6b292c9166e3
+# github.com/appscode/go v0.0.0-20190722173419-e454bf744023
 github.com/appscode/go/version
 github.com/appscode/go/runtime
 github.com/appscode/go/log/golog
@@ -90,8 +90,6 @@ github.com/jpillora/go-ogle-analytics
 github.com/json-iterator/go
 # github.com/konsorten/go-windows-terminal-sequences v1.0.2
 github.com/konsorten/go-windows-terminal-sequences
-# github.com/kubedb/apimachinery v0.0.0-20190506191700-871d6b5d30ee
-github.com/kubedb/apimachinery/apis
 # github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
@@ -381,7 +379,7 @@ kmodules.xyz/client-go
 kmodules.xyz/client-go/tools/clusterid
 kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/core/v1
-# kmodules.xyz/custom-resources v0.0.0-20190508103408-464e8324c3ec
+# kmodules.xyz/custom-resources v0.0.0-20190723185639-711575c0b8a9
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/apis/appcatalog
@@ -403,7 +401,7 @@ kubedb.dev/apimachinery/apis/config/v1alpha1
 kubedb.dev/apimachinery/apis/kubedb/v1alpha1
 kubedb.dev/apimachinery/apis/catalog
 kubedb.dev/apimachinery/apis/kubedb
-# kubevault.dev/operator v0.0.0-20190718164535-ca947abcfc3f
+# kubevault.dev/operator v0.0.0-20190726013920-b86204295e2c
 kubevault.dev/operator/apis/engine/v1alpha1
 kubevault.dev/operator/client/clientset/versioned/scheme
 kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1
