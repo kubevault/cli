@@ -8,7 +8,6 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
-	dbapi "kubedb.dev/apimachinery/apis/authorization/v1alpha1"
 	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
 )
 
@@ -19,8 +18,8 @@ var (
 		Message: "This was denied by kubectl vault deny awsaccesskeyrequest",
 	}
 
-	dbDeniedCond = dbapi.DatabaseAccessRequestCondition{
-		Type:    dbapi.AccessDenied,
+	dbDeniedCond = engineapi.DatabaseAccessRequestCondition{
+		Type:    engineapi.AccessDenied,
 		Reason:  "KubectlDeny",
 		Message: "This was denied by kubectl vault deny databaseaccessrequest",
 	}

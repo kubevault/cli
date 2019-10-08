@@ -11,9 +11,6 @@ import (
 	"k8s.io/cli-runtime/pkg/resource"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
-	dbapi "kubedb.dev/apimachinery/apis/authorization/v1alpha1"
-	dbcs "kubedb.dev/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1"
-	dbutil "kubedb.dev/apimachinery/client/clientset/versioned/typed/authorization/v1alpha1/util"
 	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
 	enginecs "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1"
 	engineutil "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1/util"
@@ -32,8 +29,8 @@ var (
 		Message: "This was approved by kubectl vault approve awsaccesskeyrequest",
 	}
 
-	dbApprovedCond = dbapi.DatabaseAccessRequestCondition{
-		Type:    dbapi.AccessApproved,
+	dbApprovedCond = engineapi.DatabaseAccessRequestCondition{
+		Type:    engineapi.AccessApproved,
 		Reason:  "KubectlApprove",
 		Message: "This was approved by kubectl vault approve databaseaccessrequest",
 	}
@@ -83,8 +80,8 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 	switch ResourceName {
 	case engineapi.ResourceAWSAccessKeyRequest, engineapi.ResourceAWSAccessKeyRequests:
 		resourceName = engineapi.ResourceAWSAccessKeyRequest
-	case dbapi.ResourceDatabaseAccessRequest, dbapi.ResourceDatabaseAccessRequests:
-		resourceName = dbapi.ResourceDatabaseAccessRequest
+	case engineapi.ResourceDatabaseAccessRequest, engineapi.ResourceDatabaseAccessRequests:
+		resourceName = engineapi.ResourceDatabaseAccessRequest
 	case engineapi.ResourceGCPAccessKeyRequest, engineapi.ResourceGCPAccessKeyRequests:
 		resourceName = engineapi.ResourceGCPAccessKeyRequest
 	case engineapi.ResourceAzureAccessKeyRequest, engineapi.ResourceAzureAccessKeyRequests:
@@ -108,11 +105,6 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
 
 	engineClient, err := enginecs.NewForConfig(cfg)
-	if err != nil {
-		return err
-	}
-
-	dbClient, err := dbcs.NewForConfig(cfg)
 	if err != nil {
 		return err
 	}
@@ -142,13 +134,13 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 				cond = awsApprovedCond
 			}
 			err2 = UpdateAWSAccessKeyRequestCondition(engineClient, obj, cond)
-		case *dbapi.DatabaseAccessRequest:
-			obj := info.Object.(*dbapi.DatabaseAccessRequest)
+		case *engineapi.DatabaseAccessRequest:
+			obj := info.Object.(*engineapi.DatabaseAccessRequest)
 			cond := dbDeniedCond
 			if isApproveReq {
 				cond = dbApprovedCond
 			}
-			err2 = UpdateDBAccessRequestCondition(dbClient, obj, cond)
+			err2 = UpdateDBAccessRequestCondition(engineClient, obj, cond)
 		case *engineapi.GCPAccessKeyRequest:
 			obj := info.Object.(*engineapi.GCPAccessKeyRequest)
 			cond := gcpDeniedCond
@@ -177,8 +169,8 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 
 func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsAKR *engineapi.AWSAccessKeyRequest, cond engineapi.AWSAccessKeyRequestCondition) error {
 	_, err := engineutil.UpdateAWSAccessKeyRequestStatus(c, awsAKR, func(in *engineapi.AWSAccessKeyRequestStatus) *engineapi.AWSAccessKeyRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}
@@ -189,10 +181,10 @@ func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsA
 	return err
 }
 
-func UpdateDBAccessRequestCondition(c dbcs.AuthorizationV1alpha1Interface, dbAR *dbapi.DatabaseAccessRequest, cond dbapi.DatabaseAccessRequestCondition) error {
-	_, err := dbutil.UpdateDatabaseAccessRequestStatus(c, dbAR, func(in *dbapi.DatabaseAccessRequestStatus) *dbapi.DatabaseAccessRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+func UpdateDBAccessRequestCondition(c enginecs.EngineV1alpha1Interface, dbAR *engineapi.DatabaseAccessRequest, cond engineapi.DatabaseAccessRequestCondition) error {
+	_, err := engineutil.UpdateDatabaseAccessRequestStatus(c, dbAR, func(in *engineapi.DatabaseAccessRequestStatus) *engineapi.DatabaseAccessRequestStatus {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}
@@ -205,8 +197,8 @@ func UpdateDBAccessRequestCondition(c dbcs.AuthorizationV1alpha1Interface, dbAR 
 
 func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR *engineapi.GCPAccessKeyRequest, cond engineapi.GCPAccessKeyRequestCondition) error {
 	_, err := engineutil.UpdateGCPAccessKeyRequestStatus(c, gcpAKR, func(in *engineapi.GCPAccessKeyRequestStatus) *engineapi.GCPAccessKeyRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}
@@ -219,8 +211,8 @@ func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR *engin
 
 func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR *engineapi.AzureAccessKeyRequest, cond engineapi.AzureAccessKeyRequestCondition) error {
 	_, err := engineutil.UpdateAzureAccessKeyRequestStatus(c, azureAKR, func(in *engineapi.AzureAccessKeyRequestStatus) *engineapi.AzureAccessKeyRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}
