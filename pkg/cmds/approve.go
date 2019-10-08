@@ -177,8 +177,8 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 
 func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsAKR *engineapi.AWSAccessKeyRequest, cond engineapi.AWSAccessKeyRequestCondition) error {
 	_, err := engineutil.UpdateAWSAccessKeyRequestStatus(c, awsAKR, func(in *engineapi.AWSAccessKeyRequestStatus) *engineapi.AWSAccessKeyRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}
@@ -191,8 +191,8 @@ func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsA
 
 func UpdateDBAccessRequestCondition(c dbcs.AuthorizationV1alpha1Interface, dbAR *dbapi.DatabaseAccessRequest, cond dbapi.DatabaseAccessRequestCondition) error {
 	_, err := dbutil.UpdateDatabaseAccessRequestStatus(c, dbAR, func(in *dbapi.DatabaseAccessRequestStatus) *dbapi.DatabaseAccessRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}
@@ -205,8 +205,8 @@ func UpdateDBAccessRequestCondition(c dbcs.AuthorizationV1alpha1Interface, dbAR 
 
 func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR *engineapi.GCPAccessKeyRequest, cond engineapi.GCPAccessKeyRequestCondition) error {
 	_, err := engineutil.UpdateGCPAccessKeyRequestStatus(c, gcpAKR, func(in *engineapi.GCPAccessKeyRequestStatus) *engineapi.GCPAccessKeyRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}
@@ -219,8 +219,8 @@ func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR *engin
 
 func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR *engineapi.AzureAccessKeyRequest, cond engineapi.AzureAccessKeyRequestCondition) error {
 	_, err := engineutil.UpdateAzureAccessKeyRequestStatus(c, azureAKR, func(in *engineapi.AzureAccessKeyRequestStatus) *engineapi.AzureAccessKeyRequestStatus {
-		for _, cond := range in.Conditions {
-			if cond.Type == cond.Type {
+		for _, c := range in.Conditions {
+			if c.Type == cond.Type {
 				return in
 			}
 		}

@@ -204,7 +204,7 @@ lint: $(BUILD_DIRS)
 	    --env GO111MODULE=on                                    \
 	    --env GOFLAGS="-mod=vendor"                             \
 	    $(BUILD_IMAGE)                                          \
-	    golangci-lint run --enable $(ADDTL_LINTERS)
+	    golangci-lint run --enable $(ADDTL_LINTERS) --skip-dirs-use-default --deadline=10m
 
 $(BUILD_DIRS):
 	@mkdir -p $@

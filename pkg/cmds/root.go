@@ -5,6 +5,7 @@ import (
 
 	v "github.com/appscode/go/version"
 	"github.com/spf13/cobra"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cliflag "k8s.io/component-base/cli/flag"
@@ -28,9 +29,9 @@ func NewRootCmd() *cobra.Command {
 		PersistentPreRun: func(c *cobra.Command, args []string) {
 			cli.SendAnalytics(c, v.Version.Version)
 
-			scheme.AddToScheme(clientsetscheme.Scheme)
-			appcatscheme.AddToScheme(clientsetscheme.Scheme)
-			dbscheme.AddToScheme(clientsetscheme.Scheme)
+			utilruntime.Must(scheme.AddToScheme(clientsetscheme.Scheme))
+			utilruntime.Must(appcatscheme.AddToScheme(clientsetscheme.Scheme))
+			utilruntime.Must(dbscheme.AddToScheme(clientsetscheme.Scheme))
 		},
 	}
 
@@ -47,7 +48,7 @@ func NewRootCmd() *cobra.Command {
 	flags.AddGoFlagSet(flag.CommandLine)
 	logs.ParseFlags()
 	flags.BoolVar(&cli.EnableAnalytics, "analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
-	flag.Set("stderrthreshold", "ERROR")
+	utilruntime.Must(flag.Set("stderrthreshold", "ERROR"))
 	flags.BoolVar(&EnableStatusSubresource, "enable-status-subresource", true, "If true, uses sub resource for crds.")
 
 	rootCmd.AddCommand(NewCmdApprove(matchVersionKubeConfigFlags))
