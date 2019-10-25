@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
+	api "kubevault.dev/operator/apis/engine/v1alpha1"
+	cs "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1"
+
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/golang/glog"
 	"github.com/pkg/errors"
@@ -12,8 +15,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	kutil "kmodules.xyz/client-go"
-	api "kubevault.dev/operator/apis/engine/v1alpha1"
-	cs "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1"
 )
 
 func CreateOrPatchDatabaseAccessRequest(c cs.EngineV1alpha1Interface, meta metav1.ObjectMeta, transform func(alert *api.DatabaseAccessRequest) *api.DatabaseAccessRequest) (*api.DatabaseAccessRequest, kutil.VerbType, error) {
@@ -86,12 +87,7 @@ func UpdateDatabaseAccessRequestStatus(
 	c cs.EngineV1alpha1Interface,
 	in *api.DatabaseAccessRequest,
 	transform func(*api.DatabaseAccessRequestStatus) *api.DatabaseAccessRequestStatus,
-	useSubresource ...bool,
 ) (result *api.DatabaseAccessRequest, err error) {
-	if len(useSubresource) > 1 {
-		return nil, errors.Errorf("invalid value passed for useSubresource: %v", useSubresource)
-	}
-
 	apply := func(x *api.DatabaseAccessRequest) *api.DatabaseAccessRequest {
 		return &api.DatabaseAccessRequest{
 			TypeMeta:   x.TypeMeta,
@@ -101,36 +97,31 @@ func UpdateDatabaseAccessRequestStatus(
 		}
 	}
 
-	if len(useSubresource) == 1 && useSubresource[0] {
-		attempt := 0
-		cur := in.DeepCopy()
-		err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
-			attempt++
-			var e2 error
-			result, e2 = c.DatabaseAccessRequests(in.Namespace).UpdateStatus(apply(cur))
-			if kerr.IsConflict(e2) {
-				latest, e3 := c.DatabaseAccessRequests(in.Namespace).Get(in.Name, metav1.GetOptions{})
-				switch {
-				case e3 == nil:
-					cur = latest
-					return false, nil
-				case kutil.IsRequestRetryable(e3):
-					return false, nil
-				default:
-					return false, e3
-				}
-			} else if err != nil && !kutil.IsRequestRetryable(e2) {
-				return false, e2
+	attempt := 0
+	cur := in.DeepCopy()
+	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+		attempt++
+		var e2 error
+		result, e2 = c.DatabaseAccessRequests(in.Namespace).UpdateStatus(apply(cur))
+		if kerr.IsConflict(e2) {
+			latest, e3 := c.DatabaseAccessRequests(in.Namespace).Get(in.Name, metav1.GetOptions{})
+			switch {
+			case e3 == nil:
+				cur = latest
+				return false, nil
+			case kutil.IsRequestRetryable(e3):
+				return false, nil
+			default:
+				return false, e3
 			}
-			return e2 == nil, nil
-		})
-
-		if err != nil {
-			err = fmt.Errorf("failed to update status of DatabaseAccessRequest %s/%s after %d attempts due to %v", in.Namespace, in.Name, attempt, err)
+		} else if err != nil && !kutil.IsRequestRetryable(e2) {
+			return false, e2
 		}
-		return
-	}
+		return e2 == nil, nil
+	})
 
-	result, _, err = PatchDatabaseAccessRequestObject(c, in, apply(in))
+	if err != nil {
+		err = fmt.Errorf("failed to update status of DatabaseAccessRequest %s/%s after %d attempts due to %v", in.Namespace, in.Name, attempt, err)
+	}
 	return
 }

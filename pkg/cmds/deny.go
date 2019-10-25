@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
+
 	"github.com/spf13/cobra"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
-	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
 )
 
 var (
@@ -47,9 +48,6 @@ func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command 
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
-			}
-			if EnableStatusSubresource {
-				EnableStatusSubresource = GetDefaultValueForStatusSubresource(clientGetter)
 			}
 
 			if err := modifyStatusCondition(clientGetter, false); err != nil {

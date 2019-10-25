@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
+	enginecs "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1"
+	engineutil "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1/util"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -11,9 +15,6 @@ import (
 	"k8s.io/cli-runtime/pkg/resource"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
-	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
-	enginecs "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1"
-	engineutil "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1/util"
 )
 
 var (
@@ -57,9 +58,6 @@ func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Comma
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
-			}
-			if EnableStatusSubresource {
-				EnableStatusSubresource = GetDefaultValueForStatusSubresource(clientGetter)
 			}
 
 			if err := modifyStatusCondition(clientGetter, true); err != nil {
@@ -177,7 +175,7 @@ func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsA
 		cond.LastUpdateTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	}, EnableStatusSubresource)
+	})
 	return err
 }
 
@@ -191,7 +189,7 @@ func UpdateDBAccessRequestCondition(c enginecs.EngineV1alpha1Interface, dbAR *en
 		cond.LastUpdateTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	}, EnableStatusSubresource)
+	})
 	return err
 }
 
@@ -205,7 +203,7 @@ func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR *engin
 		cond.LastUpdateTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	}, EnableStatusSubresource)
+	})
 	return err
 }
 
@@ -219,6 +217,6 @@ func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR *e
 		cond.LastUpdateTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	}, EnableStatusSubresource)
+	})
 	return err
 }
