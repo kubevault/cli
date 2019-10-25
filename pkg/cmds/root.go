@@ -3,6 +3,8 @@ package cmds
 import (
 	"flag"
 
+	"kubevault.dev/operator/client/clientset/versioned/scheme"
+
 	v "github.com/appscode/go/version"
 	"github.com/spf13/cobra"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -13,11 +15,6 @@ import (
 	"kmodules.xyz/client-go/logs"
 	"kmodules.xyz/client-go/tools/cli"
 	appcatscheme "kmodules.xyz/custom-resources/client/clientset/versioned/scheme"
-	"kubevault.dev/operator/client/clientset/versioned/scheme"
-)
-
-var (
-	EnableStatusSubresource bool
 )
 
 func NewRootCmd() *cobra.Command {
@@ -47,7 +44,6 @@ func NewRootCmd() *cobra.Command {
 	logs.ParseFlags()
 	flags.BoolVar(&cli.EnableAnalytics, "analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
 	utilruntime.Must(flag.Set("stderrthreshold", "ERROR"))
-	flags.BoolVar(&EnableStatusSubresource, "enable-status-subresource", true, "If true, uses sub resource for crds.")
 
 	rootCmd.AddCommand(NewCmdApprove(matchVersionKubeConfigFlags))
 	rootCmd.AddCommand(NewCmdDeny(matchVersionKubeConfigFlags))
