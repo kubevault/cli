@@ -25,31 +25,31 @@ var (
 title: Reference | KubeVault CLI
 description: KubeVault CLI Reference
 menu:
-  docs_{{ .Version }}:
+  docs_{{ "{{ .version }}" }}:
     identifier: reference-cli
     name: KubeVault CLI
     weight: 30
     parent: reference
-menu_name: docs_{{ .Version }}
+menu_name: docs_{{ "{{ .version }}" }}
 ---
 `))
 
 	_ = template.Must(tplFrontMatter.New("cmd").Parse(`---
 title: {{ .Name }}
 menu:
-  docs_{{ .Version }}:
+  docs_{{ "{{ .version }}" }}:
     identifier: {{ .ID }}
     name: {{ .Name }}
     parent: reference-cli
 {{- if .RootCmd }}
     weight: 0
 {{ end }}
-menu_name: docs_{{ .Version }}
+menu_name: docs_{{ "{{ .version }}" }}
 section_menu_id: reference
 {{- if .RootCmd }}
-url: /docs/{{ .Version }}/reference/cli/
+url: /docs/{{ "{{ .version }}" }}/reference/cli/
 aliases:
-- /docs/{{ .Version }}/reference/cli/{{ .ID }}/
+- /docs/{{ "{{ .version }}" }}/reference/cli/{{ .ID }}/
 {{- end }}
 ---
 `))
