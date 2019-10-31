@@ -1,5 +1,5 @@
 [![Go Report Card](https://goreportcard.com/badge/kubevault.dev/cli)](https://goreportcard.com/report/kubevault.dev/cli)
-[![Build Status](https://travis-ci.org/kubevault/cli.svg?branch=master)](https://travis-ci.org/kubevault/cli)
+[![Build Status](https://github.com/kubevault/cli/workflows/CI/badge.svg)](https://github.com/kubevault/cli/actions?workflow=CI)
 [![codecov](https://codecov.io/gh/kubevault/cli/branch/master/graph/badge.svg)](https://codecov.io/gh/kubevault/cli)
 [![Github All Releases](https://img.shields.io/github/downloads/kubevault/cli/total.svg)](https://github.com/kubevault/cli/releases)
 [![Slack](https://slack.appscode.com/badge.svg)](https://slack.appscode.com)
