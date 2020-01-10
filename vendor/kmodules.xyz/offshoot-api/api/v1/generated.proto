@@ -111,28 +111,9 @@ message ObjectMeta {
   map<string, string> annotations = 1;
 }
 
-// PersistentVolumeClaim is a user's request for and claim to a persistent volume
-message PersistentVolumeClaim {
-  // Standard object's metadata.
-  // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  // +optional
-  optional PersistentVolumeClaimObjectMeta metadata = 1;
-
-  // Spec defines the desired characteristics of a volume requested by a pod author.
-  // More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
-  // +optional
-  optional k8s.io.api.core.v1.PersistentVolumeClaimSpec spec = 2;
-
-  // Status represents the current information/status of a persistent volume claim.
-  // Read-only.
-  // More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
-  // +optional
-  optional k8s.io.api.core.v1.PersistentVolumeClaimStatus status = 3;
-}
-
 // ObjectMeta is metadata that all persisted resources must have, which includes all objects
 // users must create.
-message PersistentVolumeClaimObjectMeta {
+message PartialObjectMeta {
   // Name must be unique within a namespace. Is required when creating resources, although
   // some resources may allow a client to request the generation of an appropriate name
   // automatically. Name is primarily intended for creation idempotence and configuration
@@ -193,6 +174,25 @@ message PersistentVolumeClaimObjectMeta {
   // +patchMergeKey=uid
   // +patchStrategy=merge
   repeated k8s.io.apimachinery.pkg.apis.meta.v1.OwnerReference ownerReferences = 6;
+}
+
+// PersistentVolumeClaim is a user's request for and claim to a persistent volume
+message PersistentVolumeClaim {
+  // Standard object's metadata.
+  // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+  // +optional
+  optional PartialObjectMeta metadata = 1;
+
+  // Spec defines the desired characteristics of a volume requested by a pod author.
+  // More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+  // +optional
+  optional k8s.io.api.core.v1.PersistentVolumeClaimSpec spec = 2;
+
+  // Status represents the current information/status of a persistent volume claim.
+  // Read-only.
+  // More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+  // +optional
+  optional k8s.io.api.core.v1.PersistentVolumeClaimStatus status = 3;
 }
 
 message PodRuntimeSettings {

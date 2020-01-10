@@ -40,6 +40,7 @@ const (
 // +kubebuilder:resource:path=secretengines,singular=secretengine,categories={vault,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type SecretEngine struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -144,7 +145,6 @@ type AzureConfiguration struct {
 	//	- tenant-id: <value>, The tenant id for the Azure Active Directory.
 	//	- client-id: <value>, The OAuth2 client id to connect to Azure.
 	//	- client-secret: <value>, The OAuth2 client secret to connect to Azure.
-	// +required
 	CredentialSecret string `json:"credentialSecret" protobuf:"bytes,1,opt,name=credentialSecret"`
 
 	// The Azure environment.

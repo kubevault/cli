@@ -9,10 +9,8 @@ github.com/PuerkitoBio/purell
 github.com/PuerkitoBio/urlesc
 # github.com/appscode/go v0.0.0-20191119085241-0887d8ec2ecc
 github.com/appscode/go/analytics
-github.com/appscode/go/context
 github.com/appscode/go/encoding/json/types
 github.com/appscode/go/homedir
-github.com/appscode/go/log
 github.com/appscode/go/log/golog
 github.com/appscode/go/net
 github.com/appscode/go/runtime
@@ -373,7 +371,7 @@ k8s.io/kubectl/pkg/version
 k8s.io/utils/exec
 k8s.io/utils/integer
 k8s.io/utils/pointer
-# kmodules.xyz/client-go v0.0.0-20191127054604-26981530831d
+# kmodules.xyz/client-go v0.0.0-20200108114229-70ba8841e60f
 kmodules.xyz/client-go
 kmodules.xyz/client-go/logs
 kmodules.xyz/client-go/meta
@@ -385,11 +383,11 @@ kmodules.xyz/custom-resources/api/crds
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
-# kmodules.xyz/monitoring-agent-api v0.0.0-20191127151826-1eac40b764dc
+# kmodules.xyz/monitoring-agent-api v0.0.0-20191224204126-ee69caffab6c
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20191130172330-41f833a64423
+# kmodules.xyz/offshoot-api v0.0.0-20200103145223-2c4f520520d2
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/operator v0.0.0-20191130190210-a4a972e3ecdd
+# kubevault.dev/operator v0.3.0
 kubevault.dev/operator/api/crds
 kubevault.dev/operator/apis/catalog
 kubevault.dev/operator/apis/catalog/v1alpha1

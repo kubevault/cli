@@ -11,9 +11,9 @@ require (
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/component-base v0.0.0-20191114102325-35a9586014f7
 	k8s.io/kubectl v0.0.0-20191114113550-6123e1c827f7
-	kmodules.xyz/client-go v0.0.0-20191127054604-26981530831d
+	kmodules.xyz/client-go v0.0.0-20200108114229-70ba8841e60f
 	kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419
-	kubevault.dev/operator v0.0.0-20191130190210-a4a972e3ecdd
+	kubevault.dev/operator v0.3.0
 )
 
 replace (
