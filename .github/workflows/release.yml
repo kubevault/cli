@@ -35,6 +35,20 @@ jobs:
       run: |
         make release
 
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        draft: true
+        files: |
+          bin/kubectl-vault-linux-amd64
+          bin/kubectl-vault-linux-arm
+          bin/kubectl-vault-linux-arm64
+          bin/kubectl-vault-windows-amd64.exe
+          bin/kubectl-vault-darwin-amd64
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - uses: actions/upload-artifact@master
       with:
         name: kubectl-vault-binaries
