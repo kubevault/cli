@@ -54,12 +54,13 @@ BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
 OS   := $(if $(GOOS),$(GOOS),$(shell go env GOOS))
 ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
 
-GO_VERSION       ?= 1.13.4
+GO_VERSION       ?= 1.13.8
 BUILD_IMAGE      ?= appscode/golang-dev:$(GO_VERSION)
 
-OUTBIN = bin/$(OS)_$(ARCH)/$(BIN)
+OUTBIN = bin/$(BIN)-$(OS)-$(ARCH)
 ifeq ($(OS),windows)
-  OUTBIN = bin/$(OS)_$(ARCH)/$(BIN).exe
+  OUTBIN := bin/$(BIN)-$(OS)-$(ARCH).exe
+  BIN := $(BIN).exe
 endif
 
 # Directories that we need created to build/test.
@@ -168,11 +169,11 @@ $(OUTBIN): .go/$(OUTBIN).stamp
 		    --env HTTP_PROXY=$(HTTP_PROXY)                          \
 		    --env HTTPS_PROXY=$(HTTPS_PROXY)                        \
 		    $(BUILD_IMAGE)                                          \
-		    upx --brute /go/$(OUTBIN);                              \
+		    upx --brute /go/bin/$(BIN);                             \
 	fi
-	@if ! cmp -s .go/$(OUTBIN) $(OUTBIN); then \
-	    mv .go/$(OUTBIN) $(OUTBIN);            \
-	    date >$@;                              \
+	@if ! cmp -s .go/bin/$(OS)_$(ARCH)/$(BIN) $(OUTBIN); then   \
+	    mv .go/bin/$(OS)_$(ARCH)/$(BIN) $(OUTBIN);              \
+	    date >$@;                                               \
 	fi
 	@echo
 
@@ -258,7 +259,7 @@ add-license:
 
 .PHONY: check-license
 check-license:
-	@echo "Checking files have proper license header"
+	@echo "Checking files for license header"
 	@docker run --rm 	                                 \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
