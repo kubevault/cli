@@ -1,5 +1,5 @@
 /*
-Copyright The KubeVault Authors.
+Copyright 2016 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,22 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+
+package auth
 
 import (
-	"os"
-
-	"kubevault.dev/cli/pkg/cmds"
-
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
-	"kmodules.xyz/client-go/logs"
+	// Initialize all known client auth plugins.
+	_ "k8s.io/client-go/plugin/pkg/client/auth/azure"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
 )
-
-func main() {
-	logs.InitLogs()
-	defer logs.FlushLogs()
-
-	if err := cmds.NewRootCmd().Execute(); err != nil {
-		os.Exit(1)
-	}
-}

@@ -24,6 +24,7 @@ import (
 	"github.com/spf13/cobra"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 )
 
