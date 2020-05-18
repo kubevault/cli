@@ -19,39 +19,38 @@ import (
 	"fmt"
 	"os"
 
-	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
-
 	"github.com/spf13/cobra"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 var (
-	awsDeniedCond = engineapi.AWSAccessKeyRequestCondition{
-		Type:    engineapi.AccessDenied,
+	awsDeniedCond = kmapi.Condition{
+		Type:    kmapi.ConditionRequestDenied,
 		Reason:  "KubectlDeny",
 		Message: "This was denied by kubectl vault deny awsaccesskeyrequest",
 	}
 
-	dbDeniedCond = engineapi.DatabaseAccessRequestCondition{
-		Type:    engineapi.AccessDenied,
+	dbDeniedCond = kmapi.Condition{
+		Type:    kmapi.ConditionRequestDenied,
 		Reason:  "KubectlDeny",
 		Message: "This was denied by kubectl vault deny databaseaccessrequest",
 	}
 
-	gcpDeniedCond = engineapi.GCPAccessKeyRequestCondition{
-		Type:    engineapi.AccessDenied,
+	gcpDeniedCond = kmapi.Condition{
+		Type:    kmapi.ConditionRequestDenied,
 		Reason:  "KubectlDeny",
 		Message: "This was denied by kubectl vault deny gcpaccesskeyrequest",
 	}
 
-	azureDeniedCond = engineapi.AzureAccessKeyRequestCondition{
-		Type:           engineapi.AccessDenied,
-		Reason:         "KubectlDeny",
-		Message:        "This was denied by kubectl vault deny azureaccesskeyrequest",
-		LastUpdateTime: v1.Time{},
+	azureDeniedCond = kmapi.Condition{
+		Type:               kmapi.ConditionRequestDenied,
+		Reason:             "KubectlDeny",
+		Message:            "This was denied by kubectl vault deny azureaccesskeyrequest",
+		LastTransitionTime: v1.Time{},
 	}
 )
 
