@@ -20,7 +20,7 @@ github.com/MakeNowJust/heredoc
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
-# github.com/appscode/go v0.0.0-20191119085241-0887d8ec2ecc
+# github.com/appscode/go v0.0.0-20200323182826-54e98e09185a
 github.com/appscode/go/analytics
 github.com/appscode/go/encoding/json/types
 github.com/appscode/go/homedir
@@ -405,8 +405,9 @@ k8s.io/kubectl/pkg/version
 k8s.io/utils/exec
 k8s.io/utils/integer
 k8s.io/utils/pointer
-# kmodules.xyz/client-go v0.0.0-20200108114229-70ba8841e60f
+# kmodules.xyz/client-go v0.0.0-20200518125232-435dcc370844
 kmodules.xyz/client-go
+kmodules.xyz/client-go/api/v1
 kmodules.xyz/client-go/logs
 kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/tools/analytics
@@ -421,7 +422,7 @@ kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20200103145223-2c4f520520d2
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/operator v0.3.0
+# kubevault.dev/operator v0.3.1-0.20200518182915-4e709413c4d1
 kubevault.dev/operator/api/crds
 kubevault.dev/operator/apis/catalog
 kubevault.dev/operator/apis/catalog/v1alpha1
