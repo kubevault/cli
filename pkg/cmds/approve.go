@@ -16,6 +16,7 @@ limitations under the License.
 package cmds
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -182,7 +183,7 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 }
 
 func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsAKR metav1.ObjectMeta, cond kmapi.Condition) error {
-	_, err := engineutil.UpdateAWSAccessKeyRequestStatus(c, awsAKR, func(in *engineapi.AWSAccessKeyRequestStatus) *engineapi.AWSAccessKeyRequestStatus {
+	_, err := engineutil.UpdateAWSAccessKeyRequestStatus(context.TODO(), c, awsAKR, func(in *engineapi.AWSAccessKeyRequestStatus) *engineapi.AWSAccessKeyRequestStatus {
 		for _, c := range in.Conditions {
 			if c.Type == cond.Type {
 				return in
@@ -191,12 +192,12 @@ func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsA
 		cond.LastTransitionTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	})
+	}, metav1.UpdateOptions{})
 	return err
 }
 
 func UpdateDBAccessRequestCondition(c enginecs.EngineV1alpha1Interface, dbAR metav1.ObjectMeta, cond kmapi.Condition) error {
-	_, err := engineutil.UpdateDatabaseAccessRequestStatus(c, dbAR, func(in *engineapi.DatabaseAccessRequestStatus) *engineapi.DatabaseAccessRequestStatus {
+	_, err := engineutil.UpdateDatabaseAccessRequestStatus(context.TODO(), c, dbAR, func(in *engineapi.DatabaseAccessRequestStatus) *engineapi.DatabaseAccessRequestStatus {
 		for _, c := range in.Conditions {
 			if c.Type == cond.Type {
 				return in
@@ -205,12 +206,12 @@ func UpdateDBAccessRequestCondition(c enginecs.EngineV1alpha1Interface, dbAR met
 		cond.LastTransitionTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	})
+	}, metav1.UpdateOptions{})
 	return err
 }
 
 func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR metav1.ObjectMeta, cond kmapi.Condition) error {
-	_, err := engineutil.UpdateGCPAccessKeyRequestStatus(c, gcpAKR, func(in *engineapi.GCPAccessKeyRequestStatus) *engineapi.GCPAccessKeyRequestStatus {
+	_, err := engineutil.UpdateGCPAccessKeyRequestStatus(context.TODO(), c, gcpAKR, func(in *engineapi.GCPAccessKeyRequestStatus) *engineapi.GCPAccessKeyRequestStatus {
 		for _, c := range in.Conditions {
 			if c.Type == cond.Type {
 				return in
@@ -219,12 +220,12 @@ func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR metav1
 		cond.LastTransitionTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	})
+	}, metav1.UpdateOptions{})
 	return err
 }
 
 func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR metav1.ObjectMeta, cond kmapi.Condition) error {
-	_, err := engineutil.UpdateAzureAccessKeyRequestStatus(c, azureAKR, func(in *engineapi.AzureAccessKeyRequestStatus) *engineapi.AzureAccessKeyRequestStatus {
+	_, err := engineutil.UpdateAzureAccessKeyRequestStatus(context.TODO(), c, azureAKR, func(in *engineapi.AzureAccessKeyRequestStatus) *engineapi.AzureAccessKeyRequestStatus {
 		for _, c := range in.Conditions {
 			if c.Type == cond.Type {
 				return in
@@ -233,6 +234,6 @@ func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR me
 		cond.LastTransitionTime = metav1.Now()
 		in.Conditions = append(in.Conditions, cond)
 		return in
-	})
+	}, metav1.UpdateOptions{})
 	return err
 }
