@@ -21,7 +21,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
@@ -31,27 +30,30 @@ import (
 var (
 	awsDeniedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestDenied,
+		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlDeny",
-		Message: "This was denied by kubectl vault deny awsaccesskeyrequest",
+		Message: "This was denied by: kubectl vault deny awsaccesskeyrequest",
 	}
 
 	dbDeniedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestDenied,
+		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlDeny",
-		Message: "This was denied by kubectl vault deny databaseaccessrequest",
+		Message: "This was denied by: kubectl vault deny databaseaccessrequest",
 	}
 
 	gcpDeniedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestDenied,
+		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlDeny",
-		Message: "This was denied by kubectl vault deny gcpaccesskeyrequest",
+		Message: "This was denied by: kubectl vault deny gcpaccesskeyrequest",
 	}
 
 	azureDeniedCond = kmapi.Condition{
-		Type:               kmapi.ConditionRequestDenied,
-		Reason:             "KubectlDeny",
-		Message:            "This was denied by kubectl vault deny azureaccesskeyrequest",
-		LastTransitionTime: v1.Time{},
+		Type:    kmapi.ConditionRequestDenied,
+		Status:  kmapi.ConditionTrue,
+		Reason:  "KubectlDeny",
+		Message: "This was denied by: kubectl vault deny azureaccesskeyrequest",
 	}
 )
 

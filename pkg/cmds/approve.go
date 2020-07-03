@@ -46,28 +46,28 @@ var (
 		Type:    kmapi.ConditionRequestApproved,
 		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve awsaccesskeyrequest",
+		Message: "This was approved by: kubectl vault approve awsaccesskeyrequest",
 	}
 
 	dbApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
 		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve databaseaccessrequest",
+		Message: "This was approved by: kubectl vault approve databaseaccessrequest",
 	}
 
 	gcpApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
 		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve gcpaccesskeyrequest",
+		Message: "This was approved by: kubectl vault approve gcpaccesskeyrequest",
 	}
 
 	azureApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
 		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve azureaccesskeyrequest",
+		Message: "This was approved by: kubectl vault approve azureaccesskeyrequest",
 	}
 )
 
