@@ -1,6 +1,6 @@
 module kubevault.dev/cli
 
-go 1.12
+go 1.14
 
 require (
 	github.com/appscode/go v0.0.0-20200323182826-54e98e09185a
@@ -11,9 +11,9 @@ require (
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/component-base v0.18.3
 	k8s.io/kubectl v0.18.3
-	kmodules.xyz/client-go v0.0.0-20200525195850-2fd180961371
-	kmodules.xyz/custom-resources v0.0.0-20200525205248-56eeb11ebcf3
-	kubevault.dev/operator v0.4.0-alpha.0
+	kmodules.xyz/client-go v0.0.0-20200630053911-20d035822d35
+	kmodules.xyz/custom-resources v0.0.0-20200604135349-9e9f5c4fdba9
+	kubevault.dev/operator v0.4.0-alpha.0.0.20200703093608-01289e5c19a4
 )
 
 replace (
