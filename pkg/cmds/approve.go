@@ -44,26 +44,30 @@ var (
 var (
 	awsApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
+		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve awsaccesskeyrequest",
+		Message: "This was approved by: kubectl vault approve awsaccesskeyrequest",
 	}
 
 	dbApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
+		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve databaseaccessrequest",
+		Message: "This was approved by: kubectl vault approve databaseaccessrequest",
 	}
 
 	gcpApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
+		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve gcpaccesskeyrequest",
+		Message: "This was approved by: kubectl vault approve gcpaccesskeyrequest",
 	}
 
 	azureApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
+		Status:  kmapi.ConditionTrue,
 		Reason:  "KubectlApprove",
-		Message: "This was approved by kubectl vault approve azureaccesskeyrequest",
+		Message: "This was approved by: kubectl vault approve azureaccesskeyrequest",
 	}
 )
 
@@ -149,28 +153,28 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 			if isApproveReq {
 				cond = awsApprovedCond
 			}
-			err2 = UpdateAWSAccessKeyRequestCondition(engineClient, obj.ObjectMeta, cond)
+			err2 = UpdateAWSAccessKeyRequestCondition(engineClient, obj.ObjectMeta, cond, isApproveReq)
 		case *engineapi.DatabaseAccessRequest:
 			obj := info.Object.(*engineapi.DatabaseAccessRequest)
 			cond := dbDeniedCond
 			if isApproveReq {
 				cond = dbApprovedCond
 			}
-			err2 = UpdateDBAccessRequestCondition(engineClient, obj.ObjectMeta, cond)
+			err2 = UpdateDBAccessRequestCondition(engineClient, obj.ObjectMeta, cond, isApproveReq)
 		case *engineapi.GCPAccessKeyRequest:
 			obj := info.Object.(*engineapi.GCPAccessKeyRequest)
 			cond := gcpDeniedCond
 			if isApproveReq {
 				cond = gcpApprovedCond
 			}
-			err2 = UpdateGCPAccessKeyRequest(engineClient, obj.ObjectMeta, cond)
+			err2 = UpdateGCPAccessKeyRequest(engineClient, obj.ObjectMeta, cond, isApproveReq)
 		case *engineapi.AzureAccessKeyRequest:
 			obj := info.Object.(*engineapi.AzureAccessKeyRequest)
 			cond := azureDeniedCond
 			if isApproveReq {
 				cond = azureApprovedCond
 			}
-			err2 = UpdateAzureAccessKeyRequest(engineClient, obj.ObjectMeta, cond)
+			err2 = UpdateAzureAccessKeyRequest(engineClient, obj.ObjectMeta, cond, isApproveReq)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -183,57 +187,57 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 	return err
 }
 
-func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsAKR metav1.ObjectMeta, cond kmapi.Condition) error {
+func UpdateAWSAccessKeyRequestCondition(c enginecs.EngineV1alpha1Interface, awsAKR metav1.ObjectMeta, cond kmapi.Condition, isApproveReq bool) error {
 	_, err := engineutil.UpdateAWSAccessKeyRequestStatus(context.TODO(), c, awsAKR, func(in *engineapi.AWSAccessKeyRequestStatus) *engineapi.AWSAccessKeyRequestStatus {
-		for _, c := range in.Conditions {
-			if c.Type == cond.Type {
-				return in
-			}
-		}
 		cond.LastTransitionTime = metav1.Now()
-		in.Conditions = append(in.Conditions, cond)
+		in.Conditions = kmapi.SetCondition(in.Conditions, cond)
+		if isApproveReq {
+			in.Phase = engineapi.RequestStatusPhaseApproved
+		} else {
+			in.Phase = engineapi.RequestStatusPhaseDenied
+		}
 		return in
 	}, metav1.UpdateOptions{})
 	return err
 }
 
-func UpdateDBAccessRequestCondition(c enginecs.EngineV1alpha1Interface, dbAR metav1.ObjectMeta, cond kmapi.Condition) error {
+func UpdateDBAccessRequestCondition(c enginecs.EngineV1alpha1Interface, dbAR metav1.ObjectMeta, cond kmapi.Condition, isApproveReq bool) error {
 	_, err := engineutil.UpdateDatabaseAccessRequestStatus(context.TODO(), c, dbAR, func(in *engineapi.DatabaseAccessRequestStatus) *engineapi.DatabaseAccessRequestStatus {
-		for _, c := range in.Conditions {
-			if c.Type == cond.Type {
-				return in
-			}
-		}
 		cond.LastTransitionTime = metav1.Now()
-		in.Conditions = append(in.Conditions, cond)
+		in.Conditions = kmapi.SetCondition(in.Conditions, cond)
+		if isApproveReq {
+			in.Phase = engineapi.RequestStatusPhaseApproved
+		} else {
+			in.Phase = engineapi.RequestStatusPhaseDenied
+		}
 		return in
 	}, metav1.UpdateOptions{})
 	return err
 }
 
-func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR metav1.ObjectMeta, cond kmapi.Condition) error {
+func UpdateGCPAccessKeyRequest(c enginecs.EngineV1alpha1Interface, gcpAKR metav1.ObjectMeta, cond kmapi.Condition, isApproveReq bool) error {
 	_, err := engineutil.UpdateGCPAccessKeyRequestStatus(context.TODO(), c, gcpAKR, func(in *engineapi.GCPAccessKeyRequestStatus) *engineapi.GCPAccessKeyRequestStatus {
-		for _, c := range in.Conditions {
-			if c.Type == cond.Type {
-				return in
-			}
-		}
 		cond.LastTransitionTime = metav1.Now()
-		in.Conditions = append(in.Conditions, cond)
+		in.Conditions = kmapi.SetCondition(in.Conditions, cond)
+		if isApproveReq {
+			in.Phase = engineapi.RequestStatusPhaseApproved
+		} else {
+			in.Phase = engineapi.RequestStatusPhaseDenied
+		}
 		return in
 	}, metav1.UpdateOptions{})
 	return err
 }
 
-func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR metav1.ObjectMeta, cond kmapi.Condition) error {
+func UpdateAzureAccessKeyRequest(c enginecs.EngineV1alpha1Interface, azureAKR metav1.ObjectMeta, cond kmapi.Condition, isApproveReq bool) error {
 	_, err := engineutil.UpdateAzureAccessKeyRequestStatus(context.TODO(), c, azureAKR, func(in *engineapi.AzureAccessKeyRequestStatus) *engineapi.AzureAccessKeyRequestStatus {
-		for _, c := range in.Conditions {
-			if c.Type == cond.Type {
-				return in
-			}
-		}
 		cond.LastTransitionTime = metav1.Now()
-		in.Conditions = append(in.Conditions, cond)
+		in.Conditions = kmapi.SetCondition(in.Conditions, cond)
+		if isApproveReq {
+			in.Phase = engineapi.RequestStatusPhaseApproved
+		} else {
+			in.Phase = engineapi.RequestStatusPhaseDenied
+		}
 		return in
 	}, metav1.UpdateOptions{})
 	return err
