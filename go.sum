@@ -1402,8 +1402,8 @@ kmodules.xyz/offshoot-api v0.0.0-20200521035628-e135bf07b226 h1:RZ7H0gl1z/9jLI74
 kmodules.xyz/offshoot-api v0.0.0-20200521035628-e135bf07b226/go.mod h1:IbK+hCI23UfTDMzG7hos9sERCase2xsFK+XC0Ns3OCg=
 kmodules.xyz/openshift v0.0.0-20200522123204-ce4abf5433c8/go.mod h1:nVhGcoB3Bi7Ots5+g972Ap/vtyIrrtoK3Z3aulNux7w=
 kmodules.xyz/webhook-runtime v0.0.0-20200522123600-ca70a7e28ed0/go.mod h1:9hUftUcjvzDSiO5LIbe2U8Naz4tyS9Ndf1LRzsytMzs=
-kubevault.dev/operator v0.4.0-alpha.0.0.20200703093608-01289e5c19a4 h1:nMdlpwUxTdpzs9TiTVoytvSAEvT1tuAuC2aF/wX/xSU=
-kubevault.dev/operator v0.4.0-alpha.0.0.20200703093608-01289e5c19a4/go.mod h1:ozEFcx3LwalnhxtDCXyLPXgWnwq+y3d1OZ3sjur/w9c=
+kubevault.dev/operator v0.4.0-beta.0 h1:58KwT6dQcNReiNsHCon/HfYqDwMnKaDsv+sPHSngQn4=
+kubevault.dev/operator v0.4.0-beta.0/go.mod h1:ozEFcx3LwalnhxtDCXyLPXgWnwq+y3d1OZ3sjur/w9c=
 layeh.com/radius v0.0.0-20190322222518-890bc1058917/go.mod h1:fywZKyu//X7iRzaxLgPWsvc0L26IUpVvE/aeIL2JtIQ=
 modernc.org/cc v1.0.0/go.mod h1:1Sk4//wdnYJiUIxnW8ddKpaOJCF37yAdqYnkxUpaYxw=
 modernc.org/golex v1.0.0/go.mod h1:b/QX9oBD/LhixY6NDh+IdGv17hgB+51fET1i2kPSmvk=

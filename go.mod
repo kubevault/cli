@@ -13,7 +13,7 @@ require (
 	k8s.io/kubectl v0.18.3
 	kmodules.xyz/client-go v0.0.0-20200630053911-20d035822d35
 	kmodules.xyz/custom-resources v0.0.0-20200604135349-9e9f5c4fdba9
-	kubevault.dev/operator v0.4.0-alpha.0.0.20200703093608-01289e5c19a4
+	kubevault.dev/operator v0.4.0-beta.0
 )
 
 replace (
