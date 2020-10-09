@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/appscode/go v0.0.0-20200323182826-54e98e09185a
 	github.com/pkg/errors v0.8.1
-	github.com/spf13/cobra v0.0.5
+	github.com/spf13/cobra v1.0.0
 	k8s.io/apimachinery v0.18.3
 	k8s.io/cli-runtime v0.18.3
 	k8s.io/client-go v12.0.0+incompatible
