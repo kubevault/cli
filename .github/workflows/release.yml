@@ -74,4 +74,4 @@ jobs:
         # if: startsWith(github.event.ref, 'refs/tags/') && (contains(github.ref, '-alpha.') || contains(github.ref, '-beta.') || contains(github.ref, '-rc.')) == false
         run: |
           cd $RUNNER_WORKSPACE/krew-index
-          ./hack/scripts/open-pr.sh $GITHUB_WORKSPACE dba
+          ./hack/scripts/open-pr.sh $GITHUB_WORKSPACE vault
