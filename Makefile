@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 SHELL=/bin/bash -o pipefail
 
 GO_PKG   := kubevault.dev
@@ -54,7 +55,7 @@ BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
 OS   := $(if $(GOOS),$(GOOS),$(shell go env GOOS))
 ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
 
-GO_VERSION       ?= 1.13.8
+GO_VERSION       ?= 1.15
 BUILD_IMAGE      ?= appscode/golang-dev:$(GO_VERSION)
 
 OUTBIN = bin/$(BIN)-$(OS)-$(ARCH)
@@ -89,6 +90,10 @@ build-%:
 	    GOARCH=$(lastword $(subst _, ,$*))
 
 all-build: $(addprefix build-, $(subst /,_, $(BIN_PLATFORMS)))
+ifeq ($(COMPRESS),yes)
+	@cd bin; \
+	sha256sum $(patsubst $(BIN)-windows-%.tar.gz,$(BIN)-windows-%.zip, $(addsuffix .tar.gz, $(addprefix $(BIN)-, $(subst /,-, $(BIN_PLATFORMS))))) > $(BIN)-checksums.txt
+endif
 
 version:
 	@echo ::set-output name=version::$(VERSION)
@@ -155,26 +160,21 @@ $(OUTBIN): .go/$(OUTBIN).stamp
 	        commit_timestamp=$(commit_timestamp)                \
 	        ./hack/build.sh                                     \
 	    "
-	@if [ $(COMPRESS) = yes ] && [ $(OS) != darwin ]; then          \
-		echo "compressing $(OUTBIN)";                               \
-		docker run                                                  \
-		    -i                                                      \
-		    --rm                                                    \
-		    -u $$(id -u):$$(id -g)                                  \
-		    -v $$(pwd):/src                                         \
-		    -w /src                                                 \
-		    -v $$(pwd)/.go/bin/$(OS)_$(ARCH):/go/bin                \
-		    -v $$(pwd)/.go/bin/$(OS)_$(ARCH):/go/bin/$(OS)_$(ARCH)  \
-		    -v $$(pwd)/.go/cache:/.cache                            \
-		    --env HTTP_PROXY=$(HTTP_PROXY)                          \
-		    --env HTTPS_PROXY=$(HTTPS_PROXY)                        \
-		    $(BUILD_IMAGE)                                          \
-		    upx --brute /go/bin/$(BIN);                             \
-	fi
 	@if ! cmp -s .go/bin/$(OS)_$(ARCH)/$(BIN) $(OUTBIN); then   \
 	    mv .go/bin/$(OS)_$(ARCH)/$(BIN) $(OUTBIN);              \
 	    date >$@;                                               \
 	fi
+ifeq ($(COMPRESS),yes)
+ifeq ($(OS),windows)
+	@echo "compressing $(OUTBIN)";                               \
+	cd bin;                                                      \
+	zip -j $(subst .exe,,$(BIN))-$(OS)-$(ARCH).zip $(subst .exe,,$(BIN))-$(OS)-$(ARCH).exe ../LICENSE.md
+else
+	@echo "compressing $(OUTBIN)";                               \
+	cd bin;                                                      \
+	tar -czvf $(BIN)-$(OS)-$(ARCH).tar.gz $(BIN)-$(OS)-$(ARCH) ../LICENSE.md
+endif
+endif
 	@echo
 
 .PHONY: test
@@ -197,7 +197,7 @@ unit-tests: $(BUILD_DIRS)
 	        ARCH=$(ARCH)                                        \
 	        OS=$(OS)                                            \
 	        VERSION=$(VERSION)                                  \
-	        ./hack/test.sh $(SRC_DIRS)                          \
+	        ./hack/test.sh $(SRC_PKGS)                          \
 	    "
 
 ADDTL_LINTERS   := goconst,gofmt,goimports,unparam
@@ -219,7 +219,7 @@ lint: $(BUILD_DIRS)
 	    --env GO111MODULE=on                                    \
 	    --env GOFLAGS="-mod=vendor"                             \
 	    $(BUILD_IMAGE)                                          \
-	    golangci-lint run --enable $(ADDTL_LINTERS) --deadline=10m --skip-files="generated.*\.go$\" --skip-dirs-use-default
+	    golangci-lint run --enable $(ADDTL_LINTERS) --timeout=10m --skip-files="generated.*\.go$\" --skip-dirs-use-default
 
 $(BUILD_DIRS):
 	@mkdir -p $@
@@ -300,3 +300,18 @@ release:
 .PHONY: clean
 clean:
 	rm -rf .go bin
+
+.PHONY: gen-krew-manifest
+gen-krew-manifest:
+	@if [ "$(version_strategy)" != "tag" ]; then       \
+		echo "apply tag to generate krew manifest.";   \
+		exit 1;                                        \
+	fi
+	@sed                                               \
+      -e 's|{VERSION}|$(VERSION)|g'                                                                       \
+      -e 's|{SHA256SUM_DARWIN_AMD64}|$(shell sha256sum bin/$(BIN)-darwin-amd64.tar.gz | cut -d' ' -f1)|g' \
+      -e 's|{SHA256SUM_LINUX_AMD64}|$(shell sha256sum bin/$(BIN)-linux-amd64.tar.gz | cut -d' ' -f1)|g'   \
+      -e 's|{SHA256SUM_LINUX_ARM}|$(shell sha256sum bin/$(BIN)-linux-arm.tar.gz | cut -d' ' -f1)|g'       \
+      -e 's|{SHA256SUM_LINUX_ARM64}|$(shell sha256sum bin/$(BIN)-linux-arm64.tar.gz | cut -d' ' -f1)|g'   \
+      -e 's|{SHA256SUM_WINDOWS_AMD64}|$(shell sha256sum bin/$(BIN)-windows-amd64.zip | cut -d' ' -f1)|g'  \
+      hack/krew/plugin.yaml
