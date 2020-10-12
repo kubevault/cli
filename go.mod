@@ -6,12 +6,13 @@ require (
 	github.com/appscode/go v0.0.0-20200928211031-cc0c23082d91
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
+	k8s.io/api v0.18.9
 	k8s.io/apimachinery v0.18.9
 	k8s.io/cli-runtime v0.18.9
-	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/client-go v0.18.9
 	k8s.io/component-base v0.18.9
 	k8s.io/kubectl v0.18.9
-	kmodules.xyz/client-go v0.0.0-20201008164401-74d81f261ec5
+	kmodules.xyz/client-go v0.0.0-20201011221802-3180ab67d845
 	kmodules.xyz/custom-resources v0.0.0-20201008012351-6d8090f759d4
 	kubevault.dev/operator v0.4.0-beta.0.0.20201010072813-60cfdc6820a6
 )
