@@ -27,6 +27,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
@@ -44,28 +45,28 @@ var (
 var (
 	awsApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
-		Status:  kmapi.ConditionTrue,
+		Status:  core.ConditionTrue,
 		Reason:  "KubectlApprove",
 		Message: "This was approved by: kubectl vault approve awsaccesskeyrequest",
 	}
 
 	dbApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
-		Status:  kmapi.ConditionTrue,
+		Status:  core.ConditionTrue,
 		Reason:  "KubectlApprove",
 		Message: "This was approved by: kubectl vault approve databaseaccessrequest",
 	}
 
 	gcpApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
-		Status:  kmapi.ConditionTrue,
+		Status:  core.ConditionTrue,
 		Reason:  "KubectlApprove",
 		Message: "This was approved by: kubectl vault approve gcpaccesskeyrequest",
 	}
 
 	azureApprovedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestApproved,
-		Status:  kmapi.ConditionTrue,
+		Status:  core.ConditionTrue,
 		Reason:  "KubectlApprove",
 		Message: "This was approved by: kubectl vault approve azureaccesskeyrequest",
 	}
