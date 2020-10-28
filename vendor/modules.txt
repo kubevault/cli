@@ -433,7 +433,7 @@ k8s.io/kubectl/pkg/validation
 k8s.io/utils/exec
 k8s.io/utils/integer
 k8s.io/utils/pointer
-# kmodules.xyz/client-go v0.0.0-20201021051118-03dac1aea508
+# kmodules.xyz/client-go v0.0.0-20201027113349-01a6d453d836
 ## explicit
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -452,9 +452,11 @@ kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.0.0-20201007104803-408a1ff2de8d
+# kmodules.xyz/monitoring-agent-api v0.0.0-20201022103441-f51a42fb9ac8
+## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20200922211229-36acc531abab
+# kmodules.xyz/offshoot-api v0.0.0-20201027212804-f5e6dc573558
+## explicit
 kmodules.xyz/offshoot-api/api/v1
 # kubevault.dev/operator v0.4.0-beta.0.0.20201010072813-60cfdc6820a6
 ## explicit
