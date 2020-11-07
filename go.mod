@@ -6,6 +6,7 @@ require (
 	github.com/appscode/go v0.0.0-20200928211031-cc0c23082d91
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.1
+	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
 	gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209 // indirect
 	k8s.io/api v0.18.9
 	k8s.io/apimachinery v0.18.9
@@ -15,6 +16,8 @@ require (
 	k8s.io/kubectl v0.18.9
 	kmodules.xyz/client-go v0.0.0-20201105071625-0b277310b9b8
 	kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79
+	kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a // indirect
+	kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2 // indirect
 	kubevault.dev/operator v0.4.0-beta.0.0.20201010072813-60cfdc6820a6
 )
 
