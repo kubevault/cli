@@ -1512,8 +1512,12 @@ kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79 h1:BKPPUY/w0ac4
 kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79/go.mod h1:/r3/eJ3LIfwGyBEVaobqUZRZGh7GJv5RJojj/bdD14Q=
 kmodules.xyz/monitoring-agent-api v0.0.0-20201007104803-408a1ff2de8d h1:HFdWHhAkJZpoyMkp0kayKPf896IEkI7fWIpeJK4sY1o=
 kmodules.xyz/monitoring-agent-api v0.0.0-20201007104803-408a1ff2de8d/go.mod h1:ySvogFmyMVUNEFdUYnHp9T4njsB7o661ClfwNLcBWVo=
+kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a h1:3uwHtoj4msqYEoAJ7lyS7z3OFeQPF9v3J4Iv8shs86U=
+kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a/go.mod h1:r8b8lckYt5Gc5tiF3NSBPJmUrxPILerNRdozcaX7grI=
 kmodules.xyz/offshoot-api v0.0.0-20200922211229-36acc531abab h1:d/4AFAN0TfKgwhjbQYzwXXHT/5/vTP7SAAvS4uJX+wQ=
 kmodules.xyz/offshoot-api v0.0.0-20200922211229-36acc531abab/go.mod h1:Wy3/mWK2lWQOviKVpBtiCEYtLaYIaSiym8leZNKBUd4=
+kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2 h1:JVuNeHhVq/iRRM2yRF7nuYUdq1necfAPGpA5JjUcBuk=
+kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2/go.mod h1:RMHLigHILAk04wMAuMqBerskKdWlLyjqb0zLLL68cBM=
 kmodules.xyz/openshift v0.0.0-20200922211657-1ece16d36c18/go.mod h1:kOnEGdrj+DxTYJWHftqEHeYywCgh9tEiBOD5kPhVbCc=
 kmodules.xyz/webhook-runtime v0.0.0-20200922211931-8337935590de/go.mod h1:5A8s2nvrNAZGrt0OlsiiuZIik3xWyKW6+ZSwgljIm78=
 kubevault.dev/operator v0.4.0-beta.0.0.20201010072813-60cfdc6820a6 h1:Tv3F6Axt4cV6B8vLRhEnl/Gc0FbN4rCpgZADa3b5+gI=
