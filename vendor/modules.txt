@@ -457,9 +457,11 @@ kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.0.0-20201007104803-408a1ff2de8d
+# kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a
+## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20200922211229-36acc531abab
+# kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2
+## explicit
 kmodules.xyz/offshoot-api/api/v1
 # kubevault.dev/operator v0.4.0-beta.0.0.20201010072813-60cfdc6820a6
 ## explicit
