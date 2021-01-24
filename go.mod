@@ -3,11 +3,11 @@ module kubevault.dev/cli
 go 1.14
 
 require (
-	github.com/appscode/go v0.0.0-20200928211031-cc0c23082d91
+	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.1
-	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
-	gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209 // indirect
+	gomodules.xyz/runtime v0.0.0-20201104200926-d838b09dda8b
+	gomodules.xyz/x v0.0.0-20201105065653-91c568df6331
 	k8s.io/api v0.18.9
 	k8s.io/apimachinery v0.18.9
 	k8s.io/cli-runtime v0.18.9
@@ -16,7 +16,7 @@ require (
 	k8s.io/kubectl v0.18.9
 	kmodules.xyz/client-go v0.0.0-20210118094617-273ba20ad7ca
 	kmodules.xyz/custom-resources v0.0.0-20201124062543-bd8d35c21b0c
-	kubevault.dev/operator v0.4.0-beta.0.0.20201010072813-60cfdc6820a6
+	kubevault.dev/apimachinery v0.0.0-20210124211354-5738aa125d4d
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d

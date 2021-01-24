@@ -19,10 +19,10 @@ package cmds
 import (
 	"flag"
 
-	"kubevault.dev/operator/client/clientset/versioned/scheme"
+	"kubevault.dev/apimachinery/client/clientset/versioned/scheme"
 
-	v "github.com/appscode/go/version"
 	"github.com/spf13/cobra"
+	v "gomodules.xyz/x/version"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"

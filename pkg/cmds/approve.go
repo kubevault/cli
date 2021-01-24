@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"os"
 
-	engineapi "kubevault.dev/operator/apis/engine/v1alpha1"
-	enginecs "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1"
-	engineutil "kubevault.dev/operator/client/clientset/versioned/typed/engine/v1alpha1/util"
+	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
+	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
+	engineutil "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1/util"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
