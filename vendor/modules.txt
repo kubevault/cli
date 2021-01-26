@@ -41,8 +41,7 @@ github.com/evanphx/json-patch
 github.com/exponent-io/jsonpath
 # github.com/fatih/structs v1.1.0
 github.com/fatih/structs
-# github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32
-## explicit
+# github.com/ghodss/yaml v1.0.0
 github.com/ghodss/yaml
 # github.com/go-openapi/jsonpointer v0.19.3 => github.com/go-openapi/jsonpointer v0.19.3
 github.com/go-openapi/jsonpointer
