@@ -3,7 +3,6 @@ module kubevault.dev/cli
 go 1.14
 
 require (
-	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.1
 	gomodules.xyz/runtime v0.0.0-20201104200926-d838b09dda8b
