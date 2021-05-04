@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/pkg/errors v0.9.1
-	github.com/spf13/cobra v1.1.1
+	github.com/spf13/cobra v1.1.3
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/sets v0.0.0-20210218105342-2efe2fb519a2 // indirect
 	gomodules.xyz/x v0.0.3
@@ -15,7 +15,9 @@ require (
 	k8s.io/component-base v0.21.0
 	k8s.io/kubectl v0.21.0
 	kmodules.xyz/client-go v0.0.0-20210504024435-1eb80721e9b8
-	kmodules.xyz/custom-resources v0.0.0-20210504014735-4cd8925c7e05
+	kmodules.xyz/custom-resources v0.0.0-20210504034124-54c54fcdb690
+	kmodules.xyz/monitoring-agent-api v0.0.0-20210504040241-261c2428d207 // indirect
+	kmodules.xyz/offshoot-api v0.0.0-20210504040651-7951e351f0f5 // indirect
 	kubevault.dev/apimachinery v0.0.0-20210124211354-5738aa125d4d
 )
 

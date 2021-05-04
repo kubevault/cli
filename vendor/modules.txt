@@ -127,7 +127,7 @@ github.com/russross/blackfriday/v2
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
-# github.com/spf13/cobra v1.1.1
+# github.com/spf13/cobra v1.1.3
 ## explicit
 github.com/spf13/cobra
 github.com/spf13/cobra/doc
@@ -533,7 +533,7 @@ kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/tools/analytics
 kmodules.xyz/client-go/tools/cli
 kmodules.xyz/client-go/tools/clusterid
-# kmodules.xyz/custom-resources v0.0.0-20210504014735-4cd8925c7e05
+# kmodules.xyz/custom-resources v0.0.0-20210504034124-54c54fcdb690
 ## explicit
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
@@ -541,9 +541,11 @@ kmodules.xyz/custom-resources/apis/metrics
 kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a
+# kmodules.xyz/monitoring-agent-api v0.0.0-20210504040241-261c2428d207
+## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2
+# kmodules.xyz/offshoot-api v0.0.0-20210504040651-7951e351f0f5
+## explicit
 kmodules.xyz/offshoot-api/api/v1
 # kubevault.dev/apimachinery v0.0.0-20210124211354-5738aa125d4d
 ## explicit
