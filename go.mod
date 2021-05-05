@@ -1,29 +1,22 @@
 module kubevault.dev/cli
 
-go 1.14
+go 1.15
 
 require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.3
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/sets v0.0.0-20210218105342-2efe2fb519a2 // indirect
 	gomodules.xyz/x v0.0.3
 	k8s.io/api v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/cli-runtime v0.21.0
-	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/client-go v0.21.0
 	k8s.io/component-base v0.21.0
 	k8s.io/kubectl v0.21.0
 	kmodules.xyz/client-go v0.0.0-20210504024435-1eb80721e9b8
 	kmodules.xyz/custom-resources v0.0.0-20210504034124-54c54fcdb690
-	kmodules.xyz/monitoring-agent-api v0.0.0-20210504040241-261c2428d207 // indirect
-	kmodules.xyz/offshoot-api v0.0.0-20210504040651-7951e351f0f5 // indirect
-	kubevault.dev/apimachinery v0.0.0-20210124211354-5738aa125d4d
+	kubevault.dev/apimachinery v0.0.0-20210504171253-af048ed4c9f5
 )
-
-replace git.apache.org/thrift.git => github.com/apache/thrift v0.13.0
-
-replace github.com/Azure/go-autorest/autorest/azure/auth => github.com/Azure/go-autorest/autorest/azure/auth v0.2.0
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
 
@@ -108,6 +101,8 @@ replace google.golang.org/api => google.golang.org/api v0.20.0
 replace google.golang.org/genproto => google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a
 
 replace google.golang.org/grpc => google.golang.org/grpc v1.27.1
+
+replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.3.0
 
 replace helm.sh/helm/v3 => github.com/kubepack/helm/v3 v3.1.0-rc.1.0.20210503022716-7e2d4913a125
 
