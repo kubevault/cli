@@ -5,17 +5,18 @@ go 1.15
 require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.3
+	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/x v0.0.3
+	gomodules.xyz/x v0.0.4
 	k8s.io/api v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/cli-runtime v0.21.0
 	k8s.io/client-go v0.21.0
 	k8s.io/component-base v0.21.0
 	k8s.io/kubectl v0.21.0
-	kmodules.xyz/client-go v0.0.0-20210504024435-1eb80721e9b8
+	kmodules.xyz/client-go v0.0.0-20210505231546-fa4fb8e1d04e
 	kmodules.xyz/custom-resources v0.0.0-20210504034124-54c54fcdb690
-	kubevault.dev/apimachinery v0.0.0-20210504171253-af048ed4c9f5
+	kubevault.dev/apimachinery v0.0.0-20210505232652-a0cc7d66cf6a
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d

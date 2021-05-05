@@ -21,13 +21,13 @@ import (
 
 	"kubevault.dev/cli/pkg/cmds"
 
+	"gomodules.xyz/kglog"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
-	"kmodules.xyz/client-go/logs"
 )
 
 func main() {
-	logs.InitLogs()
-	defer logs.FlushLogs()
+	kglog.InitLogs()
+	defer kglog.FlushLogs()
 
 	if err := cmds.NewRootCmd().Execute(); err != nil {
 		os.Exit(1)
