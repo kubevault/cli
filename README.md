@@ -1,8 +1,7 @@
 [![Go Report Card](https://goreportcard.com/badge/kubevault.dev/cli)](https://goreportcard.com/report/kubevault.dev/cli)
 [![Build Status](https://github.com/kubevault/cli/workflows/CI/badge.svg)](https://github.com/kubevault/cli/actions?workflow=CI)
-[![codecov](https://codecov.io/gh/kubevault/cli/branch/master/graph/badge.svg)](https://codecov.io/gh/kubevault/cli)
 [![Github All Releases](https://img.shields.io/github/downloads/kubevault/cli/total.svg)](https://github.com/kubevault/cli/releases)
-[![Slack](https://slack.appscode.com/badge.svg)](https://slack.appscode.com)
+[![Slack](https://shields.io/badge/Join_Slack-salck?color=4A154B&logo=slack)](https://slack.appscode.com)
 [![Twitter](https://img.shields.io/twitter/follow/kubevault.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/intent/follow?screen_name=KubeVault)
 
 # KubeVault CLI
@@ -25,12 +24,6 @@ Want to learn how to use KubeVault? Please start [here](https://kubevault.com/do
 
 ## Contribution guidelines
 Want to help improve KubeVault? Please start [here](https://kubevault.com/docs/latest/setup/developer-guide/overview/).
-
----
-
-**KubeVault binaries collects anonymous usage statistics to help us learn how the software is being used and how we can improve it. To disable stats collection, run the operator with the flag** `--enable-analytics=false`.
-
----
 
 ## Support
 
