@@ -20,18 +20,28 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
-// +kubebuilder:validation:Enum=Provisioning;DataRestoring;Ready;Critical;NotReady;Halted;Sealed;Unsealed;Initializing;Initialized
+const (
+	VaultServerContainerName   = "vault"
+	VaultUnsealerContainerName = "unsealer"
+	VaultExporterContainerName = "exporter"
+)
+
+// +kubebuilder:validation:Enum=Initializing;Unsealing;Sealed;Ready;NotReady;Critical
 type VaultServerPhase string
 
 const (
+	// used for VaultServer that are Initializing
+	VaultServerPhaseInitializing VaultServerPhase = "Initializing"
+	// used for VaultServer that are Unsealing
+	VaultServerPhaseUnsealing VaultServerPhase = "Unsealing"
 	// used for VaultServer that are sealed
 	VaultServerPhaseSealed VaultServerPhase = "Sealed"
-	// used for VaultServer that are unsealed
-	VaultServerPhaseUnsealed VaultServerPhase = "Unsealed"
-	// used for VaultServer that are initializing
-	VaultServerPhaseInitializing VaultServerPhase = "Initializing"
-	// used for VaultServer that are initialized
-	VaultServerPhaseInitialized VaultServerPhase = "Initialized"
+	// used for VaultServer that are Ready
+	VaultServerPhaseReady VaultServerPhase = "Ready"
+	// used for VaultServer that are NotReady
+	VaultServerPhaseNotReady VaultServerPhase = "NotReady"
+	// used for VaultServer that are Critical
+	VaultServerPhaseCritical VaultServerPhase = "Critical"
 )
 
 // +kubebuilder:validation:Enum=Halt;Delete;WipeOut;DoNotTerminate
@@ -66,11 +76,30 @@ type NamedServiceTemplateSpec struct {
 	ofst.ServiceTemplateSpec `json:",inline,omitempty" protobuf:"bytes,2,opt,name=serviceTemplateSpec"`
 }
 
-// +kubebuilder:validation:Enum=ca;server;client;
+// +kubebuilder:validation:Enum=ca;server;client;storage
 type VaultCertificateAlias string
 
 const (
-	VaultCACert     VaultCertificateAlias = "ca"
-	VaultServerCert VaultCertificateAlias = "server"
-	VaultClientCert VaultCertificateAlias = "client"
+	VaultCACert      VaultCertificateAlias = "ca"
+	VaultServerCert  VaultCertificateAlias = "server"
+	VaultClientCert  VaultCertificateAlias = "client"
+	VaultStorageCert VaultCertificateAlias = "storage"
+)
+
+// +kubebuilder:validation:Enum=inmem;etcd;gcs;s3;azure;postgresql;mysql;file;dynamodb;swift;consul;raft
+type VaultServerBackend string
+
+const (
+	VaultServerInmem      VaultServerBackend = "inmem"
+	VaultServerEtcd       VaultServerBackend = "etcd"
+	VaultServerGcs        VaultServerBackend = "gcs"
+	VaultServerS3         VaultServerBackend = "s3"
+	VaultServerAzure      VaultServerBackend = "azure"
+	VaultServerPostgreSQL VaultServerBackend = "postgresql"
+	VaultServerMySQL      VaultServerBackend = "mysql"
+	VaultServerFile       VaultServerBackend = "file"
+	VaultServerDynamoDB   VaultServerBackend = "dynamodb"
+	VaultServerSwift      VaultServerBackend = "swift"
+	VaultServerConsul     VaultServerBackend = "consul"
+	VaultServerRaft       VaultServerBackend = "raft"
 )
