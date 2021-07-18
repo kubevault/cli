@@ -166,11 +166,11 @@ ifeq ($(COMPRESS),yes)
 ifeq ($(OS),windows)
 	@echo "compressing $(OUTBIN)";                               \
 	cd bin;                                                      \
-	zip -j $(subst .exe,,$(BIN))-$(OS)-$(ARCH).zip $(subst .exe,,$(BIN))-$(OS)-$(ARCH).exe ../LICENSE
+	zip -j $(subst .exe,,$(BIN))-$(OS)-$(ARCH).zip $(subst .exe,,$(BIN))-$(OS)-$(ARCH).exe ../LICENSE.md
 else
 	@echo "compressing $(OUTBIN)";                               \
 	cd bin;                                                      \
-	tar -czvf $(BIN)-$(OS)-$(ARCH).tar.gz $(BIN)-$(OS)-$(ARCH) ../LICENSE
+	tar -czvf $(BIN)-$(OS)-$(ARCH).tar.gz $(BIN)-$(OS)-$(ARCH) ../LICENSE.md
 endif
 endif
 	@echo
