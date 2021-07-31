@@ -566,7 +566,7 @@ kmodules.xyz/custom-resources/crds
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20210618005544-5217a24765da
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.4.0-rc.0.0.20210727072740-777c84acb2eb
+# kubevault.dev/apimachinery v0.4.0
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
