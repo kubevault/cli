@@ -14,7 +14,7 @@ require (
 	k8s.io/client-go v0.21.1
 	k8s.io/component-base v0.21.1
 	k8s.io/kubectl v0.21.0
-	kmodules.xyz/client-go v0.0.0-20210816185215-dc29246d1e2b
+	kmodules.xyz/client-go v0.0.0-20210816193105-1158390a19cd
 	kmodules.xyz/custom-resources v0.0.0-20210812193424-1631fae03a1a
 	kubevault.dev/apimachinery v0.4.1-0.20210816190511-9d6b8fcdf372
 )
