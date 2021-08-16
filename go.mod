@@ -7,16 +7,16 @@ require (
 	github.com/spf13/cobra v1.1.3
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/x v0.0.5
+	gomodules.xyz/x v0.0.7
 	k8s.io/api v0.21.1
 	k8s.io/apimachinery v0.21.1
 	k8s.io/cli-runtime v0.21.1
 	k8s.io/client-go v0.21.1
 	k8s.io/component-base v0.21.1
 	k8s.io/kubectl v0.21.0
-	kmodules.xyz/client-go v0.0.0-20210719120358-dd0503cf99cf
-	kmodules.xyz/custom-resources v0.0.0-20210727045435-83db827677cf
-	kubevault.dev/apimachinery v0.4.0
+	kmodules.xyz/client-go v0.0.0-20210816185215-dc29246d1e2b
+	kmodules.xyz/custom-resources v0.0.0-20210812193424-1631fae03a1a
+	kubevault.dev/apimachinery v0.4.1-0.20210816190511-9d6b8fcdf372
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
