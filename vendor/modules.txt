@@ -538,7 +538,7 @@ k8s.io/utils/exec
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20210816193105-1158390a19cd
+# kmodules.xyz/client-go v0.0.0-20210827153326-54ead9c6225f
 ## explicit
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -562,11 +562,12 @@ kmodules.xyz/custom-resources/apis/metrics
 kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.0.0-20210618110729-9cd872c66513
+# kmodules.xyz/monitoring-agent-api v0.0.0-20210827175850-d00b079c067b
+## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20210804100837-d0388be3e60d
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.4.1-0.20210816190511-9d6b8fcdf372
+# kubevault.dev/apimachinery v0.4.1-0.20210816195404-19bbdbb1b098
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
