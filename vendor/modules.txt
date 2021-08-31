@@ -563,11 +563,10 @@ kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
 # kmodules.xyz/monitoring-agent-api v0.0.0-20210827175850-d00b079c067b
-## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20210804100837-d0388be3e60d
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.4.1-0.20210816195404-19bbdbb1b098
+# kubevault.dev/apimachinery v0.4.1-0.20210830130923-7e6e30869571
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
