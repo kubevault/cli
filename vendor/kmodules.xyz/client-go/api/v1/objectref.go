@@ -16,27 +16,13 @@ limitations under the License.
 
 package v1
 
-func (agent *AgentSpec) SetDefaults() {
-	if agent == nil {
-		return
-	}
-
-	if agent.Agent.Vendor() == VendorPrometheus {
-		if agent.Prometheus == nil {
-			agent.Prometheus = &PrometheusSpec{}
-		}
-		if agent.Prometheus.Exporter.Port == 0 {
-			agent.Prometheus.Exporter.Port = PrometheusExporterPortNumber
-		}
-	}
-}
-
-func IsKnownAgentType(at AgentType) bool {
-	switch at {
-	case AgentPrometheus,
-		AgentPrometheusOperator,
-		AgentPrometheusBuiltin:
-		return true
-	}
-	return false
+// ObjectReference contains enough information to let you inspect or modify the referred object.
+type ObjectReference struct {
+	// Namespace of the referent.
+	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+	// +optional
+	Namespace string `json:"namespace,omitempty" protobuf:"bytes,1,opt,name=namespace"`
+	// Name of the referent.
+	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+	Name string `json:"name" protobuf:"bytes,2,opt,name=name"`
 }
