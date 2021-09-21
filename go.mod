@@ -7,14 +7,14 @@ require (
 	github.com/spf13/cobra v1.1.3
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/x v0.0.7
+	gomodules.xyz/x v0.0.8
 	k8s.io/api v0.21.1
 	k8s.io/apimachinery v0.21.1
 	k8s.io/cli-runtime v0.21.1
 	k8s.io/client-go v0.21.1
 	k8s.io/component-base v0.21.1
 	k8s.io/kubectl v0.21.0
-	kmodules.xyz/client-go v0.0.0-20210831030638-b1d662179991
+	kmodules.xyz/client-go v0.0.0-20210909114628-15cac6c74063
 	kmodules.xyz/custom-resources v0.0.0-20210829135624-c63be82e13c0
 	kubevault.dev/apimachinery v0.4.1-0.20210914203500-d2e0997da544
 )
