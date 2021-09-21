@@ -18,19 +18,11 @@ limitations under the License.
 
 package v1alpha1
 
-type AWSAccessKeyRequestExpansion interface{}
-
 type AWSRoleExpansion interface{}
-
-type AzureAccessKeyRequestExpansion interface{}
 
 type AzureRoleExpansion interface{}
 
-type DatabaseAccessRequestExpansion interface{}
-
 type ElasticsearchRoleExpansion interface{}
-
-type GCPAccessKeyRequestExpansion interface{}
 
 type GCPRoleExpansion interface{}
 
@@ -40,4 +32,8 @@ type MySQLRoleExpansion interface{}
 
 type PostgresRoleExpansion interface{}
 
+type SecretAccessRequestExpansion interface{}
+
 type SecretEngineExpansion interface{}
+
+type SecretRoleBindingExpansion interface{}

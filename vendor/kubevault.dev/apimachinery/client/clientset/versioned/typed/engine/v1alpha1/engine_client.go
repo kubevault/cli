@@ -27,18 +27,16 @@ import (
 
 type EngineV1alpha1Interface interface {
 	RESTClient() rest.Interface
-	AWSAccessKeyRequestsGetter
 	AWSRolesGetter
-	AzureAccessKeyRequestsGetter
 	AzureRolesGetter
-	DatabaseAccessRequestsGetter
 	ElasticsearchRolesGetter
-	GCPAccessKeyRequestsGetter
 	GCPRolesGetter
 	MongoDBRolesGetter
 	MySQLRolesGetter
 	PostgresRolesGetter
+	SecretAccessRequestsGetter
 	SecretEnginesGetter
+	SecretRoleBindingsGetter
 }
 
 // EngineV1alpha1Client is used to interact with features provided by the engine.kubevault.com group.
@@ -46,32 +44,16 @@ type EngineV1alpha1Client struct {
 	restClient rest.Interface
 }
 
-func (c *EngineV1alpha1Client) AWSAccessKeyRequests(namespace string) AWSAccessKeyRequestInterface {
-	return newAWSAccessKeyRequests(c, namespace)
-}
-
 func (c *EngineV1alpha1Client) AWSRoles(namespace string) AWSRoleInterface {
 	return newAWSRoles(c, namespace)
-}
-
-func (c *EngineV1alpha1Client) AzureAccessKeyRequests(namespace string) AzureAccessKeyRequestInterface {
-	return newAzureAccessKeyRequests(c, namespace)
 }
 
 func (c *EngineV1alpha1Client) AzureRoles(namespace string) AzureRoleInterface {
 	return newAzureRoles(c, namespace)
 }
 
-func (c *EngineV1alpha1Client) DatabaseAccessRequests(namespace string) DatabaseAccessRequestInterface {
-	return newDatabaseAccessRequests(c, namespace)
-}
-
 func (c *EngineV1alpha1Client) ElasticsearchRoles(namespace string) ElasticsearchRoleInterface {
 	return newElasticsearchRoles(c, namespace)
-}
-
-func (c *EngineV1alpha1Client) GCPAccessKeyRequests(namespace string) GCPAccessKeyRequestInterface {
-	return newGCPAccessKeyRequests(c, namespace)
 }
 
 func (c *EngineV1alpha1Client) GCPRoles(namespace string) GCPRoleInterface {
@@ -90,8 +72,16 @@ func (c *EngineV1alpha1Client) PostgresRoles(namespace string) PostgresRoleInter
 	return newPostgresRoles(c, namespace)
 }
 
+func (c *EngineV1alpha1Client) SecretAccessRequests(namespace string) SecretAccessRequestInterface {
+	return newSecretAccessRequests(c, namespace)
+}
+
 func (c *EngineV1alpha1Client) SecretEngines(namespace string) SecretEngineInterface {
 	return newSecretEngines(c, namespace)
+}
+
+func (c *EngineV1alpha1Client) SecretRoleBindings(namespace string) SecretRoleBindingInterface {
+	return newSecretRoleBindings(c, namespace)
 }
 
 // NewForConfig creates a new EngineV1alpha1Client for the given config.

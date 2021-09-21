@@ -22,10 +22,10 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ GCPAccessKeyRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceGCPAccessKeyRequests))
+func (_ SecretAccessRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceSecretAccessRequests))
 }
 
-func (d GCPAccessKeyRequest) IsValid() error {
+func (d SecretAccessRequest) IsValid() error {
 	return nil
 }

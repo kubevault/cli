@@ -29,32 +29,11 @@ import (
 )
 
 var (
-	awsDeniedCond = kmapi.Condition{
+	secretAccessDeniedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestDenied,
 		Status:  core.ConditionTrue,
 		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny awsaccesskeyrequest",
-	}
-
-	dbDeniedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestDenied,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny databaseaccessrequest",
-	}
-
-	gcpDeniedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestDenied,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny gcpaccesskeyrequest",
-	}
-
-	azureDeniedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestDenied,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny azureaccesskeyrequest",
+		Message: "This was denied by: kubectl vault deny secretaccessrequest",
 	}
 )
 

@@ -34,19 +34,19 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchDatabaseAccessRequest(
+func CreateOrPatchSecretRoleBinding(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(alert *api.DatabaseAccessRequest) *api.DatabaseAccessRequest,
+	transform func(alert *api.SecretRoleBinding) *api.SecretRoleBinding,
 	opts metav1.PatchOptions,
-) (*api.DatabaseAccessRequest, kutil.VerbType, error) {
-	cur, err := c.DatabaseAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+) (*api.SecretRoleBinding, kutil.VerbType, error) {
+	cur, err := c.SecretRoleBindings(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
-		klog.V(3).Infof("Creating DatabaseAccessRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.DatabaseAccessRequests(meta.Namespace).Create(ctx, transform(&api.DatabaseAccessRequest{
+		klog.V(3).Infof("Creating SecretRoleBinding %s/%s.", meta.Namespace, meta.Name)
+		out, err := c.SecretRoleBindings(meta.Namespace).Create(ctx, transform(&api.SecretRoleBinding{
 			TypeMeta: metav1.TypeMeta{
-				Kind:       api.ResourceKindDatabaseAccessRequest,
+				Kind:       api.ResourceKindSecretRoleBinding,
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
@@ -59,25 +59,25 @@ func CreateOrPatchDatabaseAccessRequest(
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchDatabaseAccessRequest(ctx, c, cur, transform, opts)
+	return PatchSecretRoleBinding(ctx, c, cur, transform, opts)
 }
 
-func PatchDatabaseAccessRequest(
+func PatchSecretRoleBinding(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
-	cur *api.DatabaseAccessRequest,
-	transform func(*api.DatabaseAccessRequest) *api.DatabaseAccessRequest,
+	cur *api.SecretRoleBinding,
+	transform func(*api.SecretRoleBinding) *api.SecretRoleBinding,
 	opts metav1.PatchOptions,
-) (*api.DatabaseAccessRequest, kutil.VerbType, error) {
-	return PatchDatabaseAccessRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
+) (*api.SecretRoleBinding, kutil.VerbType, error) {
+	return PatchSecretRoleBindingObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchDatabaseAccessRequestObject(
+func PatchSecretRoleBindingObject(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
-	cur, mod *api.DatabaseAccessRequest,
+	cur, mod *api.SecretRoleBinding,
 	opts metav1.PatchOptions,
-) (*api.DatabaseAccessRequest, kutil.VerbType, error) {
+) (*api.SecretRoleBinding, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -95,47 +95,47 @@ func PatchDatabaseAccessRequestObject(
 	if len(patch) == 0 || string(patch) == "{}" {
 		return cur, kutil.VerbUnchanged, nil
 	}
-	klog.V(3).Infof("Patching DatabaseAccessRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.DatabaseAccessRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
+	klog.V(3).Infof("Patching SecretRoleBinding %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
+	out, err := c.SecretRoleBindings(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateDatabaseAccessRequest(
+func TryUpdateSecretRoleBinding(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.DatabaseAccessRequest) *api.DatabaseAccessRequest,
+	transform func(*api.SecretRoleBinding) *api.SecretRoleBinding,
 	opts metav1.UpdateOptions,
-) (result *api.DatabaseAccessRequest, err error) {
+) (result *api.SecretRoleBinding, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.DatabaseAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+		cur, e2 := c.SecretRoleBindings(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = c.DatabaseAccessRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
+			result, e2 = c.SecretRoleBindings(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
-		klog.Errorf("Attempt %d failed to update DatabaseAccessRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
+		klog.Errorf("Attempt %d failed to update SecretRoleBinding %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
 
 	if err != nil {
-		err = errors.Errorf("failed to update DatabaseAccessRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
+		err = errors.Errorf("failed to update SecretRoleBinding %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
 	return
 }
 
-func UpdateDatabaseAccessRequestStatus(
+func UpdateSecretRoleBindingStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.DatabaseAccessRequestStatus) *api.DatabaseAccessRequestStatus,
+	transform func(*api.SecretRoleBindingStatus) *api.SecretRoleBindingStatus,
 	opts metav1.UpdateOptions,
-) (result *api.DatabaseAccessRequest, err error) {
-	apply := func(x *api.DatabaseAccessRequest) *api.DatabaseAccessRequest {
-		return &api.DatabaseAccessRequest{
+) (result *api.SecretRoleBinding, err error) {
+	apply := func(x *api.SecretRoleBinding) *api.SecretRoleBinding {
+		return &api.SecretRoleBinding{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
@@ -144,16 +144,16 @@ func UpdateDatabaseAccessRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.DatabaseAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+	cur, err := c.SecretRoleBindings(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.DatabaseAccessRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
+		result, e2 = c.SecretRoleBindings(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.DatabaseAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+			latest, e3 := c.SecretRoleBindings(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest
@@ -170,7 +170,7 @@ func UpdateDatabaseAccessRequestStatus(
 	})
 
 	if err != nil {
-		err = fmt.Errorf("failed to update status of DatabaseAccessRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
+		err = fmt.Errorf("failed to update status of SecretRoleBinding %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
 	return
 }

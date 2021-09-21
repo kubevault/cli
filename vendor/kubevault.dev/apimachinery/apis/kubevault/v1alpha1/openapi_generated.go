@@ -339,6 +339,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.CertificatePrivateKey":                         schema_kmodulesxyz_client_go_api_v1_CertificatePrivateKey(ref),
 		"kmodules.xyz/client-go/api/v1.CertificateSpec":                               schema_kmodulesxyz_client_go_api_v1_CertificateSpec(ref),
 		"kmodules.xyz/client-go/api/v1.Condition":                                     schema_kmodulesxyz_client_go_api_v1_Condition(ref),
+		"kmodules.xyz/client-go/api/v1.ObjectReference":                               schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.ResourceID":                                    schema_kmodulesxyz_client_go_api_v1_ResourceID(ref),
 		"kmodules.xyz/client-go/api/v1.TLSConfig":                                     schema_kmodulesxyz_client_go_api_v1_TLSConfig(ref),
 		"kmodules.xyz/client-go/api/v1.X509Subject":                                   schema_kmodulesxyz_client_go_api_v1_X509Subject(ref),
@@ -377,6 +378,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AllowedSecretEngines":     schema_apimachinery_apis_kubevault_v1alpha1_AllowedSecretEngines(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AuthConfig":               schema_apimachinery_apis_kubevault_v1alpha1_AuthConfig(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AuthMethod":               schema_apimachinery_apis_kubevault_v1alpha1_AuthMethod(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AuthMethodStatus":         schema_apimachinery_apis_kubevault_v1alpha1_AuthMethodStatus(ref),
@@ -398,6 +400,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.PostgreSQLSpec":           schema_apimachinery_apis_kubevault_v1alpha1_PostgreSQLSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.RaftSpec":                 schema_apimachinery_apis_kubevault_v1alpha1_RaftSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.S3Spec":                   schema_apimachinery_apis_kubevault_v1alpha1_S3Spec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.SecretEngineNamespaces":   schema_apimachinery_apis_kubevault_v1alpha1_SecretEngineNamespaces(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.SwiftSpec":                schema_apimachinery_apis_kubevault_v1alpha1_SwiftSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.TLSPolicy":                schema_apimachinery_apis_kubevault_v1alpha1_TLSPolicy(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.UnsealerSpec":             schema_apimachinery_apis_kubevault_v1alpha1_UnsealerSpec(ref),
@@ -16708,6 +16711,35 @@ func schema_kmodulesxyz_client_go_api_v1_Condition(ref common.ReferenceCallback)
 	}
 }
 
+func schema_kmodulesxyz_client_go_api_v1_ObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectReference contains enough information to let you inspect or modify the referred object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_kmodulesxyz_client_go_api_v1_ResourceID(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18581,6 +18613,42 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha1_AllowedSecretEngines(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AllowedSecretEngines defines which Secret Engines may be attached to this Listener.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespaces": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespaces indicates namespaces from which Secret Engines may be attached to this Listener. This is restricted to the namespace of this VaultServer by default.",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha1.SecretEngineNamespaces"),
+						},
+					},
+					"secretEngines": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretEngines specifies the types of Secret Engines that are allowed to bind to this VaultServer. When unspecified or empty, all types of Secret Engines are allowed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubevault.dev/apimachinery/apis/kubevault/v1alpha1.SecretEngineNamespaces"},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha1_AuthConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19744,6 +19812,34 @@ func schema_apimachinery_apis_kubevault_v1alpha1_S3Spec(ref common.ReferenceCall
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha1_SecretEngineNamespaces(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SecretEngineNamespaces indicate which namespaces Secret Engines should be selected from.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"from": {
+						SchemaProps: spec.SchemaProps{
+							Description: "From indicates where Secret Engines will be selected for this VaultServer. Possible values are: * All: Secret Engines in all namespaces may be used by this VaultServer. * Selector: Secret Engines in namespaces selected by the selector may be used by\n  this VaultServer.\n* Same: Only Secret Engines in the same namespace may be used by this VaultServer.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selector must be specified when From is set to \"Selector\". In that case, only Secret Engines in Namespaces matching this Selector will be selected by this VaultServer. This field is ignored for other values of \"From\".",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha1_SwiftSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20139,12 +20235,18 @@ func schema_apimachinery_apis_kubevault_v1alpha1_VaultServerSpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"allowedSecretEngines": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AllowedSecretEngines defines the types of Secret Engines that MAY be attached to a Listener and the trusted namespaces where those Route resources MAY be present.\n\nAlthough a client request may match multiple route rules, only one rule may ultimately receive the request. Matching precedence MUST be determined in order of the following criteria:\n\n* The most specific match as defined by the Route type. * The oldest Route based on creation timestamp. For example, a Route with\n  a creation timestamp of \"2020-09-08 01:02:03\" is given precedence over\n  a Route with a creation timestamp of \"2020-09-08 01:02:04\".\n* If everything else is equivalent, the Route appearing first in\n  alphabetical order (namespace/name) should be given precedence. For\n  example, foo/bar is given precedence over foo/baz.\n\nAll valid rules within a Route attached to this Listener should be implemented. Invalid Route rules can be ignored (sometimes that will mean the full Route). If a Route rule transitions from valid to invalid, support for that Route rule should be dropped to ensure consistency. For example, even if a filter specified by a Route rule is invalid, the rest of the rules within that Route should still be supported.\n\nSupport: Core",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AllowedSecretEngines"),
+						},
+					},
 				},
 				Required: []string{"version", "backend"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AuthMethod", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.BackendStorageSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.NamedServiceTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.UnsealerSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AllowedSecretEngines", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.AuthMethod", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.BackendStorageSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.NamedServiceTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha1.UnsealerSpec"},
 	}
 }
 

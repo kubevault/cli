@@ -131,7 +131,7 @@ func UpdateGCPRoleStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.GCPRoleStatus) *api.GCPRoleStatus,
+	transform func(*api.RoleStatus) *api.RoleStatus,
 	opts metav1.UpdateOptions,
 ) (result *api.GCPRole, err error) {
 	apply := func(x *api.GCPRole) *api.GCPRole {

@@ -131,7 +131,7 @@ func UpdateMongoDBRoleStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MongoDBRoleStatus) *api.MongoDBRoleStatus,
+	transform func(*api.RoleStatus) *api.RoleStatus,
 	opts metav1.UpdateOptions,
 ) (result *api.MongoDBRole, err error) {
 	apply := func(x *api.MongoDBRole) *api.MongoDBRole {
