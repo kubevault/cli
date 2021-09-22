@@ -129,9 +129,12 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 			if isApproveReq {
 				cond = secretAccessApprovedCond
 			}
+
 			if cond == secretAccessDeniedCond && kmapi.IsConditionTrue(obj.Status.Conditions, kmapi.ConditionRequestApproved) {
 				return errors.New("Failed to update request status to 'Deny'\nRequest already Approved.")
 			}
+
+			cond.ObservedGeneration = obj.Generation
 			err2 = UpdateSecretAccessRequestCondition(engineClient, obj.ObjectMeta, cond)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -148,6 +151,7 @@ func UpdateSecretAccessRequestCondition(c enginecs.EngineV1alpha1Interface, req 
 	_, err := engineutil.UpdateSecretAccessRequestStatus(context.TODO(), c, req, func(in *engineapi.SecretAccessRequestStatus) *engineapi.SecretAccessRequestStatus {
 		cond.LastTransitionTime = metav1.Now()
 		in.Conditions = kmapi.SetCondition(in.Conditions, cond)
+		in.ObservedGeneration = req.Generation
 		return in
 	}, metav1.UpdateOptions{})
 	return err
