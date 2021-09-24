@@ -34,19 +34,19 @@ import (
 	kutil "kmodules.xyz/client-go"
 )
 
-func CreateOrPatchAWSAccessKeyRequest(
+func CreateOrPatchSecretAccessRequest(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(alert *api.AWSAccessKeyRequest) *api.AWSAccessKeyRequest,
+	transform func(alert *api.SecretAccessRequest) *api.SecretAccessRequest,
 	opts metav1.PatchOptions,
-) (*api.AWSAccessKeyRequest, kutil.VerbType, error) {
-	cur, err := c.AWSAccessKeyRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+) (*api.SecretAccessRequest, kutil.VerbType, error) {
+	cur, err := c.SecretAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if kerr.IsNotFound(err) {
-		klog.V(3).Infof("Creating AWSAccessKeyRequest %s/%s.", meta.Namespace, meta.Name)
-		out, err := c.AWSAccessKeyRequests(meta.Namespace).Create(ctx, transform(&api.AWSAccessKeyRequest{
+		klog.V(3).Infof("Creating SecretAccessRequest %s/%s.", meta.Namespace, meta.Name)
+		out, err := c.SecretAccessRequests(meta.Namespace).Create(ctx, transform(&api.SecretAccessRequest{
 			TypeMeta: metav1.TypeMeta{
-				Kind:       api.ResourceKindAWSAccessKeyRequest,
+				Kind:       api.ResourceKindSecretAccessRequest,
 				APIVersion: api.SchemeGroupVersion.String(),
 			},
 			ObjectMeta: meta,
@@ -59,25 +59,25 @@ func CreateOrPatchAWSAccessKeyRequest(
 	} else if err != nil {
 		return nil, kutil.VerbUnchanged, err
 	}
-	return PatchAWSAccessKeyRequest(ctx, c, cur, transform, opts)
+	return PatchSecretAccessRequest(ctx, c, cur, transform, opts)
 }
 
-func PatchAWSAccessKeyRequest(
+func PatchSecretAccessRequest(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
-	cur *api.AWSAccessKeyRequest,
-	transform func(*api.AWSAccessKeyRequest) *api.AWSAccessKeyRequest,
+	cur *api.SecretAccessRequest,
+	transform func(*api.SecretAccessRequest) *api.SecretAccessRequest,
 	opts metav1.PatchOptions,
-) (*api.AWSAccessKeyRequest, kutil.VerbType, error) {
-	return PatchAWSAccessKeyRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
+) (*api.SecretAccessRequest, kutil.VerbType, error) {
+	return PatchSecretAccessRequestObject(ctx, c, cur, transform(cur.DeepCopy()), opts)
 }
 
-func PatchAWSAccessKeyRequestObject(
+func PatchSecretAccessRequestObject(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
-	cur, mod *api.AWSAccessKeyRequest,
+	cur, mod *api.SecretAccessRequest,
 	opts metav1.PatchOptions,
-) (*api.AWSAccessKeyRequest, kutil.VerbType, error) {
+) (*api.SecretAccessRequest, kutil.VerbType, error) {
 	curJson, err := json.Marshal(cur)
 	if err != nil {
 		return nil, kutil.VerbUnchanged, err
@@ -95,47 +95,47 @@ func PatchAWSAccessKeyRequestObject(
 	if len(patch) == 0 || string(patch) == "{}" {
 		return cur, kutil.VerbUnchanged, nil
 	}
-	klog.V(3).Infof("Patching AWSAccessKeyRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
-	out, err := c.AWSAccessKeyRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
+	klog.V(3).Infof("Patching SecretAccessRequest %s/%s with %s.", cur.Namespace, cur.Name, string(patch))
+	out, err := c.SecretAccessRequests(cur.Namespace).Patch(ctx, cur.Name, types.MergePatchType, patch, opts)
 	return out, kutil.VerbPatched, err
 }
 
-func TryUpdateAWSAccessKeyRequest(
+func TryUpdateSecretAccessRequest(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.AWSAccessKeyRequest) *api.AWSAccessKeyRequest,
+	transform func(*api.SecretAccessRequest) *api.SecretAccessRequest,
 	opts metav1.UpdateOptions,
-) (result *api.AWSAccessKeyRequest, err error) {
+) (result *api.SecretAccessRequest, err error) {
 	attempt := 0
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
-		cur, e2 := c.AWSAccessKeyRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+		cur, e2 := c.SecretAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
 			return false, e2
 		} else if e2 == nil {
-			result, e2 = c.AWSAccessKeyRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
+			result, e2 = c.SecretAccessRequests(cur.Namespace).Update(ctx, transform(cur.DeepCopy()), opts)
 			return e2 == nil, nil
 		}
-		klog.Errorf("Attempt %d failed to update AWSAccessKeyRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
+		klog.Errorf("Attempt %d failed to update SecretAccessRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
 
 	if err != nil {
-		err = errors.Errorf("failed to update AWSAccessKeyRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
+		err = errors.Errorf("failed to update SecretAccessRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
 	return
 }
 
-func UpdateAWSAccessKeyRequestStatus(
+func UpdateSecretAccessRequestStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.AWSAccessKeyRequestStatus) *api.AWSAccessKeyRequestStatus,
+	transform func(*api.SecretAccessRequestStatus) *api.SecretAccessRequestStatus,
 	opts metav1.UpdateOptions,
-) (result *api.AWSAccessKeyRequest, err error) {
-	apply := func(x *api.AWSAccessKeyRequest) *api.AWSAccessKeyRequest {
-		return &api.AWSAccessKeyRequest{
+) (result *api.SecretAccessRequest, err error) {
+	apply := func(x *api.SecretAccessRequest) *api.SecretAccessRequest {
+		return &api.SecretAccessRequest{
 			TypeMeta:   x.TypeMeta,
 			ObjectMeta: x.ObjectMeta,
 			Spec:       x.Spec,
@@ -144,16 +144,16 @@ func UpdateAWSAccessKeyRequestStatus(
 	}
 
 	attempt := 0
-	cur, err := c.AWSAccessKeyRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+	cur, err := c.SecretAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
 		attempt++
 		var e2 error
-		result, e2 = c.AWSAccessKeyRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
+		result, e2 = c.SecretAccessRequests(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
 		if kerr.IsConflict(e2) {
-			latest, e3 := c.AWSAccessKeyRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
+			latest, e3 := c.SecretAccessRequests(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 			switch {
 			case e3 == nil:
 				cur = latest
@@ -170,7 +170,7 @@ func UpdateAWSAccessKeyRequestStatus(
 	})
 
 	if err != nil {
-		err = fmt.Errorf("failed to update status of AWSAccessKeyRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
+		err = fmt.Errorf("failed to update status of SecretAccessRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
 	return
 }

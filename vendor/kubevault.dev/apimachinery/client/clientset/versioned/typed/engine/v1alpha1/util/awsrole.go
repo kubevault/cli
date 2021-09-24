@@ -131,7 +131,7 @@ func UpdateAWSRoleStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.AWSRoleStatus) *api.AWSRoleStatus,
+	transform func(status *api.RoleStatus) *api.RoleStatus,
 	opts metav1.UpdateOptions,
 ) (result *api.AWSRole, err error) {
 	apply := func(x *api.AWSRole) *api.AWSRole {

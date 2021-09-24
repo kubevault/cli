@@ -19,8 +19,6 @@ package v1alpha1
 import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kmapi "kmodules.xyz/client-go/api/v1"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
 
 const (
@@ -41,23 +39,14 @@ const (
 type ElasticsearchRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              ElasticsearchRoleSpec   `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            ElasticsearchRoleStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec              ElasticsearchRoleSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status            RoleStatus            `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
 // ElasticsearchRoleSpec contains connection information, Elasticsearch role info etc
 type ElasticsearchRoleSpec struct {
-	// VaultRef is the name of a AppBinding referencing to a Vault Server
-	VaultRef core.LocalObjectReference `json:"vaultRef" protobuf:"bytes,1,opt,name=vaultRef"`
-
-	// DatabaseRef specifies the database appbinding reference in any namespace
-	DatabaseRef *appcat.AppReference `json:"databaseRef,omitempty" protobuf:"bytes,2,opt,name=databaseRef"`
-
-	// Specifies the database name under which the role will be created
-	DatabaseName string `json:"databaseName,omitempty" protobuf:"bytes,3,opt,name=databaseName"`
-
-	// Specifies the path where secret engine is enabled
-	Path string `json:"path,omitempty" protobuf:"bytes,4,opt,name=path"`
+	// SecretEngineRef is the name of a Secret Engine
+	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef" protobuf:"bytes,1,opt,name=secretEngineRef"`
 
 	// links:
 	// 	- https://www.vaultproject.io/api/secret/databases/index.html
@@ -66,20 +55,20 @@ type ElasticsearchRoleSpec struct {
 	// Specifies the TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to system/engine default TTL time
-	DefaultTTL string `json:"defaultTTL,omitempty" protobuf:"bytes,5,opt,name=defaultTTL"`
+	DefaultTTL string `json:"defaultTTL,omitempty" protobuf:"bytes,2,opt,name=defaultTTL"`
 
 	// Specifies the maximum TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to system/engine default TTL time.
-	MaxTTL string `json:"maxTTL,omitempty" protobuf:"bytes,6,opt,name=maxTTL"`
+	MaxTTL string `json:"maxTTL,omitempty" protobuf:"bytes,3,opt,name=maxTTL"`
 
 	// https://www.vaultproject.io/api/secret/databases/elasticdb.html#creation_statements
 	// Specifies the database statements executed to create and configure a user.
-	CreationStatements []string `json:"creationStatements" protobuf:"bytes,7,rep,name=creationStatements"`
+	CreationStatements []string `json:"creationStatements" protobuf:"bytes,4,rep,name=creationStatements"`
 
 	// https://www.vaultproject.io/api/secret/databases/elasticdb.html#revocation_statements
 	// Specifies the database statements to be executed to revoke a user.
-	RevocationStatements []string `json:"revocationStatements,omitempty" protobuf:"bytes,8,rep,name=revocationStatements"`
+	RevocationStatements []string `json:"revocationStatements,omitempty" protobuf:"bytes,5,rep,name=revocationStatements"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -90,17 +79,4 @@ type ElasticsearchRoleList struct {
 
 	// Items is a list of ElasticsearchRole objects
 	Items []ElasticsearchRole `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
-}
-
-type ElasticsearchRolePhase string
-
-type ElasticsearchRoleStatus struct {
-	Phase ElasticsearchRolePhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=ElasticsearchRolePhase"`
-
-	// ObservedGeneration is the most recent generation observed for this ElasticsearchRole. It corresponds to the
-	// ElasticsearchRole's generation, which is updated on mutation by the API Server.
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
-
-	// Represents the latest available observations of a ElasticsearchRole current state.
-	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
 }

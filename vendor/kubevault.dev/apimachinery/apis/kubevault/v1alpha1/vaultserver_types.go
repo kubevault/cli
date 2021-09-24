@@ -105,6 +105,34 @@ type VaultServerSpec struct {
 	// TerminationPolicy controls the delete operation for vault server
 	// +optional
 	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,13,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+
+	// AllowedSecretEngines defines the types of Secret Engines that MAY be attached to a
+	// Listener and the trusted namespaces where those Route resources MAY be
+	// present.
+	//
+	// Although a client request may match multiple route rules, only one rule
+	// may ultimately receive the request. Matching precedence MUST be
+	// determined in order of the following criteria:
+	//
+	// * The most specific match as defined by the Route type.
+	// * The oldest Route based on creation timestamp. For example, a Route with
+	//   a creation timestamp of "2020-09-08 01:02:03" is given precedence over
+	//   a Route with a creation timestamp of "2020-09-08 01:02:04".
+	// * If everything else is equivalent, the Route appearing first in
+	//   alphabetical order (namespace/name) should be given precedence. For
+	//   example, foo/bar is given precedence over foo/baz.
+	//
+	// All valid rules within a Route attached to this Listener should be
+	// implemented. Invalid Route rules can be ignored (sometimes that will mean
+	// the full Route). If a Route rule transitions from valid to invalid,
+	// support for that Route rule should be dropped to ensure consistency. For
+	// example, even if a filter specified by a Route rule is invalid, the rest
+	// of the rules within that Route should still be supported.
+	//
+	// Support: Core
+	// +kubebuilder:default={namespaces:{from: Same}}
+	// +optional
+	AllowedSecretEngines *AllowedSecretEngines `json:"allowedSecretEngines,omitempty" protobuf:"bytes,14,opt,name=allowedSecretEngines"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -155,6 +183,76 @@ type VaultServerStatus struct {
 	// Status of the vault auth methods
 	// +optional
 	AuthMethodStatus []AuthMethodStatus `json:"authMethodStatus,omitempty" protobuf:"bytes,9,rep,name=authMethodStatus"`
+}
+
+// AllowedSecretEngines defines which Secret Engines may be attached to this Listener.
+type AllowedSecretEngines struct {
+	// Namespaces indicates namespaces from which Secret Engines may be attached to this
+	// Listener. This is restricted to the namespace of this VaultServer by default.
+	//
+	// +optional
+	// +kubebuilder:default={from: Same}
+	Namespaces *SecretEngineNamespaces `json:"namespaces,omitempty" protobuf:"bytes,1,opt,name=namespaces"`
+
+	// SecretEngines specifies the types of Secret Engines that are allowed to bind
+	// to this VaultServer. When unspecified or empty, all types of Secret Engines
+	// are allowed.
+	//
+	// +optional
+	SecretEngines []SecretEngineType `json:"secretEngines,omitempty" protobuf:"bytes,2,rep,name=secretEngines,casttype=SecretEngineType"`
+}
+
+// +kubebuilder:validation:Enum=kv;pki;aws;azure;gcp;postgres;mongodb;mysql;elasticsearch
+type SecretEngineType string
+
+const (
+	SecretEngineTypeKV            SecretEngineType = "kv"
+	SecretEngineTypePKI           SecretEngineType = "pki"
+	SecretEngineTypeAWS           SecretEngineType = "aws"
+	SecretEngineTypeAzure         SecretEngineType = "azure"
+	SecretEngineTypeGCP           SecretEngineType = "gcp"
+	SecretEngineTypePostgres      SecretEngineType = "postgres"
+	SecretEngineTypeMongoDB       SecretEngineType = "mongodb"
+	SecretEngineTypeMySQL         SecretEngineType = "mysql"
+	SecretEngineTypeElasticsearch SecretEngineType = "elasticsearch"
+)
+
+// FromNamespaces specifies namespace from which Secret Engines may be attached to a
+// VaultServer.
+//
+// +kubebuilder:validation:Enum=All;Selector;Same
+type FromNamespaces string
+
+const (
+	// Secret Engines in all namespaces may be attached to this VaultServer.
+	NamespacesFromAll FromNamespaces = "All"
+	// Only Secret Engines in namespaces selected by the selector may be attached to
+	// this VaultServer.
+	NamespacesFromSelector FromNamespaces = "Selector"
+	// Only Secret Engines in the same namespace as the VaultServer may be attached to this
+	// VaultServer.
+	NamespacesFromSame FromNamespaces = "Same"
+)
+
+// SecretEngineNamespaces indicate which namespaces Secret Engines should be selected from.
+type SecretEngineNamespaces struct {
+	// From indicates where Secret Engines will be selected for this VaultServer. Possible
+	// values are:
+	// * All: Secret Engines in all namespaces may be used by this VaultServer.
+	// * Selector: Secret Engines in namespaces selected by the selector may be used by
+	//   this VaultServer.
+	// * Same: Only Secret Engines in the same namespace may be used by this VaultServer.
+	//
+	// +optional
+	// +kubebuilder:default=Same
+	From *FromNamespaces `json:"from,omitempty" protobuf:"bytes,1,opt,name=from,casttype=FromNamespaces"`
+
+	// Selector must be specified when From is set to "Selector". In that case,
+	// only Secret Engines in Namespaces matching this Selector will be selected by this
+	// VaultServer. This field is ignored for other values of "From".
+	//
+	// +optional
+	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
 }
 
 type VaultStatus struct {

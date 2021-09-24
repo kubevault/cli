@@ -131,7 +131,7 @@ func UpdateAzureRoleStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.AzureRoleStatus) *api.AzureRoleStatus,
+	transform func(*api.RoleStatus) *api.RoleStatus,
 	opts metav1.UpdateOptions,
 ) (result *api.AzureRole, err error) {
 	apply := func(x *api.AzureRole) *api.AzureRole {

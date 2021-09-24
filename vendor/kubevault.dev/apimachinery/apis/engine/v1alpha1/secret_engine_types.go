@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -51,13 +50,9 @@ type SecretEngine struct {
 }
 
 type SecretEngineSpec struct {
-	VaultRef core.LocalObjectReference `json:"vaultRef" protobuf:"bytes,1,opt,name=vaultRef"`
+	VaultRef kmapi.ObjectReference `json:"vaultRef" protobuf:"bytes,1,opt,name=vaultRef"`
 
-	// Path defines the path used to enable this secret engine
-	// +optional
-	Path string `json:"path,omitempty" protobuf:"bytes,2,opt,name=path"`
-
-	SecretEngineConfiguration `json:",inline" protobuf:"bytes,3,opt,name=secretEngineConfiguration"`
+	SecretEngineConfiguration `json:",inline" protobuf:"bytes,2,opt,name=secretEngineConfiguration"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -266,12 +261,12 @@ type ElasticsearchConfiguration struct {
 
 	// List of the roles allowed to use this connection.
 	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
-	AllowedRoles []string `json:"allowedRoles,omitempty" protobuf:"bytes,3,rep,name=allowedRoles"`
+	AllowedRoles []string `json:"allowedRoles,omitempty" protobuf:"bytes,2,rep,name=allowedRoles"`
 
 	// Specifies the name of the plugin to use for this connection.
 	// Default plugin:
 	//  - for elasticsearch: elasticsearch-database-plugin
-	PluginName string `json:"pluginName,omitempty" protobuf:"bytes,2,opt,name=pluginName"`
+	PluginName string `json:"pluginName,omitempty" protobuf:"bytes,3,opt,name=pluginName"`
 
 	// The URL for Elasticsearch's API ("http://localhost:9200").
 	// +kubebuilder:validation:Required
@@ -313,4 +308,8 @@ type SecretEngineStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
 
 	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+
+	// Path defines the path used to enable this secret engine
+	// Visible to user but immutable
+	Path string `json:"path,omitempty" protobuf:"bytes,4,opt,name=path"`
 }

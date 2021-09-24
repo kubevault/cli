@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"fmt"
 
+	api "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -51,4 +52,35 @@ func GetDBNameFromAppBindingRef(dbAppRef *appcat.AppReference) string {
 		cluster = clusterid.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, dbAppRef.Namespace, dbAppRef.Name)
+}
+
+func (se SecretEngine) GetSecretEnginePath() string {
+	// Todo: update SecretEngine path
+	//  - k8s.{cluster-name or -}.{se-type}.se-ns.se-name
+	cluster := "-"
+	if clusterid.ClusterName() != "" {
+		cluster = clusterid.ClusterName()
+	}
+	return fmt.Sprintf("k8s.%s.%s.%s.%s", cluster, se.GetSecretEngineType(), se.Namespace, se.Name)
+}
+
+func (se SecretEngine) GetSecretEngineType() api.SecretEngineType {
+	switch seSpec := se.Spec; {
+	case seSpec.GCP != nil:
+		return api.SecretEngineTypeGCP
+	case seSpec.AWS != nil:
+		return api.SecretEngineTypeAWS
+	case seSpec.Azure != nil:
+		return api.SecretEngineTypeAzure
+	case seSpec.Elasticsearch != nil:
+		return api.SecretEngineTypeElasticsearch
+	case seSpec.MongoDB != nil:
+		return api.SecretEngineTypeMongoDB
+	case seSpec.MySQL != nil:
+		return api.SecretEngineTypeMySQL
+	case seSpec.Postgres != nil:
+		return api.SecretEngineTypePostgres
+	default:
+		return ""
+	}
 }

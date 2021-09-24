@@ -18,19 +18,8 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
-
-// RoleRef contains information that points to the role being used
-type RoleRef struct {
-	// APIGroup is the group for the resource being referenced
-	APIGroup string `json:"apiGroup,omitempty" protobuf:"bytes,1,opt,name=apiGroup"`
-	// Kind is the type of resource being referenced
-	Kind string `json:"kind,omitempty" protobuf:"bytes,2,opt,name=kind"`
-	// Name is the name of resource being referenced
-	Name string `json:"name" protobuf:"bytes,3,opt,name=name"`
-	// Namespace is the namespace of the resource being referenced
-	Namespace string `json:"namespace" protobuf:"bytes,4,opt,name=namespace"`
-}
 
 // Lease contains lease info
 type Lease struct {
@@ -52,3 +41,24 @@ var (
 	RequestStatusPhaseApproved           RequestStatusPhase = "Approved"
 	RequestStatusPhaseDenied             RequestStatusPhase = "Denied"
 )
+
+type RolePhase string
+
+const (
+	// RolePhase constants
+	RolePhaseSuccess    RolePhase = "Success"
+	RolePhaseProcessing RolePhase = "Processing"
+)
+
+type RoleStatus struct {
+	Phase RolePhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=RolePhase"`
+
+	// ObservedGeneration is the most recent generation observed for this MySQLRole. It corresponds to the
+	// MySQLRole's generation, which is updated on mutation by the API Server.
+	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
+
+	// Represents the latest available observations of a MySQLRole current state.
+	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+
+	PolicyRef *kmapi.ObjectReference `json:"policyRef,omitempty" protobuf:"bytes,4,opt,name=policyRef"`
+}

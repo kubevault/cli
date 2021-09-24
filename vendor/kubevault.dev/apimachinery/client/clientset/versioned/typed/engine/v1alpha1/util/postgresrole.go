@@ -131,7 +131,7 @@ func UpdatePostgresRoleStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.PostgresRoleStatus) *api.PostgresRoleStatus,
+	transform func(*api.RoleStatus) *api.RoleStatus,
 	opts metav1.UpdateOptions,
 ) (result *api.PostgresRole, err error) {
 	apply := func(x *api.PostgresRole) *api.PostgresRole {

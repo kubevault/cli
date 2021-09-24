@@ -131,7 +131,7 @@ func UpdateMySQLRoleStatus(
 	ctx context.Context,
 	c cs.EngineV1alpha1Interface,
 	meta metav1.ObjectMeta,
-	transform func(*api.MySQLRoleStatus) *api.MySQLRoleStatus,
+	transform func(*api.RoleStatus) *api.RoleStatus,
 	opts metav1.UpdateOptions,
 ) (result *api.MySQLRole, err error) {
 	apply := func(x *api.MySQLRole) *api.MySQLRole {

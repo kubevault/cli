@@ -71,8 +71,9 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/gofuzz v1.1.0
+# github.com/google/gofuzz v1.2.0
 github.com/google/gofuzz
+github.com/google/gofuzz/bytesource
 # github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
 github.com/google/shlex
 # github.com/google/uuid v1.1.2
@@ -538,7 +539,7 @@ k8s.io/utils/exec
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20210909114628-15cac6c74063
+# kmodules.xyz/client-go v0.0.0-20210921150324-f005c6dfcb32
 ## explicit
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -563,11 +564,10 @@ kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
 # kmodules.xyz/monitoring-agent-api v0.0.0-20210902163558-0323c6034f70
-## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20210804100837-d0388be3e60d
+# kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.4.1-0.20210830130923-7e6e30869571
+# kubevault.dev/apimachinery v0.4.1-0.20210922053854-428a8125a307
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog

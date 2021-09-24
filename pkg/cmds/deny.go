@@ -19,6 +19,7 @@ package cmds
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	core "k8s.io/api/core/v1"
@@ -29,32 +30,11 @@ import (
 )
 
 var (
-	awsDeniedCond = kmapi.Condition{
+	secretAccessDeniedCond = kmapi.Condition{
 		Type:    kmapi.ConditionRequestDenied,
 		Status:  core.ConditionTrue,
 		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny awsaccesskeyrequest",
-	}
-
-	dbDeniedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestDenied,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny databaseaccessrequest",
-	}
-
-	gcpDeniedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestDenied,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny gcpaccesskeyrequest",
-	}
-
-	azureDeniedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestDenied,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny azureaccesskeyrequest",
+		Message: "This was denied by: kubectl vault deny secretaccessrequest",
 	}
 )
 
@@ -72,7 +52,7 @@ func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command 
 			if err := modifyStatusCondition(clientGetter, false); err != nil {
 				Fatal(err)
 			} else {
-				fmt.Println("Denied")
+				fmt.Printf("secretaccessrequests %s denied\n", strings.Join(ObjectNames, ", "))
 			}
 			os.Exit(0)
 		},
