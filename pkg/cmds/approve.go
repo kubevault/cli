@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
 	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
@@ -65,7 +66,7 @@ func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Comma
 			if err := modifyStatusCondition(clientGetter, true); err != nil {
 				Fatal(err)
 			} else {
-				fmt.Println("Approved")
+				fmt.Printf("secretaccessrequests %s approved\n", strings.Join(ObjectNames, ", "))
 			}
 			os.Exit(0)
 		},
@@ -103,7 +104,6 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 		return err
 	}
 
-	var found int
 	r := builder.
 		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
 		ContinueOnError().
@@ -124,14 +124,13 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 		switch info.Object.(type) {
 		case *engineapi.SecretAccessRequest:
 			obj := info.Object.(*engineapi.SecretAccessRequest)
-			found++
 			cond := secretAccessDeniedCond
 			if isApproveReq {
 				cond = secretAccessApprovedCond
 			}
 
 			if cond == secretAccessDeniedCond && kmapi.IsConditionTrue(obj.Status.Conditions, kmapi.ConditionRequestApproved) {
-				return errors.New("Failed to update request status to 'Deny'\nRequest already Approved.")
+				return errors.New("failed to deny, request already approved")
 			}
 
 			cond.ObservedGeneration = obj.Generation
@@ -141,9 +140,6 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isAp
 		}
 		return err2
 	})
-	if found == 0 {
-		fmt.Println("No resources found")
-	}
 	return err
 }
 

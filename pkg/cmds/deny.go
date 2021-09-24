@@ -19,6 +19,7 @@ package cmds
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	core "k8s.io/api/core/v1"
@@ -51,7 +52,7 @@ func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command 
 			if err := modifyStatusCondition(clientGetter, false); err != nil {
 				Fatal(err)
 			} else {
-				fmt.Println("Denied")
+				fmt.Printf("secretaccessrequests %s denied\n", strings.Join(ObjectNames, ", "))
 			}
 			os.Exit(0)
 		},
