@@ -62,3 +62,24 @@ type RoleStatus struct {
 
 	PolicyRef *kmapi.ObjectReference `json:"policyRef,omitempty" protobuf:"bytes,4,opt,name=policyRef"`
 }
+
+const (
+	SecretRoleBindingAnnotationName      = "secretrolebindings.engine.kubevault.com/name"
+	SecretRoleBindingAnnotationNamespace = "secretrolebindings.engine.kubevault.com/namespace"
+)
+
+// SecretRoleBinding Phases
+
+const (
+	SecretRoleBindingPhaseSuccess    RequestStatusPhase = "Success"
+	SecretRoleBindingPhaseProcessing RequestStatusPhase = "Processing"
+	SecretRoleBindingPhaseFailed     RequestStatusPhase = "Failed"
+)
+
+// SecretRoleBinding Conditions
+
+const (
+	VaultPolicySuccess        = "VaultPolicySuccess"
+	VaultPolicyBindingSuccess = "VaultPolicyBindingSuccess"
+	SecretRoleBindingSuccess  = "SecretRoleBindingSuccess"
+)

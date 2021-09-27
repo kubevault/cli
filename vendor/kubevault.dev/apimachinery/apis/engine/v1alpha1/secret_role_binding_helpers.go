@@ -17,9 +17,12 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
+
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
+	meta_util "kmodules.xyz/client-go/meta"
 )
 
 func (_ SecretRoleBinding) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -28,4 +31,12 @@ func (_ SecretRoleBinding) CustomResourceDefinition() *apiextensions.CustomResou
 
 func (d SecretRoleBinding) IsValid() error {
 	return nil
+}
+
+func (srb SecretRoleBinding) VaultPolicyName() string {
+	return meta_util.NameWithPrefix("srb", fmt.Sprintf("%s-%s", srb.Namespace, srb.Name))
+}
+
+func (srb SecretRoleBinding) VaultPolicyBindingName() string {
+	return meta_util.NameWithPrefix("srb", fmt.Sprintf("%s-%s", srb.Namespace, srb.Name))
 }
