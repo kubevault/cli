@@ -156,7 +156,6 @@ go.starlark.net/starlark
 go.starlark.net/starlarkstruct
 go.starlark.net/syntax
 # golang.org/x/crypto v0.0.0-20210314154223-e6e6c4f2bb5b
-## explicit
 golang.org/x/crypto/pkcs12
 golang.org/x/crypto/pkcs12/internal/rc2
 # golang.org/x/net v0.0.0-20210428140749-89ef3d95e781
@@ -554,7 +553,7 @@ kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/tools/analytics
 kmodules.xyz/client-go/tools/cli
 kmodules.xyz/client-go/tools/clusterid
-# kmodules.xyz/custom-resources v0.0.0-20211007064058-70fba50e58a4
+# kmodules.xyz/custom-resources v0.0.0-20211007080833-72bd9e8cae6e
 ## explicit
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
@@ -565,11 +564,10 @@ kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
 # kmodules.xyz/monitoring-agent-api v0.0.0-20210928135619-38ca075a2dbd
-## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.5.1-0.20210928181518-3f0dfa49c80b
+# kubevault.dev/apimachinery v0.5.1-0.20211007072029-11f1fc548ffe
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
