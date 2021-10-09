@@ -3,6 +3,7 @@ module kubevault.dev/cli
 go 1.15
 
 require (
+	github.com/aws/aws-sdk-go v1.27.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.3
 	gomodules.xyz/kglog v0.0.1
