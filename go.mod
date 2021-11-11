@@ -3,12 +3,16 @@ module kubevault.dev/cli
 go 1.15
 
 require (
+	cloud.google.com/go v0.54.0
+	cloud.google.com/go/storage v1.6.0
 	github.com/aws/aws-sdk-go v1.27.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.3
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/x v0.0.8
+	google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a
+	google.golang.org/protobuf v1.25.0
 	k8s.io/api v0.21.1
 	k8s.io/apimachinery v0.21.1
 	k8s.io/cli-runtime v0.21.1
