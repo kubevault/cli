@@ -5,13 +5,10 @@ go 1.15
 require (
 	cloud.google.com/go v0.54.0
 	cloud.google.com/go/storage v1.6.0
-	github.com/Azure/azure-sdk-for-go v16.2.1+incompatible
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.12.0
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v0.3.0
 	github.com/Azure/go-autorest/autorest v0.11.19 // indirect
 	github.com/Azure/go-autorest/autorest/adal v0.9.14 // indirect
-	github.com/Azure/go-autorest/autorest/to v0.0.0-00010101000000-000000000000
-	github.com/Azure/go-autorest/autorest/validation v0.0.0-00010101000000-000000000000 // indirect
 	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/aws/aws-sdk-go v1.27.0
 	github.com/pkg/errors v0.9.1
