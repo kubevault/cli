@@ -22,6 +22,7 @@ import (
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
 	aws_kms_ssm "kubevault.dev/cli/pkg/get-root-token/aws-kms-ssm"
+	azure_key_vault "kubevault.dev/cli/pkg/get-root-token/azure-key-vault"
 	google_kms_gcs "kubevault.dev/cli/pkg/get-root-token/google-kms-gcs"
 )
 
@@ -36,6 +37,8 @@ func NewTokenInterface(vs *vaultapi.VaultServer) (api.TokenInterface, error) {
 		return aws_kms_ssm.New(mode.AwsKmsSsm)
 	case mode.GoogleKmsGcs != nil:
 		return google_kms_gcs.New(mode.GoogleKmsGcs)
+	case mode.AzureKeyVault != nil:
+		return azure_key_vault.New(mode.AzureKeyVault)
 	}
 
 	return nil, errors.New("unknown/unsupported unsealing mode")

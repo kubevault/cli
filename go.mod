@@ -5,13 +5,26 @@ go 1.15
 require (
 	cloud.google.com/go v0.54.0
 	cloud.google.com/go/storage v1.6.0
+	github.com/Azure/azure-sdk-for-go v16.2.1+incompatible
+	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.12.0
+	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v0.3.0
+	github.com/Azure/go-autorest/autorest v0.11.19 // indirect
+	github.com/Azure/go-autorest/autorest/adal v0.9.14 // indirect
+	github.com/Azure/go-autorest/autorest/to v0.0.0-00010101000000-000000000000
+	github.com/Azure/go-autorest/autorest/validation v0.0.0-00010101000000-000000000000 // indirect
+	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/aws/aws-sdk-go v1.27.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.3
+	golang.org/x/crypto v0.0.0-20211115234514-b4de73f9ece8 // indirect
+	golang.org/x/net v0.0.0-20211116231205-47ca1ff31462 // indirect
+	golang.org/x/sys v0.0.0-20211116061358-0a5406a5449c // indirect
+	golang.org/x/text v0.3.7 // indirect
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/x v0.0.8
 	google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a
+	google.golang.org/grpc v1.29.1 // indirect
 	google.golang.org/protobuf v1.25.0
 	k8s.io/api v0.21.1
 	k8s.io/apimachinery v0.21.1
