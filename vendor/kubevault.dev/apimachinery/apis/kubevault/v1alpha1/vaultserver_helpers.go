@@ -174,6 +174,16 @@ func (vs *VaultServer) Scheme() string {
 	return "http"
 }
 
+// UnsealKeyID is the ID that used as key name when storing unseal key
+func (vs *VaultServer) UnsealKeyID(id int) string {
+	return fmt.Sprintf("%s-unseal-key-%d", vs.Name, id)
+}
+
+// RootTokenID is the ID that used as key name when storing root token
+func (vs *VaultServer) RootTokenID() string {
+	return fmt.Sprintf("%s-root-token", vs.Name)
+}
+
 func (vsb *BackendStorageSpec) GetBackendType() (VaultServerBackend, error) {
 	switch {
 	case vsb.Inmem != nil:
