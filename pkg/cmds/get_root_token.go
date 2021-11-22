@@ -28,6 +28,7 @@ import (
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
+	"k8s.io/client-go/kubernetes"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 )
@@ -68,6 +69,16 @@ func getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 		return err
 	}
 
+	cfg, err := clientGetter.ToRESTConfig()
+	if err != nil {
+		return errors.Wrap(err, "failed to read kubeconfig")
+	}
+
+	kubeClient, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return err
+	}
+
 	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
 	r := builder.
 		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
@@ -89,7 +100,7 @@ func getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 		switch info.Object.(type) {
 		case *vaultapi.VaultServer:
 			obj := info.Object.(*vaultapi.VaultServer)
-			err2 = printRootToken(obj)
+			err2 = printRootToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -98,8 +109,8 @@ func getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	return err
 }
 
-func printRootToken(vs *vaultapi.VaultServer) error {
-	ti, err := token.NewTokenInterface(vs)
+func printRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+	ti, err := token.NewTokenInterface(vs, kubeClient)
 	if err != nil {
 		return err
 	}

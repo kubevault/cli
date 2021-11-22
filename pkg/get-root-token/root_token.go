@@ -24,9 +24,12 @@ import (
 	aws_kms_ssm "kubevault.dev/cli/pkg/get-root-token/aws-kms-ssm"
 	azure_key_vault "kubevault.dev/cli/pkg/get-root-token/azure-key-vault"
 	google_kms_gcs "kubevault.dev/cli/pkg/get-root-token/google-kms-gcs"
+	kubernetes_secret "kubevault.dev/cli/pkg/get-root-token/kubernetes-secret"
+
+	"k8s.io/client-go/kubernetes"
 )
 
-func NewTokenInterface(vs *vaultapi.VaultServer) (api.TokenInterface, error) {
+func NewTokenInterface(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (api.TokenInterface, error) {
 	if vs.Spec.Unsealer == nil {
 		return nil, errors.New("vaultServer unsealer spec is empty")
 	}
@@ -39,6 +42,8 @@ func NewTokenInterface(vs *vaultapi.VaultServer) (api.TokenInterface, error) {
 		return google_kms_gcs.New(mode.GoogleKmsGcs)
 	case mode.AzureKeyVault != nil:
 		return azure_key_vault.New(mode.AzureKeyVault)
+	case mode.KubernetesSecret != nil:
+		return kubernetes_secret.New(vs, kubeClient)
 	}
 
 	return nil, errors.New("unknown/unsupported unsealing mode")
