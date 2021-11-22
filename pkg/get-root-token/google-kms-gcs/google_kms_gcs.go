@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io/ioutil"
+	"os"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
@@ -30,6 +31,13 @@ import (
 	"github.com/pkg/errors"
 	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
 	"google.golang.org/protobuf/types/known/wrapperspb"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+)
+
+const (
+	ServiceAccountJSON    = "sa.json"
+	GoogleApplicationCred = "GOOGLE_APPLICATION_CREDENTIALS"
 )
 
 type TokenInfo struct {
@@ -39,9 +47,35 @@ type TokenInfo struct {
 
 var _ api.TokenInterface = &TokenInfo{}
 
-func New(spec *vaultapi.GoogleKmsGcsSpec) (*TokenInfo, error) {
-	if spec == nil {
-		return nil, errors.New("googleKmsGcs spec is empty")
+func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo, error) {
+	if vs == nil {
+		return nil, errors.New("vs spec is empty")
+	}
+
+	if vs.Spec.Unsealer.Mode.GoogleKmsGcs == nil {
+		return nil, errors.New("GoogleKmsGcs mode is nil")
+	}
+
+	if kubeClient == nil {
+		return nil, errors.New("kubeClient is nil")
+	}
+
+	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.GoogleKmsGcs.CredentialSecret, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := secret.Data[ServiceAccountJSON]; !ok {
+		return nil, errors.Errorf("%s not found in secret", ServiceAccountJSON)
+	}
+
+	saFile := fmt.Sprintf("/tmp/%s", ServiceAccountJSON)
+	if err = ioutil.WriteFile(saFile, secret.Data[ServiceAccountJSON], os.ModePerm); err != nil {
+		return nil, err
+	}
+
+	if err = os.Setenv(GoogleApplicationCred, saFile); err != nil {
+		return nil, err
 	}
 
 	client, err := storage.NewClient(context.TODO())
@@ -50,7 +84,7 @@ func New(spec *vaultapi.GoogleKmsGcsSpec) (*TokenInfo, error) {
 	}
 
 	return &TokenInfo{
-		googleKmsGcsSpec: spec,
+		googleKmsGcsSpec: vs.Spec.Unsealer.Mode.GoogleKmsGcs,
 		storageClient:    client,
 	}, nil
 }

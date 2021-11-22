@@ -37,11 +37,11 @@ func NewTokenInterface(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface
 
 	switch true {
 	case mode.AwsKmsSsm != nil:
-		return aws_kms_ssm.New(mode.AwsKmsSsm)
+		return aws_kms_ssm.New(vs, kubeClient)
 	case mode.GoogleKmsGcs != nil:
-		return google_kms_gcs.New(mode.GoogleKmsGcs)
+		return google_kms_gcs.New(vs, kubeClient)
 	case mode.AzureKeyVault != nil:
-		return azure_key_vault.New(mode.AzureKeyVault)
+		return azure_key_vault.New(vs, kubeClient)
 	case mode.KubernetesSecret != nil:
 		return kubernetes_secret.New(vs, kubeClient)
 	}

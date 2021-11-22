@@ -19,6 +19,7 @@ package azure_key_vault
 import (
 	"context"
 	"encoding/base64"
+	"os"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
@@ -26,10 +27,15 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets"
 	"github.com/pkg/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 )
 
 const (
 	ContentTypePassword = "password"
+	ClientID            = "AZURE_CLIENT_ID"
+	ClientSecret        = "AZURE_CLIENT_SECRET"
+	TenantID            = "AZURE_TENANT_ID"
 )
 
 type TokenInfo struct {
@@ -39,9 +45,39 @@ type TokenInfo struct {
 
 var _ api.TokenInterface = &TokenInfo{}
 
-func New(spec *vaultapi.AzureKeyVault) (*TokenInfo, error) {
-	if spec == nil {
-		return nil, errors.New("azureKeyVault spec is empty")
+func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo, error) {
+	if vs == nil {
+		return nil, errors.New("vs spec is empty")
+	}
+
+	if vs.Spec.Unsealer.Mode.AzureKeyVault == nil {
+		return nil, errors.New("AzureKeyVault mode is nil")
+	}
+
+	if kubeClient == nil {
+		return nil, errors.New("kubeClient is nil")
+	}
+
+	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AzureKeyVault.AADClientSecret, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := secret.Data["client-id"]; !ok {
+		return nil, errors.Errorf("%s not found in secret", ClientID)
+	}
+	if _, ok := secret.Data["client-secret"]; !ok {
+		return nil, errors.Errorf("%s not found in secret", ClientSecret)
+	}
+
+	if err = os.Setenv(ClientID, string(secret.Data["client-id"])); err != nil {
+		return nil, err
+	}
+	if err = os.Setenv(ClientSecret, string(secret.Data["client-secret"])); err != nil {
+		return nil, err
+	}
+	if err = os.Setenv(TenantID, vs.Spec.Unsealer.Mode.AzureKeyVault.TenantID); err != nil {
+		return nil, err
 	}
 
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
@@ -51,11 +87,10 @@ func New(spec *vaultapi.AzureKeyVault) (*TokenInfo, error) {
 
 	return &TokenInfo{
 		cred:         cred,
-		vaultBaseUrl: spec.VaultBaseURL,
+		vaultBaseUrl: vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL,
 	}, nil
 }
 
-// Token will require exportation of AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID
 func (ti *TokenInfo) Token() (string, error) {
 	client, err := azsecrets.NewClient(ti.vaultBaseUrl, ti.cred, nil)
 	if err != nil {

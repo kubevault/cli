@@ -17,8 +17,10 @@ limitations under the License.
 package aws_kms_ssm
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
+	"os"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
@@ -28,36 +30,68 @@ import (
 	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/aws/aws-sdk-go/service/ssm"
 	"github.com/pkg/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+)
+
+const (
+	AccessKey = "AWS_ACCESS_KEY_ID"
+	SecretKey = "AWS_SECRET_ACCESS_KEY"
 )
 
 type TokenInfo struct {
-	awskmsSsmSpec *vaultapi.AwsKmsSsmSpec
+	awsKmsSsmSpec *vaultapi.AwsKmsSsmSpec
 	ssmService    *ssm.SSM
 	kmsService    *kms.KMS
 }
 
 var _ api.TokenInterface = &TokenInfo{}
 
-func New(spec *vaultapi.AwsKmsSsmSpec) (*TokenInfo, error) {
-	if spec == nil {
-		return nil, errors.New("awsKmsSsm spec is empty")
+func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo, error) {
+	if vs == nil {
+		return nil, errors.New("vs spec is empty")
 	}
 
-	// TODO: Check region for empty
+	if vs.Spec.Unsealer.Mode.AwsKmsSsm == nil {
+		return nil, errors.New("AwsKmsSsm mode is nil")
+	}
+
+	if kubeClient == nil {
+		return nil, errors.New("kubeClient is nil")
+	}
+
+	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AwsKmsSsm.CredentialSecret, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := secret.Data["access_key"]; !ok {
+		return nil, errors.Errorf("%s not found in secret", AccessKey)
+	}
+	if _, ok := secret.Data["secret_key"]; !ok {
+		return nil, errors.Errorf("%s not found in secret", SecretKey)
+	}
+
+	if err = os.Setenv(AccessKey, string(secret.Data["access_key"])); err != nil {
+		return nil, err
+	}
+	if err = os.Setenv(SecretKey, string(secret.Data["secret_key"])); err != nil {
+		return nil, err
+	}
 
 	sess, err := session.NewSession(&aws.Config{
 		CredentialsChainVerboseErrors: func() *bool {
 			f := true
 			return &f
 		}(),
-		Region: aws.String(spec.Region)},
+		Region: aws.String(vs.Spec.Unsealer.Mode.AwsKmsSsm.Region)},
 	)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create session")
 	}
 
 	return &TokenInfo{
-		awskmsSsmSpec: spec,
+		awsKmsSsmSpec: vs.Spec.Unsealer.Mode.AwsKmsSsm,
 		kmsService:    kms.New(sess),
 		ssmService:    ssm.New(sess),
 	}, nil
@@ -89,7 +123,7 @@ func (ti *TokenInfo) Token() (string, error) {
 			"Tool": aws.String("vault-unsealer"),
 		},
 		GrantTokens: []*string{},
-		KeyId:       aws.String(ti.awskmsSsmSpec.KmsKeyID),
+		KeyId:       aws.String(ti.awsKmsSsmSpec.KmsKeyID),
 	})
 	if err != nil {
 		return "", errors.Wrap(err, "failed to kms decrypt")
@@ -99,8 +133,8 @@ func (ti *TokenInfo) Token() (string, error) {
 }
 
 func (ti *TokenInfo) TokenName() string {
-	if ti.awskmsSsmSpec.SsmKeyPrefix != "" {
-		return fmt.Sprintf("%s%s", ti.awskmsSsmSpec.SsmKeyPrefix, "vault-root-token")
+	if ti.awsKmsSsmSpec.SsmKeyPrefix != "" {
+		return fmt.Sprintf("%s%s", ti.awsKmsSsmSpec.SsmKeyPrefix, "vault-root-token")
 	}
 	return "vault-root-token"
 }
