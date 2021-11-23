@@ -58,7 +58,7 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 func (ti *TokenInfo) Token() (string, error) {
 	secret, err := ti.kubeClient.CoreV1().Secrets(ti.secretNamespace).Get(context.TODO(), ti.secretName, metav1.GetOptions{})
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	token := ti.TokenName()
