@@ -41,8 +41,8 @@ const (
 )
 
 type TokenInfo struct {
-	googleKmsGcsSpec *vaultapi.GoogleKmsGcsSpec
-	storageClient    *storage.Client
+	storageClient *storage.Client
+	vs            *vaultapi.VaultServer
 }
 
 var _ api.TokenInterface = &TokenInfo{}
@@ -84,14 +84,15 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 	}
 
 	return &TokenInfo{
-		googleKmsGcsSpec: vs.Spec.Unsealer.Mode.GoogleKmsGcs,
-		storageClient:    client,
+		storageClient: client,
+		vs:            vs,
 	}, nil
 }
 
 func (ti *TokenInfo) Token() (string, error) {
 	token := ti.TokenName()
-	rc, err := ti.storageClient.Bucket(ti.googleKmsGcsSpec.Bucket).Object(token).NewReader(context.TODO())
+	googleKmsGcsSpec := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs
+	rc, err := ti.storageClient.Bucket(googleKmsGcsSpec.Bucket).Object(token).NewReader(context.TODO())
 	if err != nil {
 		return "", err
 	}
@@ -103,8 +104,8 @@ func (ti *TokenInfo) Token() (string, error) {
 	}
 
 	name := fmt.Sprintf("projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s",
-		ti.googleKmsGcsSpec.KmsProject, ti.googleKmsGcsSpec.KmsLocation,
-		ti.googleKmsGcsSpec.KmsKeyRing, ti.googleKmsGcsSpec.KmsCryptoKey)
+		googleKmsGcsSpec.KmsProject, googleKmsGcsSpec.KmsLocation,
+		googleKmsGcsSpec.KmsKeyRing, googleKmsGcsSpec.KmsCryptoKey)
 
 	decryptedToken, err := decryptSymmetric(name, body)
 	if err != nil {
@@ -146,5 +147,5 @@ func decryptSymmetric(name string, ciphertext []byte) (string, error) {
 }
 
 func (ti *TokenInfo) TokenName() string {
-	return "vault-root-token"
+	return ti.vs.RootTokenID()
 }

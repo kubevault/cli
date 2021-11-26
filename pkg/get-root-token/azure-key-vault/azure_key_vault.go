@@ -39,8 +39,8 @@ const (
 )
 
 type TokenInfo struct {
-	cred         *azidentity.DefaultAzureCredential
-	vaultBaseUrl string
+	cred *azidentity.DefaultAzureCredential
+	vs   *vaultapi.VaultServer
 }
 
 var _ api.TokenInterface = &TokenInfo{}
@@ -86,13 +86,14 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 	}
 
 	return &TokenInfo{
-		cred:         cred,
-		vaultBaseUrl: vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL,
+		cred: cred,
+		vs:   vs,
 	}, nil
 }
 
 func (ti *TokenInfo) Token() (string, error) {
-	client, err := azsecrets.NewClient(ti.vaultBaseUrl, ti.cred, nil)
+	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
+	client, err := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
 	if err != nil {
 		return "", err
 	}
@@ -115,5 +116,5 @@ func (ti *TokenInfo) Token() (string, error) {
 }
 
 func (ti *TokenInfo) TokenName() string {
-	return "vault-root-token"
+	return ti.vs.RootTokenID()
 }

@@ -40,9 +40,9 @@ const (
 )
 
 type TokenInfo struct {
-	awsKmsSsmSpec *vaultapi.AwsKmsSsmSpec
-	ssmService    *ssm.SSM
-	kmsService    *kms.KMS
+	ssmService *ssm.SSM
+	kmsService *kms.KMS
+	vs         *vaultapi.VaultServer
 }
 
 var _ api.TokenInterface = &TokenInfo{}
@@ -91,9 +91,9 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 	}
 
 	return &TokenInfo{
-		awsKmsSsmSpec: vs.Spec.Unsealer.Mode.AwsKmsSsm,
-		kmsService:    kms.New(sess),
-		ssmService:    ssm.New(sess),
+		kmsService: kms.New(sess),
+		ssmService: ssm.New(sess),
+		vs:         vs,
 	}, nil
 }
 func (ti *TokenInfo) Token() (string, error) {
@@ -117,13 +117,14 @@ func (ti *TokenInfo) Token() (string, error) {
 		return "", errors.Wrap(err, "failed to base64-decode")
 	}
 
+	awsKmsSsmSpec := ti.vs.Spec.Unsealer.Mode.AwsKmsSsm
 	decryptOutput, err := ti.kmsService.Decrypt(&kms.DecryptInput{
 		CiphertextBlob: sDec,
 		EncryptionContext: map[string]*string{
 			"Tool": aws.String("vault-unsealer"),
 		},
 		GrantTokens: []*string{},
-		KeyId:       aws.String(ti.awsKmsSsmSpec.KmsKeyID),
+		KeyId:       aws.String(awsKmsSsmSpec.KmsKeyID),
 	})
 	if err != nil {
 		return "", errors.Wrap(err, "failed to kms decrypt")
@@ -133,8 +134,9 @@ func (ti *TokenInfo) Token() (string, error) {
 }
 
 func (ti *TokenInfo) TokenName() string {
-	if ti.awsKmsSsmSpec.SsmKeyPrefix != "" {
-		return fmt.Sprintf("%s%s", ti.awsKmsSsmSpec.SsmKeyPrefix, "vault-root-token")
+	awsKmsSsmSpec := ti.vs.Spec.Unsealer.Mode.AwsKmsSsm
+	if awsKmsSsmSpec.SsmKeyPrefix != "" {
+		return fmt.Sprintf("%s%s", awsKmsSsmSpec.SsmKeyPrefix, ti.vs.RootTokenID())
 	}
-	return "vault-root-token"
+	return ti.vs.RootTokenID()
 }

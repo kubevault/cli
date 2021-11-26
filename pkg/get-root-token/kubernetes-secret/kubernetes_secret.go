@@ -28,9 +28,8 @@ import (
 )
 
 type TokenInfo struct {
-	secretName      string
-	secretNamespace string
-	kubeClient      kubernetes.Interface
+	kubeClient kubernetes.Interface
+	vs         *vaultapi.VaultServer
 }
 
 var _ api.TokenInterface = &TokenInfo{}
@@ -49,26 +48,27 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 	}
 
 	return &TokenInfo{
-		secretName:      vs.Spec.Unsealer.Mode.KubernetesSecret.SecretName,
-		secretNamespace: vs.Namespace,
-		kubeClient:      kubeClient,
+		kubeClient: kubeClient,
+		vs:         vs,
 	}, nil
 }
 
 func (ti *TokenInfo) Token() (string, error) {
-	secret, err := ti.kubeClient.CoreV1().Secrets(ti.secretNamespace).Get(context.TODO(), ti.secretName, metav1.GetOptions{})
+	secretName := ti.vs.Spec.Unsealer.Mode.KubernetesSecret.SecretName
+	secretNamespace := ti.vs.Namespace
+	secret, err := ti.kubeClient.CoreV1().Secrets(secretNamespace).Get(context.TODO(), secretName, metav1.GetOptions{})
 	if err != nil {
 		return "", err
 	}
 
 	token := ti.TokenName()
 	if _, ok := secret.Data[token]; !ok {
-		return "", errors.Errorf("%s not found in secret %s/%s", token, ti.secretNamespace, ti.secretName)
+		return "", errors.Errorf("%s not found in secret %s/%s", token, secretNamespace, secretName)
 	}
 
 	return string(secret.Data[token]), nil
 }
 
 func (ti *TokenInfo) TokenName() string {
-	return "vault-root-token"
+	return ti.vs.RootTokenID()
 }
