@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/base64"
 	"os"
+	"strings"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
@@ -98,7 +99,7 @@ func (ti *TokenInfo) Token() (string, error) {
 		return "", err
 	}
 
-	resp, err := client.GetSecret(context.Background(), ti.TokenName(), nil)
+	resp, err := client.GetSecret(context.Background(), strings.Replace(ti.TokenName(), ".", "-", -1), nil)
 	if err != nil {
 		return "", err
 	}
