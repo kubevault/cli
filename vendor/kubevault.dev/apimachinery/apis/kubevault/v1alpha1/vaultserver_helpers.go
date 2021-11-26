@@ -32,6 +32,7 @@ import (
 	apps_util "kmodules.xyz/client-go/apps/v1"
 	"kmodules.xyz/client-go/meta"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/tools/clusterid"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
@@ -176,12 +177,28 @@ func (vs *VaultServer) Scheme() string {
 
 // UnsealKeyID is the ID that used as key name when storing unseal key
 func (vs *VaultServer) UnsealKeyID(id int) string {
-	return fmt.Sprintf("%s-unseal-key-%d", vs.Name, id)
+	cluster := "-"
+	if clusterid.ClusterName() != "" {
+		cluster = clusterid.ClusterName()
+	}
+	return fmt.Sprintf("k8s.%s.%s.%s-unseal-key-%d", cluster, vs.Namespace, vs.Name, id)
 }
 
 // RootTokenID is the ID that used as key name when storing root token
 func (vs *VaultServer) RootTokenID() string {
-	return fmt.Sprintf("%s-root-token", vs.Name)
+	cluster := "-"
+	if clusterid.ClusterName() != "" {
+		cluster = clusterid.ClusterName()
+	}
+	return fmt.Sprintf("k8s.%s.%s.%s-root-token", cluster, vs.Namespace, vs.Name)
+}
+
+func (vs *VaultServer) KeyPrefix() string {
+	cluster := "-"
+	if clusterid.ClusterName() != "" {
+		cluster = clusterid.ClusterName()
+	}
+	return fmt.Sprintf("k8s.%s.%s.%s", cluster, vs.Namespace, vs.Name)
 }
 
 func (vsb *BackendStorageSpec) GetBackendType() (VaultServerBackend, error) {
