@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"fmt"
 
+	"kubevault.dev/apimachinery/apis"
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -39,7 +40,7 @@ func (v VaultPolicy) PolicyName() string {
 		return v.Spec.VaultPolicyName
 	}
 
-	cluster := "-"
+	cluster := apis.ClusterName
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}

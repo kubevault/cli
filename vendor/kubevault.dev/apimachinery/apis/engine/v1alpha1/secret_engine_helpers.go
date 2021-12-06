@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"fmt"
 
+	"kubevault.dev/apimachinery/apis"
 	api "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/apimachinery/crds"
 
@@ -38,7 +39,7 @@ func (e SecretEngine) IsValid() error {
 // Generates the policy name which contains
 // required permission for this secret engine
 func (e SecretEngine) GetPolicyName() string {
-	cluster := "-"
+	cluster := apis.ClusterName
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}
@@ -47,7 +48,7 @@ func (e SecretEngine) GetPolicyName() string {
 
 // Generates unique database name from database appbinding reference
 func GetDBNameFromAppBindingRef(dbAppRef *appcat.AppReference) string {
-	cluster := "-"
+	cluster := apis.ClusterName
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}
@@ -57,7 +58,7 @@ func GetDBNameFromAppBindingRef(dbAppRef *appcat.AppReference) string {
 func (se SecretEngine) GetSecretEnginePath() string {
 	// Todo: update SecretEngine path
 	//  - k8s.{cluster-name or -}.{se-type}.se-ns.se-name
-	cluster := "-"
+	cluster := apis.ClusterName
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}

@@ -21,7 +21,8 @@ import (
 )
 
 const (
-	Finalizer = "kubevault.com"
+	Finalizer   = "kubevault.com"
+	ClusterName = "kubevault.com"
 
 	// required fields:
 	// - Secret.Data["token"] - a vault token

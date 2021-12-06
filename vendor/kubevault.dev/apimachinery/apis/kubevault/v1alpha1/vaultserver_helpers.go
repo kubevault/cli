@@ -177,7 +177,7 @@ func (vs *VaultServer) Scheme() string {
 
 // UnsealKeyID is the ID that used as key name when storing unseal key
 func (vs *VaultServer) UnsealKeyID(id int) string {
-	cluster := "-"
+	cluster := apis.ClusterName
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}
@@ -186,7 +186,7 @@ func (vs *VaultServer) UnsealKeyID(id int) string {
 
 // RootTokenID is the ID that used as key name when storing root token
 func (vs *VaultServer) RootTokenID() string {
-	cluster := "-"
+	cluster := apis.ClusterName
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}
@@ -194,7 +194,7 @@ func (vs *VaultServer) RootTokenID() string {
 }
 
 func (vs *VaultServer) KeyPrefix() string {
-	cluster := "-"
+	cluster := apis.ClusterName
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}
