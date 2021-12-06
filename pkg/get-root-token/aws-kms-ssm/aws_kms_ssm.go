@@ -21,6 +21,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"os"
+	"strings"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
@@ -43,6 +44,7 @@ type TokenInfo struct {
 	ssmService *ssm.SSM
 	kmsService *kms.KMS
 	vs         *vaultapi.VaultServer
+	kubeClient kubernetes.Interface
 }
 
 var _ api.TokenInterface = &TokenInfo{}
@@ -93,6 +95,7 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 	return &TokenInfo{
 		kmsService: kms.New(sess),
 		ssmService: ssm.New(sess),
+		kubeClient: kubeClient,
 		vs:         vs,
 	}, nil
 }
@@ -134,9 +137,28 @@ func (ti *TokenInfo) Token() (string, error) {
 }
 
 func (ti *TokenInfo) TokenName() string {
+	sts, err := ti.kubeClient.AppsV1().StatefulSets(ti.vs.Namespace).Get(context.TODO(), ti.vs.Name, metav1.GetOptions{})
+	if err != nil {
+		return ""
+	}
+
+	var keyPrefix string
+	unsealerContainer := fmt.Sprintf("vault-%s", vaultapi.VaultUnsealerContainerName)
+	for _, cont := range sts.Spec.Template.Spec.Containers {
+		if cont.Name != unsealerContainer {
+			continue
+		}
+		for _, arg := range cont.Args {
+			if strings.HasPrefix(arg, "--key-prefix=") {
+				keyPrefix = arg[1+strings.Index(arg, "="):]
+			}
+		}
+	}
+
 	awsKmsSsmSpec := ti.vs.Spec.Unsealer.Mode.AwsKmsSsm
 	if awsKmsSsmSpec.SsmKeyPrefix != "" {
-		return fmt.Sprintf("%s%s", awsKmsSsmSpec.SsmKeyPrefix, ti.vs.RootTokenID())
+		return fmt.Sprintf("%s%s", awsKmsSsmSpec.SsmKeyPrefix, fmt.Sprintf("%s-root-token", keyPrefix))
 	}
-	return ti.vs.RootTokenID()
+
+	return fmt.Sprintf("%s-root-token", keyPrefix)
 }

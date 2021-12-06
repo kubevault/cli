@@ -18,6 +18,8 @@ package kubernetes_secret
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
@@ -70,5 +72,23 @@ func (ti *TokenInfo) Token() (string, error) {
 }
 
 func (ti *TokenInfo) TokenName() string {
-	return ti.vs.RootTokenID()
+	sts, err := ti.kubeClient.AppsV1().StatefulSets(ti.vs.Namespace).Get(context.TODO(), ti.vs.Name, metav1.GetOptions{})
+	if err != nil {
+		return ""
+	}
+
+	var keyPrefix string
+	unsealerContainer := fmt.Sprintf("vault-%s", vaultapi.VaultUnsealerContainerName)
+	for _, cont := range sts.Spec.Template.Spec.Containers {
+		if cont.Name != unsealerContainer {
+			continue
+		}
+		for _, arg := range cont.Args {
+			if strings.HasPrefix(arg, "--key-prefix=") {
+				keyPrefix = arg[1+strings.Index(arg, "="):]
+			}
+		}
+	}
+
+	return fmt.Sprintf("%s-root-token", keyPrefix)
 }
