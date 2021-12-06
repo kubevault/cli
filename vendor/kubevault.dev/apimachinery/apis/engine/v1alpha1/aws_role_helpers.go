@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"fmt"
 
-	"kubevault.dev/apimachinery/apis"
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -31,7 +30,7 @@ func (_ AWSRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 }
 
 func (r AWSRole) RoleName() string {
-	cluster := apis.ClusterName
+	cluster := "-"
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}

@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"kubevault.dev/apimachinery/apis"
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -41,7 +40,7 @@ func (v VaultPolicyBinding) PolicyBindingName() string {
 		return v.Spec.VaultRoleName
 	}
 
-	cluster := apis.ClusterName
+	cluster := "-"
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}

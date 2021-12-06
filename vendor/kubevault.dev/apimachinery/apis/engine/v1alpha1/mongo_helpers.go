@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"fmt"
 
-	"kubevault.dev/apimachinery/apis"
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -33,7 +32,7 @@ func (_ MongoDBRole) CustomResourceDefinition() *apiextensions.CustomResourceDef
 const DefaultMongoDBDatabasePlugin = "mongodb-database-plugin"
 
 func (r MongoDBRole) RoleName() string {
-	cluster := apis.ClusterName
+	cluster := "-"
 	if clusterid.ClusterName() != "" {
 		cluster = clusterid.ClusterName()
 	}
