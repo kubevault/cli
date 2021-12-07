@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"kubevault.dev/apimachinery/apis"
 	"kubevault.dev/apimachinery/apis/kubevault"
@@ -177,20 +178,12 @@ func (vs *VaultServer) Scheme() string {
 
 // UnsealKeyID is the ID that used as key name when storing unseal key
 func (vs *VaultServer) UnsealKeyID(id int) string {
-	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
-	}
-	return fmt.Sprintf("k8s.%s.%s.%s-unseal-key-%d", cluster, vs.Namespace, vs.Name, id)
+	return strings.Join([]string{vs.KeyPrefix(), fmt.Sprintf("unseal-key-%d", id)}, "-")
 }
 
 // RootTokenID is the ID that used as key name when storing root token
 func (vs *VaultServer) RootTokenID() string {
-	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
-	}
-	return fmt.Sprintf("k8s.%s.%s.%s-root-token", cluster, vs.Namespace, vs.Name)
+	return strings.Join([]string{vs.KeyPrefix(), "root-token"}, "-")
 }
 
 func (vs *VaultServer) KeyPrefix() string {

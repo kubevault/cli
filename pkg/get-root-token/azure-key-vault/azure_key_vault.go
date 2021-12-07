@@ -66,19 +66,20 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 		return nil, err
 	}
 
-	if _, ok := secret.Data["client-id"]; !ok {
-		return nil, errors.Errorf("%s not found in secret", ClientID)
-	}
-	if _, ok := secret.Data["client-secret"]; !ok {
-		return nil, errors.Errorf("%s not found in secret", ClientSecret)
+	clientID, ok := secret.Data["client-id"]
+	if ok {
+		if err = os.Setenv(ClientID, string(clientID)); err != nil {
+			return nil, err
+		}
 	}
 
-	if err = os.Setenv(ClientID, string(secret.Data["client-id"])); err != nil {
-		return nil, err
+	clientSecret, ok := secret.Data["client-secret"]
+	if ok {
+		if err = os.Setenv(ClientSecret, string(clientSecret)); err != nil {
+			return nil, err
+		}
 	}
-	if err = os.Setenv(ClientSecret, string(secret.Data["client-secret"])); err != nil {
-		return nil, err
-	}
+
 	if err = os.Setenv(TenantID, vs.Spec.Unsealer.Mode.AzureKeyVault.TenantID); err != nil {
 		return nil, err
 	}
@@ -126,9 +127,8 @@ func (ti *TokenInfo) TokenName() string {
 	}
 
 	var keyPrefix string
-	unsealerContainer := fmt.Sprintf("vault-%s", vaultapi.VaultUnsealerContainerName)
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != unsealerContainer {
+		if cont.Name != vaultapi.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {

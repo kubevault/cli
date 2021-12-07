@@ -67,18 +67,18 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 		return nil, err
 	}
 
-	if _, ok := secret.Data["access_key"]; !ok {
-		return nil, errors.Errorf("%s not found in secret", AccessKey)
-	}
-	if _, ok := secret.Data["secret_key"]; !ok {
-		return nil, errors.Errorf("%s not found in secret", SecretKey)
+	accessKey, ok := secret.Data["access_key"]
+	if ok {
+		if err = os.Setenv(AccessKey, string(accessKey)); err != nil {
+			return nil, err
+		}
 	}
 
-	if err = os.Setenv(AccessKey, string(secret.Data["access_key"])); err != nil {
-		return nil, err
-	}
-	if err = os.Setenv(SecretKey, string(secret.Data["secret_key"])); err != nil {
-		return nil, err
+	secretKey, ok := secret.Data["secret_key"]
+	if ok {
+		if err = os.Setenv(SecretKey, string(secretKey)); err != nil {
+			return nil, err
+		}
 	}
 
 	sess, err := session.NewSession(&aws.Config{
@@ -143,9 +143,8 @@ func (ti *TokenInfo) TokenName() string {
 	}
 
 	var keyPrefix string
-	unsealerContainer := fmt.Sprintf("vault-%s", vaultapi.VaultUnsealerContainerName)
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != unsealerContainer {
+		if cont.Name != vaultapi.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {

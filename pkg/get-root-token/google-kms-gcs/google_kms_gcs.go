@@ -21,8 +21,11 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io/ioutil"
+	"math/rand"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	"kubevault.dev/cli/pkg/get-root-token/api"
@@ -45,6 +48,7 @@ type TokenInfo struct {
 	storageClient *storage.Client
 	kubeClient    kubernetes.Interface
 	vs            *vaultapi.VaultServer
+	path          string
 }
 
 var _ api.TokenInterface = &TokenInfo{}
@@ -71,8 +75,13 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 		return nil, errors.Errorf("%s not found in secret", ServiceAccountJSON)
 	}
 
-	saFile := fmt.Sprintf("/tmp/%s", ServiceAccountJSON)
-	if err = ioutil.WriteFile(saFile, secret.Data[ServiceAccountJSON], os.ModePerm); err != nil {
+	path := filepath.Join("/tmp", fmt.Sprintf("google-sa-cred-%s", randomString(6)))
+	if err = os.MkdirAll(path, os.ModePerm); err != nil {
+		return nil, err
+	}
+
+	saFile := filepath.Join(path, ServiceAccountJSON)
+	if err = os.WriteFile(saFile, secret.Data[ServiceAccountJSON], os.ModePerm); err != nil {
 		return nil, err
 	}
 
@@ -89,10 +98,15 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 		storageClient: client,
 		kubeClient:    kubeClient,
 		vs:            vs,
+		path:          path,
 	}, nil
 }
 
 func (ti *TokenInfo) Token() (string, error) {
+	defer func() {
+		_ = os.RemoveAll(ti.path)
+	}()
+
 	token := ti.TokenName()
 	googleKmsGcsSpec := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs
 	rc, err := ti.storageClient.Bucket(googleKmsGcsSpec.Bucket).Object(token).NewReader(context.TODO())
@@ -156,9 +170,8 @@ func (ti *TokenInfo) TokenName() string {
 	}
 
 	var keyPrefix string
-	unsealerContainer := fmt.Sprintf("vault-%s", vaultapi.VaultUnsealerContainerName)
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != unsealerContainer {
+		if cont.Name != vaultapi.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {
@@ -169,4 +182,14 @@ func (ti *TokenInfo) TokenName() string {
 	}
 
 	return fmt.Sprintf("%s-root-token", keyPrefix)
+}
+
+func randomString(n int) string {
+	rand.Seed(time.Now().Unix())
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	s := make([]rune, n)
+	for i := range s {
+		s[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(s)
 }

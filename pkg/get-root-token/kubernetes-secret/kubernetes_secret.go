@@ -78,9 +78,8 @@ func (ti *TokenInfo) TokenName() string {
 	}
 
 	var keyPrefix string
-	unsealerContainer := fmt.Sprintf("vault-%s", vaultapi.VaultUnsealerContainerName)
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != unsealerContainer {
+		if cont.Name != vaultapi.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {
