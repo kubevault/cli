@@ -36,7 +36,7 @@ import (
 func NewCmdGetRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:               "get-root-token",
-		Short:             "Token root token for vault server",
+		Short:             "Get root token for vault server",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) > 0 {
