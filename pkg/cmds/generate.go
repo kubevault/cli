@@ -44,19 +44,19 @@ const (
 	ResourceKindSecretProviderClass = "secretproviderclass"
 )
 
-type options struct {
+type generateOption struct {
 	secretRoleBinding string
 	vaultRole         string
 	keys              map[string]string
 	output            string
 }
 
-func NewOptions() *options {
-	return &options{}
+func NewOptions() *generateOption {
+	return &generateOption{}
 }
 
 type SecretProviderClassOptions struct {
-	options    *options
+	options    *generateOption
 	apiVersion string
 	kind       string
 	provider   secretsstore.Provider
@@ -66,7 +66,7 @@ type SecretProviderClassOptions struct {
 	roleName   string
 }
 
-func NewSecretProviderClassOptions(op *options, namespace, name string) *SecretProviderClassOptions {
+func NewSecretProviderClassOptions(op *generateOption, namespace, name string) *SecretProviderClassOptions {
 	return &SecretProviderClassOptions{
 		options:    op,
 		apiVersion: fmt.Sprintf("%s/v1alpha1", secretsstore.GroupName),
@@ -77,7 +77,7 @@ func NewSecretProviderClassOptions(op *options, namespace, name string) *SecretP
 	}
 }
 
-func (o *options) AddSecretProviderClassFlags(fs *pflag.FlagSet) {
+func (o *generateOption) AddSecretProviderClassFlags(fs *pflag.FlagSet) {
 	fs.StringVarP(&o.vaultRole, "vaultrole", "r", o.vaultRole, "vault role. RoleKind/name")
 	fs.StringVarP(&o.secretRoleBinding, "secretrolebinding", "b", o.secretRoleBinding, "secret role binding. namespace/name")
 	fs.StringToStringVar(&o.keys, "keys", o.keys, "Key/Value map used to store the keys to read and their mapping keys. secretKey=objectName")
@@ -124,7 +124,7 @@ func NewCmdGenerate(clientGetter genericclioptions.RESTClientGetter) *cobra.Comm
 	return cmd
 }
 
-func (o *options) generate(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *generateOption) generate(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch strings.ToLower(ResourceName) {
 	case ResourceKindSecretProviderClass:

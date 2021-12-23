@@ -3,6 +3,11 @@ module kubevault.dev/cli
 go 1.15
 
 require (
+	cloud.google.com/go v0.54.0
+	cloud.google.com/go/storage v1.6.0
+	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.12.0
+	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v0.3.0
+	github.com/aws/aws-sdk-go v1.27.0
 	github.com/go-errors/errors v1.0.1
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/pkg/errors v0.9.1
@@ -11,6 +16,8 @@ require (
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/x v0.0.8
+	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
+	google.golang.org/protobuf v1.26.0
 	k8s.io/api v0.22.2
 	k8s.io/apimachinery v0.22.2
 	k8s.io/cli-runtime v0.21.1
