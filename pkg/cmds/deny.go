@@ -49,7 +49,7 @@ func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command 
 				ObjectNames = args[1:]
 			}
 
-			if err := modifyStatusCondition(clientGetter, false); err != nil {
+			if err := modifyStatusCondition(clientGetter, secretAccessDeniedCond); err != nil {
 				Fatal(err)
 			} else {
 				fmt.Printf("secretaccessrequests %s denied\n", strings.Join(ObjectNames, ", "))

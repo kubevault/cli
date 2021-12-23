@@ -34,20 +34,20 @@ import (
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 )
 
-type options struct {
+type tokenOptions struct {
 	valueOnly bool
 }
 
-func NewOptions() *options {
-	return &options{}
+func NewTokenOptions() *tokenOptions {
+	return &tokenOptions{}
 }
 
-func (o *options) AddTokenFlag(fs *pflag.FlagSet) {
+func (o *tokenOptions) AddTokenFlag(fs *pflag.FlagSet) {
 	fs.BoolVar(&o.valueOnly, "value-only", o.valueOnly, "prints only the value if flag value-only is true.")
 }
 
 func NewCmdGetRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
-	o := NewOptions()
+	o := NewTokenOptions()
 	cmd := &cobra.Command{
 		Use:   "get-root-token",
 		Short: "Get root token for vault server",
@@ -75,7 +75,7 @@ func NewCmdGetRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.
 	return cmd
 }
 
-func (o *options) getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *tokenOptions) getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
 	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
@@ -129,7 +129,7 @@ func (o *options) getRootToken(clientGetter genericclioptions.RESTClientGetter) 
 	return err
 }
 
-func (o *options) printRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *tokenOptions) printRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token.NewTokenInterface(vs, kubeClient)
 	if err != nil {
 		return err
