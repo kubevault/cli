@@ -17,22 +17,14 @@ limitations under the License.
 package cmds
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 
-	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	engineutil "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1/util"
-
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	core "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
-	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -63,7 +55,7 @@ func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Comma
 				ObjectNames = args[1:]
 			}
 
-			if err := modifyStatusCondition(clientGetter, true); err != nil {
+			if err := modifyStatusCondition(clientGetter, secretAccessApprovedCond); err != nil {
 				Fatal(err)
 			} else {
 				fmt.Printf("secretaccessrequests %s approved\n", strings.Join(ObjectNames, ", "))
@@ -74,81 +66,4 @@ func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Comma
 
 	cmdutil.AddFilenameOptionFlags(cmd, &FilenameOptions, "identifying the resource to update")
 	return cmd
-}
-
-func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, isApproveReq bool) error {
-	var resourceName string
-	switch ResourceName {
-	case engineapi.ResourceSecretAccessRequest, engineapi.ResourceSecretAccessRequests:
-		resourceName = engineapi.ResourceSecretAccessRequest
-	case "":
-		resourceName = ""
-	default:
-		return errors.New("unknown/unsupported resource")
-	}
-
-	cfg, err := clientGetter.ToRESTConfig()
-	if err != nil {
-		return errors.Wrap(err, "failed to read kubeconfig")
-	}
-
-	namespace, _, err := clientGetter.ToRawKubeConfigLoader().Namespace()
-	if err != nil {
-		return err
-	}
-
-	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
-
-	engineClient, err := enginecs.NewForConfig(cfg)
-	if err != nil {
-		return err
-	}
-
-	r := builder.
-		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
-		ContinueOnError().
-		NamespaceParam(namespace).DefaultNamespace().
-		FilenameParam(false, &FilenameOptions).
-		ResourceNames(resourceName, ObjectNames...).
-		RequireObject(true).
-		Flatten().
-		Latest().
-		Do()
-
-	err = r.Visit(func(info *resource.Info, err error) error {
-		if err != nil {
-			return err
-		}
-
-		var err2 error
-		switch info.Object.(type) {
-		case *engineapi.SecretAccessRequest:
-			obj := info.Object.(*engineapi.SecretAccessRequest)
-			cond := secretAccessDeniedCond
-			if isApproveReq {
-				cond = secretAccessApprovedCond
-			}
-
-			if cond == secretAccessDeniedCond && kmapi.IsConditionTrue(obj.Status.Conditions, kmapi.ConditionRequestApproved) {
-				return errors.New("failed to deny, request already approved")
-			}
-
-			cond.ObservedGeneration = obj.Generation
-			err2 = UpdateSecretAccessRequestCondition(engineClient, obj.ObjectMeta, cond)
-		default:
-			err2 = errors.New("unknown/unsupported type")
-		}
-		return err2
-	})
-	return err
-}
-
-func UpdateSecretAccessRequestCondition(c enginecs.EngineV1alpha1Interface, req metav1.ObjectMeta, cond kmapi.Condition) error {
-	_, err := engineutil.UpdateSecretAccessRequestStatus(context.TODO(), c, req, func(in *engineapi.SecretAccessRequestStatus) *engineapi.SecretAccessRequestStatus {
-		cond.LastTransitionTime = metav1.Now()
-		in.Conditions = kmapi.SetCondition(in.Conditions, cond)
-		in.ObservedGeneration = req.Generation
-		return in
-	}, metav1.UpdateOptions{})
-	return err
 }
