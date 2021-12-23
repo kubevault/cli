@@ -22,6 +22,7 @@ import (
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
+	"kmodules.xyz/client-go/tools/clusterid"
 )
 
 func (_ PostgresRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -32,8 +33,8 @@ const DefaultPostgresDatabasePlugin = "postgresql-database-plugin"
 
 func (r PostgresRole) RoleName() string {
 	cluster := "-"
-	if r.ClusterName != "" {
-		cluster = r.ClusterName
+	if clusterid.ClusterName() != "" {
+		cluster = clusterid.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, r.Namespace, r.Name)
 }

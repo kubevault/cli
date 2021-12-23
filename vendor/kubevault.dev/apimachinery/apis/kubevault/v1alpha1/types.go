@@ -21,9 +21,10 @@ import (
 )
 
 const (
-	VaultServerContainerName   = "vault"
-	VaultUnsealerContainerName = "unsealer"
-	VaultExporterContainerName = "exporter"
+	VaultContainerName         = "vault"
+	VaultUnsealerContainerName = "vault-unsealer"
+	VaultInitContainerName     = "vault-config"
+	VaultExporterContainerName = "vault-exporter"
 )
 
 // +kubebuilder:validation:Enum=Initializing;Unsealing;Sealed;Ready;NotReady;Critical

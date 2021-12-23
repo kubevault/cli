@@ -33,6 +33,11 @@ type Lease struct {
 	Renewable bool `json:"renewable,omitempty" protobuf:"varint,3,opt,name=renewable"`
 }
 
+// SecretAccessRequest Conditions
+const (
+	ConditionRequestExpired = "Expired"
+)
+
 // Specifies the access key request phase
 type RequestStatusPhase string
 
@@ -40,6 +45,7 @@ var (
 	RequestStatusPhaseWaitingForApproval RequestStatusPhase = "WaitingForApproval"
 	RequestStatusPhaseApproved           RequestStatusPhase = "Approved"
 	RequestStatusPhaseDenied             RequestStatusPhase = "Denied"
+	RequestStatusPhaseExpired            RequestStatusPhase = "Expired"
 )
 
 type RolePhase string
