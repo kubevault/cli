@@ -26,6 +26,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
 	"k8s.io/client-go/kubernetes"
@@ -33,10 +34,28 @@ import (
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 )
 
+type options struct {
+	valueOnly bool
+}
+
+func NewOptions() *options {
+	return &options{}
+}
+
+func (o *options) AddTokenFlag(fs *pflag.FlagSet) {
+	fs.BoolVar(&o.valueOnly, "value-only", o.valueOnly, "prints only the value if flag value-only is true.")
+}
+
 func NewCmdGetRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
+	o := NewOptions()
 	cmd := &cobra.Command{
-		Use:               "get-root-token",
-		Short:             "Get root token for vault server",
+		Use:   "get-root-token",
+		Short: "Get root token for vault server",
+		Long: "Get the decrypted root token for a vault server. You can provide flags vaultserver name and namespace.\n\n" +
+			"Examples: \n # Get the decrypted root-token for resource vaultserver with name vault and namespace demo.\n # Prints the root-token name and the value.\n " +
+			"$ kubectl vault get-root-token vaultserver -n demo vault\n\n" +
+			" # Provide flag --value-only if you want to print only the root-token value.\n" +
+			" $ kubectl vault get-root-token vaultserver -n demo vault --value-only",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) > 0 {
@@ -44,7 +63,7 @@ func NewCmdGetRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.
 				ObjectNames = args[1:]
 			}
 
-			if err := getRootToken(clientGetter); err != nil {
+			if err := o.getRootToken(clientGetter); err != nil {
 				Fatal(err)
 			}
 			os.Exit(0)
@@ -52,10 +71,11 @@ func NewCmdGetRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.
 	}
 
 	cmdutil.AddFilenameOptionFlags(cmd, &FilenameOptions, "identifying the resource to update")
+	o.AddTokenFlag(cmd.Flags())
 	return cmd
 }
 
-func getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *options) getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
 	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
@@ -100,7 +120,7 @@ func getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 		switch info.Object.(type) {
 		case *vaultapi.VaultServer:
 			obj := info.Object.(*vaultapi.VaultServer)
-			err2 = printRootToken(obj, kubeClient)
+			err2 = o.printRootToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -109,7 +129,7 @@ func getRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	return err
 }
 
-func printRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *options) printRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token.NewTokenInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -118,6 +138,10 @@ func printRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) e
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%s: %s\n", ti.TokenName(), rToken)
+	if o.valueOnly {
+		fmt.Printf("%s", rToken)
+	} else {
+		fmt.Printf("%s: %s\n", ti.TokenName(), rToken)
+	}
 	return nil
 }
