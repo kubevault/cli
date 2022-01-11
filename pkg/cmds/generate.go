@@ -49,6 +49,7 @@ type generateOption struct {
 	vaultRole         string
 	keys              map[string]string
 	output            string
+	vaultCACertPath   string
 }
 
 func NewOptions() *generateOption {
@@ -82,6 +83,7 @@ func (o *generateOption) AddSecretProviderClassFlags(fs *pflag.FlagSet) {
 	fs.StringVarP(&o.secretRoleBinding, "secretrolebinding", "b", o.secretRoleBinding, "secret role binding. namespace/name")
 	fs.StringToStringVar(&o.keys, "keys", o.keys, "Key/Value map used to store the keys to read and their mapping keys. secretKey=objectName")
 	fs.StringVarP(&o.output, "output", "o", o.output, "output format yaml/json. default to yaml")
+	fs.StringVarP(&o.vaultCACertPath, "vault-ca-cert-path", "p", o.vaultCACertPath, "vault CA cert path in secret provider, default to Insecure mode.")
 }
 
 func NewCmdGenerate(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
@@ -243,6 +245,16 @@ func (s *SecretProviderClassOptions) generateSecretProviderClass(objectsList str
 				"objects":      objectsList,
 			},
 		},
+	}
+
+	if len(s.options.vaultCACertPath) != 0 {
+		if !strings.HasPrefix(s.vsURL, "https:") {
+			return errors.New("VaultServer isn't secure with SSL, vaultCACertPath isn't supported")
+		}
+		spc.Spec.Parameters["vaultCACertPath"] = s.options.vaultCACertPath
+		spc.Spec.Parameters["vaultSkipTLSVerify"] = "false"
+	} else {
+		spc.Spec.Parameters["vaultSkipTLSVerify"] = "true"
 	}
 
 	jsonData, err := json.MarshalIndent(&spc, "", "\t")

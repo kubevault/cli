@@ -46,7 +46,7 @@ func NewGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[stri
 		return mongo.NewMongoGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	case engineapi.ResourceKindElasticsearchRole:
 		return es.NewElasticsearchGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
-	case engineapi.ResourceMySQLRole:
+	case engineapi.ResourceKindMySQLRole:
 		return sql.NewMySQLGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	case engineapi.ResourceKindPostgresRole:
 		return pg.NewPostgresGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
