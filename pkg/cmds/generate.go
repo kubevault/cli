@@ -245,6 +245,11 @@ func (s *SecretProviderClassOptions) generateSecretProviderClass(objectsList str
 		},
 	}
 
+	if strings.HasPrefix(s.vsURL, "https:") {
+		spc.Spec.Parameters["vaultCACertPath"] = "/path/to/vault/ca.crt"
+		spc.Spec.Parameters["vaultSkipTLSVerify"] = "false"
+	}
+
 	jsonData, err := json.MarshalIndent(&spc, "", "\t")
 	if err != nil {
 		return errors.Errorf("Error while Marshaling to yaml with %s", err.Error())
