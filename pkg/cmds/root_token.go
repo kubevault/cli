@@ -194,7 +194,7 @@ func (o *getTokenOptions) get(clientGetter genericclioptions.RESTClientGetter) e
 		switch info.Object.(type) {
 		case *vaultapi.VaultServer:
 			obj := info.Object.(*vaultapi.VaultServer)
-			err2 = o.printRootToken(obj, kubeClient)
+			err2 = o.getRootToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -203,7 +203,7 @@ func (o *getTokenOptions) get(clientGetter genericclioptions.RESTClientGetter) e
 	return err
 }
 
-func (o *getTokenOptions) printRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *getTokenOptions) getRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -224,14 +224,6 @@ func (o *getTokenOptions) printRootToken(vs *vaultapi.VaultServer, kubeClient ku
 	}
 
 	return err
-}
-
-func (o *getTokenOptions) Print(name, token string) {
-	if o.valueOnly {
-		fmt.Printf("%s\n", token)
-	} else {
-		fmt.Printf("%s: %s\n", name, token)
-	}
 }
 
 func del(clientGetter genericclioptions.RESTClientGetter) error {
@@ -378,4 +370,12 @@ func (o *setTokenOptions) setRootToken(vs *vaultapi.VaultServer, kubeClient kube
 
 	fmt.Printf("root-token with name %s, value %s successfully set\n", name, o.tokenValue)
 	return nil
+}
+
+func (o *getTokenOptions) Print(key, value string) {
+	if o.valueOnly {
+		fmt.Printf("%s\n", value)
+	} else {
+		fmt.Printf("%s: %s\n", key, value)
+	}
 }
