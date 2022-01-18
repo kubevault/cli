@@ -14,22 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package token
+package token_keys_store
 
 import (
 	"errors"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
-	"kubevault.dev/cli/pkg/get-root-token/api"
-	aws_kms_ssm "kubevault.dev/cli/pkg/get-root-token/aws-kms-ssm"
-	azure_key_vault "kubevault.dev/cli/pkg/get-root-token/azure-key-vault"
-	google_kms_gcs "kubevault.dev/cli/pkg/get-root-token/google-kms-gcs"
-	kubernetes_secret "kubevault.dev/cli/pkg/get-root-token/kubernetes-secret"
+	"kubevault.dev/cli/pkg/token-keys-store/api"
+	aws_kms_ssm "kubevault.dev/cli/pkg/token-keys-store/aws-kms-ssm"
+	azure_key_vault "kubevault.dev/cli/pkg/token-keys-store/azure-key-vault"
+	google_kms_gcs "kubevault.dev/cli/pkg/token-keys-store/google-kms-gcs"
+	kubernetes_secret "kubevault.dev/cli/pkg/token-keys-store/kubernetes-secret"
 
 	"k8s.io/client-go/kubernetes"
 )
 
-func NewTokenInterface(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (api.TokenInterface, error) {
+func NewTokenKeyInterface(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (api.TokenKeyInterface, error) {
 	if vs.Spec.Unsealer == nil {
 		return nil, errors.New("vaultServer unsealer spec is empty")
 	}

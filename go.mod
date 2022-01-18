@@ -5,6 +5,7 @@ go 1.15
 require (
 	cloud.google.com/go v0.54.0
 	cloud.google.com/go/storage v1.6.0
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.20.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.12.0
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v0.3.0
 	github.com/aws/aws-sdk-go v1.27.0
@@ -16,6 +17,7 @@ require (
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/x v0.0.8
+	google.golang.org/api v0.20.0
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
 	google.golang.org/protobuf v1.26.0
 	k8s.io/api v0.22.2

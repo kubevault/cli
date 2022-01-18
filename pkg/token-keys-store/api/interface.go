@@ -16,7 +16,12 @@ limitations under the License.
 
 package api
 
-type TokenInterface interface {
-	Token() (string, error)
-	TokenName() string
+type TokenKeyInterface interface {
+	Get(string) (string, error)
+	Set(string, string) error
+	Delete(string) error
+	NewTokenName() string
+	OldTokenName() string
+	NewUnsealKeyName(int) string
+	OldUnsealKeyName(int) string
 }
