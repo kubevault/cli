@@ -236,7 +236,7 @@ func (o *keyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernet
 	cnt := vs.Spec.Unsealer.SecretShares
 	for i := 0; int64(i) < cnt; i++ {
 		o.keyId = i
-		err := o.printUnsealKey(vs, kubeClient)
+		err := o.getUnsealKey(vs, kubeClient)
 		if err != nil {
 			fmt.Printf("unseal-key-%d not found\n", i)
 		}
@@ -288,7 +288,7 @@ func (o *keyOptions) get(clientGetter genericclioptions.RESTClientGetter) error 
 		switch info.Object.(type) {
 		case *vaultapi.VaultServer:
 			obj := info.Object.(*vaultapi.VaultServer)
-			err2 = o.printUnsealKey(obj, kubeClient)
+			err2 = o.getUnsealKey(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -297,11 +297,15 @@ func (o *keyOptions) get(clientGetter genericclioptions.RESTClientGetter) error 
 	return err
 }
 
-func (o *keyOptions) printUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *keyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		err = ti.Clean()
+	}()
 
 	name := ti.NewUnsealKeyName(o.keyId)
 	rToken, err := ti.Get(name)
@@ -380,6 +384,10 @@ func (o *keyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kubern
 		return err
 	}
 
+	defer func() {
+		err = ti.Clean()
+	}()
+
 	name := ti.NewUnsealKeyName(o.keyId)
 	err = ti.Delete(name)
 	if err == nil {
@@ -456,6 +464,10 @@ func (o *keyValueOptions) setUnsealKey(vs *vaultapi.VaultServer, kubeClient kube
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		err = ti.Clean()
+	}()
 
 	name := ti.NewUnsealKeyName(o.keyId)
 	err = ti.Set(name, o.keyValue)

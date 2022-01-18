@@ -106,10 +106,6 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 }
 
 func (ti *TokenKeyInfo) Get(key string) (string, error) {
-	defer func() {
-		_ = os.RemoveAll(ti.path)
-	}()
-
 	googleKmsGcsSpec := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs
 	rc, err := ti.storageClient.Bucket(googleKmsGcsSpec.Bucket).Object(key).NewReader(context.TODO())
 	if err != nil {
@@ -270,4 +266,8 @@ func randomString(n int) string {
 		s[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(s)
+}
+
+func (ti *TokenKeyInfo) Clean() error {
+	return os.RemoveAll(ti.path)
 }

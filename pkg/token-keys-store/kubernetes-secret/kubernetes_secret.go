@@ -156,3 +156,7 @@ func (ti *TokenKeyInfo) NewUnsealKeyName(id int) string {
 func (ti *TokenKeyInfo) OldUnsealKeyName(id int) string {
 	return fmt.Sprintf("vault-unseal-key-%d", id)
 }
+
+func (ti *TokenKeyInfo) Clean() error {
+	return nil
+}
