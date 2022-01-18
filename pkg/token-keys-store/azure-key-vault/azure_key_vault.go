@@ -192,7 +192,7 @@ func (ti *TokenKeyInfo) getLatestVersion(key string) (string, error) {
 	for pager.NextPage(context.Background()) {
 		resp := pager.PageResponse()
 		for _, ver := range resp.Secrets {
-			cur := time.Now().Sub(*ver.Attributes.Created)
+			cur := time.Since(*ver.Attributes.Created)
 			if version == "" {
 				version = *ver.ID
 				dur = cur

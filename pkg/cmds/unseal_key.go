@@ -223,7 +223,7 @@ func (o *keyOptions) list(clientGetter genericclioptions.RESTClientGetter) error
 		switch info.Object.(type) {
 		case *vaultapi.VaultServer:
 			obj := info.Object.(*vaultapi.VaultServer)
-			err2 = o.listUnsealKey(obj, kubeClient)
+			o.listUnsealKey(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -232,14 +232,15 @@ func (o *keyOptions) list(clientGetter genericclioptions.RESTClientGetter) error
 	return err
 }
 
-func (o *keyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *keyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) {
 	cnt := vs.Spec.Unsealer.SecretShares
 	for i := 0; int64(i) < cnt; i++ {
 		o.keyId = i
-		_ = o.printUnsealKey(vs, kubeClient)
+		err := o.printUnsealKey(vs, kubeClient)
+		if err != nil {
+			fmt.Printf("unseal-key-%d not found\n", i)
+		}
 	}
-
-	return nil
 }
 
 func (o *keyOptions) get(clientGetter genericclioptions.RESTClientGetter) error {
