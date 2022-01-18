@@ -134,13 +134,13 @@ func syncRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) er
 	}()
 
 	newKey := ti.NewTokenName()
-	value, err := ti.Get(newKey)
+	_, err = ti.Get(newKey)
 	if err == nil {
 		return err
 	}
 
 	oldKey := ti.OldTokenName()
-	value, err = ti.Get(oldKey)
+	value, err := ti.Get(oldKey)
 	if err == nil {
 		err = ti.Set(newKey, value)
 		if err != nil {
@@ -166,7 +166,7 @@ func syncUnsealKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) e
 
 	for i := 0; int64(i) < vs.Spec.Unsealer.SecretShares; i++ {
 		fmt.Println("trying for vault-unseal-key: ", i)
-		err := syncUnsealKey(i, ti, vs, kubeClient)
+		err := syncUnsealKey(i, ti)
 		if err != nil {
 			return err
 		}
@@ -175,15 +175,15 @@ func syncUnsealKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) e
 	return nil
 }
 
-func syncUnsealKey(id int, ti api.TokenKeyInterface, vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func syncUnsealKey(id int, ti api.TokenKeyInterface) error {
 	newKey := ti.NewUnsealKeyName(id)
-	value, err := ti.Get(newKey)
+	_, err := ti.Get(newKey)
 	if err == nil {
 		return err
 	}
 
 	oldKey := ti.OldUnsealKeyName(id)
-	value, err = ti.Get(oldKey)
+	value, err := ti.Get(oldKey)
 	if err == nil {
 		err = ti.Set(newKey, value)
 		if err != nil {
