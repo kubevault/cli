@@ -115,11 +115,14 @@ func syncTokenKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) er
 		return err
 	}
 
+	fmt.Println("vault root-token successfully synced")
+
 	if err := syncUnsealKeys(vs, kubeClient); err != nil {
 		return err
 	}
 
-	fmt.Println("vault root-token & unseal-keys successfully synced")
+	fmt.Println("vault unseal-keys successfully synced")
+
 	return nil
 }
 
@@ -134,21 +137,22 @@ func syncRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) er
 	}()
 
 	newKey := ti.NewTokenName()
-	_, err = ti.Get(newKey)
-	if err == nil {
+	oldKey := ti.OldTokenName()
+	value, err := ti.Get(oldKey)
+	if err != nil {
+		_, err = ti.Get(newKey)
+		if err == nil {
+			return nil
+		}
+
 		return err
 	}
 
-	oldKey := ti.OldTokenName()
-	value, err := ti.Get(oldKey)
-	if err == nil {
-		err = ti.Set(newKey, value)
-		if err != nil {
-			return err
-		}
+	if err = ti.Set(newKey, value); err != nil {
+		return err
 	}
 
-	return err
+	return nil
 }
 
 func syncUnsealKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
@@ -162,7 +166,6 @@ func syncUnsealKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) e
 	}()
 
 	for i := 0; int64(i) < vs.Spec.Unsealer.SecretShares; i++ {
-		fmt.Println("trying for vault-unseal-key: ", i)
 		err = syncUnsealKey(i, ti)
 		if err != nil {
 			return err
@@ -178,23 +181,24 @@ func syncUnsealKey(id int, ti api.TokenKeyInterface) error {
 		return err
 	}
 
-	_, err = ti.Get(newKey)
-	if err == nil {
-		return err
-	}
-
 	oldKey, err := ti.OldUnsealKeyName(id)
 	if err != nil {
 		return err
 	}
 
 	value, err := ti.Get(oldKey)
-	if err == nil {
-		err = ti.Set(newKey, value)
-		if err != nil {
-			return err
+	if err != nil {
+		_, err = ti.Get(newKey)
+		if err == nil {
+			return nil
 		}
+
+		return err
 	}
 
-	return err
+	if err = ti.Set(newKey, value); err != nil {
+		return err
+	}
+
+	return nil
 }

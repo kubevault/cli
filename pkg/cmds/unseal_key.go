@@ -256,7 +256,7 @@ func (o *getKeyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kuber
 		o.keyId = i
 		err := o.getUnsealKey(vs, kubeClient)
 		if err != nil {
-			fmt.Printf("vault-unseal-key-%d not found\n", i)
+			fmt.Printf("vault-unseal-key-%d: not found\n", i)
 		}
 	}
 }
