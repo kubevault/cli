@@ -307,14 +307,22 @@ func (o *keyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernete
 		ti.Clean()
 	}()
 
-	name := ti.NewUnsealKeyName(o.keyId)
+	name, err := ti.NewUnsealKeyName(o.keyId)
+	if err != nil {
+		return err
+	}
+
 	rToken, err := ti.Get(name)
 	if err == nil {
 		o.Print(name, rToken)
 		return nil
 	}
 
-	name = ti.OldUnsealKeyName(o.keyId)
+	name, err = ti.OldUnsealKeyName(o.keyId)
+	if err != nil {
+		return err
+	}
+
 	rToken, err = ti.Get(name)
 	if err == nil {
 		o.Print(name, rToken)
@@ -388,14 +396,22 @@ func (o *keyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kubern
 		ti.Clean()
 	}()
 
-	name := ti.NewUnsealKeyName(o.keyId)
+	name, err := ti.NewUnsealKeyName(o.keyId)
+	if err != nil {
+		return err
+	}
+
 	err = ti.Delete(name)
 	if err == nil {
 		fmt.Printf("unseal-key with name %s successfully deleted\n", name)
 		return nil
 	}
 
-	name = ti.OldUnsealKeyName(o.keyId)
+	name, err = ti.OldUnsealKeyName(o.keyId)
+	if err != nil {
+		return err
+	}
+
 	err = ti.Delete(name)
 	if err == nil {
 		fmt.Printf("unseal-key with name %s successfully deleted\n", name)
@@ -469,14 +485,22 @@ func (o *keyValueOptions) setUnsealKey(vs *vaultapi.VaultServer, kubeClient kube
 		ti.Clean()
 	}()
 
-	name := ti.NewUnsealKeyName(o.keyId)
+	name, err := ti.NewUnsealKeyName(o.keyId)
+	if err != nil {
+		return err
+	}
+
 	err = ti.Set(name, o.keyValue)
 	if err == nil {
 		fmt.Printf("unseal-key with name %s, value %s successfully set\n", name, o.keyValue)
 		return nil
 	}
 
-	name = ti.OldUnsealKeyName(o.keyId)
+	name, err = ti.OldUnsealKeyName(o.keyId)
+	if err != nil {
+		return err
+	}
+
 	err = ti.Set(name, o.keyValue)
 	if err == nil {
 		fmt.Printf("unseal-key with name %s, value %s successfully set\n", name, o.keyValue)

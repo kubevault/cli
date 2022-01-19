@@ -176,13 +176,21 @@ func syncUnsealKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) e
 }
 
 func syncUnsealKey(id int, ti api.TokenKeyInterface) error {
-	newKey := ti.NewUnsealKeyName(id)
-	_, err := ti.Get(newKey)
+	newKey, err := ti.NewUnsealKeyName(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = ti.Get(newKey)
 	if err == nil {
 		return err
 	}
 
-	oldKey := ti.OldUnsealKeyName(id)
+	oldKey, err := ti.OldUnsealKeyName(id)
+	if err != nil {
+		return err
+	}
+
 	value, err := ti.Get(oldKey)
 	if err == nil {
 		err = ti.Set(newKey, value)

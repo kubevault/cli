@@ -231,10 +231,14 @@ func (ti *TokenKeyInfo) OldTokenName() string {
 	return "vault-root-token"
 }
 
-func (ti *TokenKeyInfo) NewUnsealKeyName(id int) string {
+func (ti *TokenKeyInfo) NewUnsealKeyName(id int) (string, error) {
 	sts, err := ti.kubeClient.AppsV1().StatefulSets(ti.vs.Namespace).Get(context.TODO(), ti.vs.Name, metav1.GetOptions{})
 	if err != nil {
-		return ""
+		return "", err
+	}
+
+	if int64(id) >= ti.vs.Spec.Unsealer.SecretShares {
+		return "", errors.Errorf("unseal-key-%d not available, available id range 0 to %d", id, ti.vs.Spec.Unsealer.SecretShares-1)
 	}
 
 	var keyPrefix string
@@ -249,11 +253,15 @@ func (ti *TokenKeyInfo) NewUnsealKeyName(id int) string {
 		}
 	}
 
-	return fmt.Sprintf("%s-unseal-key-%d", keyPrefix, id)
+	return fmt.Sprintf("%s-unseal-key-%d", keyPrefix, id), nil
 }
 
-func (ti *TokenKeyInfo) OldUnsealKeyName(id int) string {
-	return fmt.Sprintf("vault-unseal-key-%d", id)
+func (ti *TokenKeyInfo) OldUnsealKeyName(id int) (string, error) {
+	if int64(id) >= ti.vs.Spec.Unsealer.SecretShares {
+		return "", errors.Errorf("unseal-key-%d not available, available id range 0 to %d", id, ti.vs.Spec.Unsealer.SecretShares-1)
+	}
+
+	return fmt.Sprintf("vault-unseal-key-%d", id), nil
 }
 
 func (ti *TokenKeyInfo) Clean() {

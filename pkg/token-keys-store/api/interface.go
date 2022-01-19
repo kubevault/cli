@@ -23,6 +23,6 @@ type TokenKeyInterface interface {
 	Clean()
 	NewTokenName() string
 	OldTokenName() string
-	NewUnsealKeyName(int) string
-	OldUnsealKeyName(int) string
+	NewUnsealKeyName(int) (string, error)
+	OldUnsealKeyName(int) (string, error)
 }
