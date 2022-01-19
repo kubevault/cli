@@ -36,9 +36,19 @@ import (
 
 func NewCmdSync(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:               "sync",
-		Short:             "sync short cmd",
-		Long:              "sync long cmd",
+		Use:   "sync",
+		Short: "sync vault root-token & unseal-keys",
+		Long: `
+You can use the sync command to update the naming format of your vaultserver root-token & unseal-keys 
+$ kubectl vault sync vaultserver <name> -n <namespace>
+
+Examples:
+ # sync the vaultserver root-token & unseal-keys
+ # old naming conventions: vault-root-token, vault-unseal-key-0, vault-unseal-key-1, etc.
+ # new naming convention for root-token: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-root-token
+ # new naming convention for unseal-key: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-unseal-key-{id}
+ $ kubectl vault sync vaultserver vault -n demo
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) > 0 {

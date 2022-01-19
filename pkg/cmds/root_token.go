@@ -76,9 +76,17 @@ func (o *delTokenOptions) AddDelTokenFlag(fs *pflag.FlagSet) {
 
 func NewCmdRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:               "root-token",
-		Short:             "root-token short cmd",
-		Long:              "root-token [command]",
+		Use:   "root-token",
+		Short: "get, set, delete root-token",
+		Long: `
+$ kubectl vault root-token [command] [flags] to get, set or delete vault root-token
+
+Examples:
+ $ kubectl vault root-token get [flags]
+ $ kubectl vault root-token set [flags]
+ $ kubectl vault root-token delete [flags]
+`,
+
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			_ = cmd.Help()
@@ -95,12 +103,23 @@ func NewCmdRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Com
 func NewCmdGetToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	o := newGetTokenOptions()
 	cmd := &cobra.Command{
-		Use:               "get",
-		Short:             "get root-token short cmd",
-		Long:              "get root-token long cmd",
+		Use:   "get",
+		Short: "get vault root-token",
+		Long: `
+$ kubectl vault root-token get vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # get the decrypted root-token of a vaultserver with name vault in demo namespace
+ $ kubectl vault root-token get vaultserver vault -n demo
+
+ # pass the --value-only flag to get only the decrypted value
+ $ kubectl vault root-token get vaultserver vault -n demo --value-only
+
+ # pass the --token-name flag to get only the decrypted root-token value with a specific token name
+ $ kubectl vault root-token get vaultserver vault -n demo --token-name <token-name> --value-only
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("get root-token")
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
@@ -120,12 +139,21 @@ func NewCmdGetToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Comm
 func NewCmdSetToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	o := newSetTokenOptions()
 	cmd := &cobra.Command{
-		Use:               "set",
-		Short:             "set root-token short cmd",
-		Long:              "set root-token long cmd",
+		Use:   "set",
+		Short: "set vault root-token",
+		Long: `
+$ kubectl vault root-token set vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # set the root-token with name --token-name flag & value --token-value flag
+ $ kubectl vault root-token set vaultserver vault -n demo --token-name <name> --token-value <value>
+
+ # default name for root-token will be used if --token-name flag is not provided
+ # default root-token naming format: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-root-token
+ $ kubectl vault root-token set vaultserver vault -n demo --token-value <value>
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("set root-token: ", args)
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
@@ -145,12 +173,21 @@ func NewCmdSetToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Comm
 func NewCmdDeleteToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	o := newDelTokenOptions()
 	cmd := &cobra.Command{
-		Use:               "delete",
-		Short:             "delete root-token short cmd",
-		Long:              "delete root-token long cmd",
+		Use:   "delete",
+		Short: "delete vault root-token",
+		Long: `
+$ kubectl vault root-token delete vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # delete the root-token with name set by --token-name flag
+ $ kubectl vault root-token delete vaultserver vault -n demo --token-name <name>
+
+ # default name for root-token will be used if --token-name flag is not provided
+ # default root-token naming format: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-root-token
+ $ kubectl vault root-token delete vaultserver vault -n demo
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("delete root-token: ", args)
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]

@@ -80,9 +80,17 @@ func (o *delKeyOptions) addDelKeyFlags(fs *pflag.FlagSet) {
 
 func NewCmdUnsealKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:               "unseal-key",
-		Short:             "unseal-key\" short cmd",
-		Long:              "unseal-key [command]",
+		Use:   "unseal-key",
+		Short: "get, set, delete, list unseal-key",
+		Long: `
+$ kubectl vault unseal-key [command] [flags] to get, set, delete or list vault unseal-keys
+
+Examples:
+ $ kubectl vault unseal-key get [flags]
+ $ kubectl vault unseal-key set [flags]
+ $ kubectl vault unseal-key delete [flags]
+ $ kubectl vault unseal-key list [flags]
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			_ = cmd.Help()
@@ -100,12 +108,21 @@ func NewCmdUnsealKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Com
 func NewCmdGetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	o := newGetKeyOptions()
 	cmd := &cobra.Command{
-		Use:               "get",
-		Short:             "get unseal-key short cmd",
-		Long:              "get unseal-key long cmd",
+		Use:   "get",
+		Short: "get vault unseal-key",
+		Long: `
+$ kubectl vault unseal-key get vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # get the decrypted unseal-key of a vaultserver with name vault in demo namespace with --key-id flag
+ # default unseal-key format: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-unseal-key-{id}
+ $ kubectl vault unseal-key get vaultserver vault -n demo --key-id <id>
+
+ # pass the --key-name flag to get only the decrypted unseal-key value with a specific key name
+ $ kubectl vault unseal-key get vaultserver vault -n demo --key-name <name>
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("get unseal-key")
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
@@ -125,12 +142,24 @@ func NewCmdGetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Comman
 func NewCmdSetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	o := newSetKeyOptions()
 	cmd := &cobra.Command{
-		Use:               "set",
-		Short:             "set unseal-key short cmd",
-		Long:              "set unseal-key long cmd",
+		Use:   "set",
+		Short: "set vault unseal-key",
+		Long: `
+$ kubectl vault unseal-key set vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # set the unseal-key with name --key-name flag & value --key-value flag
+ $ kubectl vault unseal-key set vaultserver vault -n demo --key-name <name> --key-value <value>
+
+ # pass the --key-id flag to set the default unseal-key with given <id> 
+ $ kubectl vault unseal-key set vaultserver vault -n demo --key-id <id> --key-value <value>
+
+ # default name for unseal-key will be used if --key-name flag is not provided
+ # default unseal-key naming format: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-unseal-key-{id}
+ $ kubectl vault unseal-key set vaultserver vault -n demo --key-id <id> --key-value <value>
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("set unseal-key: ", args)
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
@@ -150,12 +179,20 @@ func NewCmdSetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Comman
 func NewCmdDeleteKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	o := newDelKeyOptions()
 	cmd := &cobra.Command{
-		Use:               "delete",
-		Short:             "delete unseal-key short cmd",
-		Long:              "delete unseal-key long cmd",
+		Use:   "delete",
+		Short: "delete vault unseal-key",
+		Long: `
+$ kubectl vault unseal-key delete vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # delete the unseal-key with name set by --key-name flag
+ $ kubectl vault unseal-key delete vaultserver vault -n demo --key-name <name>
+
+ # delete the unseal-key with name set by --key-id flag
+ $ kubectl vault unseal-key delete vaultserver vault -n demo --key-id <id>
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("delete unseal-key: ", args)
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
@@ -175,12 +212,17 @@ func NewCmdDeleteKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Com
 func NewCmdListKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	o := newGetKeyOptions()
 	cmd := &cobra.Command{
-		Use:               "list",
-		Short:             "list unseal-key short cmd",
-		Long:              "list unseal-key long cmd",
+		Use:   "list",
+		Short: "list vault unseal-key",
+		Long: `
+$ kubectl vault unseal-key list vaultserver <name> -n <namespace>
+
+Examples:
+ # list the vault unseal-keys
+ $ kubectl vault unseal-key list vaultserver vault -n demo
+`,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("list unseal-key: ", args)
 			if len(args) > 0 {
 				ResourceName = args[0]
 				ObjectNames = args[1:]
