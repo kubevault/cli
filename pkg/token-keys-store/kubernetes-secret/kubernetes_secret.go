@@ -84,6 +84,7 @@ func (ti *TokenKeyInfo) Delete(key string) error {
 
 	if _, ok := secret.Data[key]; ok {
 		secret.Data[key] = nil
+		delete(secret.Data, key)
 	}
 
 	_, err = ti.kubeClient.CoreV1().Secrets(secretNamespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
