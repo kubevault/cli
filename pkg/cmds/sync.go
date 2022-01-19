@@ -146,9 +146,6 @@ func syncRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) er
 		if err != nil {
 			return err
 		}
-
-		err = ti.Delete(oldKey)
-		return err
 	}
 
 	return err
@@ -197,9 +194,6 @@ func syncUnsealKey(id int, ti api.TokenKeyInterface) error {
 		if err != nil {
 			return err
 		}
-
-		err = ti.Delete(oldKey)
-		return err
 	}
 
 	return err

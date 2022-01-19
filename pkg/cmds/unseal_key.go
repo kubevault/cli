@@ -34,30 +34,48 @@ import (
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 )
 
-type keyOptions struct {
-	keyId int
+type getKeyOptions struct {
+	keyId   int
+	keyName string
 }
 
-func newKeyOptions() *keyOptions {
-	return &keyOptions{}
-}
-
-func (o *keyOptions) addKeyFlags(fs *pflag.FlagSet) {
-	fs.IntVar(&o.keyId, "key-id", o.keyId, "unseal key id")
-}
-
-type keyValueOptions struct {
+type setKeyOptions struct {
 	keyId    int
 	keyValue string
+	keyName  string
 }
 
-func newKeyValueOptions() *keyValueOptions {
-	return &keyValueOptions{}
+type delKeyOptions struct {
+	keyId   int
+	keyName string
 }
 
-func (o *keyValueOptions) addKeyValueOptions(fs *pflag.FlagSet) {
-	fs.IntVar(&o.keyId, "key-id", o.keyId, "unseal key id")
-	fs.StringVar(&o.keyValue, "key-value", o.keyValue, "unseal key value")
+func newGetKeyOptions() *getKeyOptions {
+	return &getKeyOptions{}
+}
+
+func newSetKeyOptions() *setKeyOptions {
+	return &setKeyOptions{}
+}
+
+func newDelKeyOptions() *delKeyOptions {
+	return &delKeyOptions{}
+}
+
+func (o *getKeyOptions) addGetKeyFlags(fs *pflag.FlagSet) {
+	fs.IntVar(&o.keyId, "key-id", o.keyId, "get the latest unseal key with id")
+	fs.StringVar(&o.keyName, "key-name", o.keyName, "get unseal key with key-name")
+}
+
+func (o *setKeyOptions) addSetKeyFlags(fs *pflag.FlagSet) {
+	fs.IntVar(&o.keyId, "key-id", o.keyId, "set the latest unseal key with id")
+	fs.StringVar(&o.keyName, "key-name", o.keyName, "set unseal key with key-name")
+	fs.StringVar(&o.keyValue, "key-value", o.keyValue, "set unseal key with key-value")
+}
+
+func (o *delKeyOptions) addDelKeyFlags(fs *pflag.FlagSet) {
+	fs.IntVar(&o.keyId, "key-id", o.keyId, "delete the latest unseal key with id")
+	fs.StringVar(&o.keyName, "key-name", o.keyName, "delete unseal key with key-name")
 }
 
 func NewCmdUnsealKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
@@ -80,7 +98,7 @@ func NewCmdUnsealKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Com
 }
 
 func NewCmdGetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
-	o := newKeyOptions()
+	o := newGetKeyOptions()
 	cmd := &cobra.Command{
 		Use:               "get",
 		Short:             "get unseal-key short cmd",
@@ -100,12 +118,12 @@ func NewCmdGetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Comman
 		},
 	}
 
-	o.addKeyFlags(cmd.Flags())
+	o.addGetKeyFlags(cmd.Flags())
 	return cmd
 }
 
 func NewCmdSetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
-	o := newKeyValueOptions()
+	o := newSetKeyOptions()
 	cmd := &cobra.Command{
 		Use:               "set",
 		Short:             "set unseal-key short cmd",
@@ -125,12 +143,12 @@ func NewCmdSetKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Comman
 		},
 	}
 
-	o.addKeyValueOptions(cmd.Flags())
+	o.addSetKeyFlags(cmd.Flags())
 	return cmd
 }
 
 func NewCmdDeleteKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
-	o := newKeyOptions()
+	o := newDelKeyOptions()
 	cmd := &cobra.Command{
 		Use:               "delete",
 		Short:             "delete unseal-key short cmd",
@@ -150,12 +168,12 @@ func NewCmdDeleteKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Com
 		},
 	}
 
-	o.addKeyFlags(cmd.Flags())
+	o.addDelKeyFlags(cmd.Flags())
 	return cmd
 }
 
 func NewCmdListKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
-	o := newKeyOptions()
+	o := newGetKeyOptions()
 	cmd := &cobra.Command{
 		Use:               "list",
 		Short:             "list unseal-key short cmd",
@@ -178,7 +196,7 @@ func NewCmdListKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Comma
 	return cmd
 }
 
-func (o *keyOptions) list(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *getKeyOptions) list(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
 	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
@@ -232,18 +250,18 @@ func (o *keyOptions) list(clientGetter genericclioptions.RESTClientGetter) error
 	return err
 }
 
-func (o *keyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) {
+func (o *getKeyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) {
 	cnt := vs.Spec.Unsealer.SecretShares
 	for i := 0; int64(i) < cnt; i++ {
 		o.keyId = i
 		err := o.getUnsealKey(vs, kubeClient)
 		if err != nil {
-			fmt.Printf("unseal-key-%d not found\n", i)
+			fmt.Printf("vault-unseal-key-%d not found\n", i)
 		}
 	}
 }
 
-func (o *keyOptions) get(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *getKeyOptions) get(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
 	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
@@ -297,7 +315,7 @@ func (o *keyOptions) get(clientGetter genericclioptions.RESTClientGetter) error 
 	return err
 }
 
-func (o *keyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *getKeyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -312,27 +330,21 @@ func (o *keyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernete
 		return err
 	}
 
-	rToken, err := ti.Get(name)
-	if err == nil {
-		o.Print(name, rToken)
-		return nil
+	if len(o.keyName) > 0 {
+		name = o.keyName
 	}
 
-	name, err = ti.OldUnsealKeyName(o.keyId)
+	rToken, err := ti.Get(name)
 	if err != nil {
 		return err
 	}
 
-	rToken, err = ti.Get(name)
-	if err == nil {
-		o.Print(name, rToken)
-		return nil
-	}
+	o.Print(name, rToken)
 
-	return err
+	return nil
 }
 
-func (o *keyOptions) del(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *delKeyOptions) del(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
 	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
@@ -386,7 +398,7 @@ func (o *keyOptions) del(clientGetter genericclioptions.RESTClientGetter) error 
 	return err
 }
 
-func (o *keyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *delKeyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -401,27 +413,21 @@ func (o *keyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kubern
 		return err
 	}
 
-	err = ti.Delete(name)
-	if err == nil {
-		fmt.Printf("unseal-key with name %s successfully deleted\n", name)
-		return nil
+	if len(o.keyName) > 0 {
+		name = o.keyName
 	}
 
-	name, err = ti.OldUnsealKeyName(o.keyId)
+	err = ti.Delete(name)
 	if err != nil {
 		return err
 	}
 
-	err = ti.Delete(name)
-	if err == nil {
-		fmt.Printf("unseal-key with name %s successfully deleted\n", name)
-		return nil
-	}
+	fmt.Printf("unseal-key with name %s successfully deleted\n", name)
 
-	return err
+	return nil
 }
 
-func (o *keyValueOptions) set(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *setKeyOptions) set(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
 	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
@@ -475,7 +481,7 @@ func (o *keyValueOptions) set(clientGetter genericclioptions.RESTClientGetter) e
 	return err
 }
 
-func (o *keyValueOptions) setUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *setKeyOptions) setUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -485,31 +491,29 @@ func (o *keyValueOptions) setUnsealKey(vs *vaultapi.VaultServer, kubeClient kube
 		ti.Clean()
 	}()
 
+	if len(o.keyValue) == 0 {
+		return errors.New("unseal key value is empty")
+	}
+
 	name, err := ti.NewUnsealKeyName(o.keyId)
 	if err != nil {
 		return err
 	}
 
-	err = ti.Set(name, o.keyValue)
-	if err == nil {
-		fmt.Printf("unseal-key with name %s, value %s successfully set\n", name, o.keyValue)
-		return nil
+	if len(o.keyName) > 0 {
+		name = o.keyName
 	}
 
-	name, err = ti.OldUnsealKeyName(o.keyId)
+	err = ti.Set(name, o.keyValue)
 	if err != nil {
 		return err
 	}
 
-	err = ti.Set(name, o.keyValue)
-	if err == nil {
-		fmt.Printf("unseal-key with name %s, value %s successfully set\n", name, o.keyValue)
-		return nil
-	}
+	fmt.Printf("unseal-key with name %s, value %s successfully set\n", name, o.keyValue)
 
-	return err
+	return nil
 }
 
-func (o *keyOptions) Print(name, token string) {
+func (o *getKeyOptions) Print(name, token string) {
 	fmt.Printf("%s: %s\n", name, token)
 }

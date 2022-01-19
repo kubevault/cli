@@ -36,10 +36,16 @@ import (
 
 type getTokenOptions struct {
 	valueOnly bool
+	tokenName string
 }
 
 type setTokenOptions struct {
 	tokenValue string
+	tokenName  string
+}
+
+type delTokenOptions struct {
+	tokenName string
 }
 
 func newGetTokenOptions() *getTokenOptions {
@@ -50,12 +56,22 @@ func newSetTokenOptions() *setTokenOptions {
 	return &setTokenOptions{}
 }
 
+func newDelTokenOptions() *delTokenOptions {
+	return &delTokenOptions{}
+}
+
 func (o *getTokenOptions) AddGetTokenFlag(fs *pflag.FlagSet) {
 	fs.BoolVar(&o.valueOnly, "value-only", o.valueOnly, "prints only the value if flag value-only is true.")
+	fs.StringVar(&o.tokenName, "token-name", o.tokenName, "get root-token with token-name.")
 }
 
 func (o *setTokenOptions) AddSetTokenFlag(fs *pflag.FlagSet) {
-	fs.StringVar(&o.tokenValue, "token-value", o.tokenValue, "token value to be set.")
+	fs.StringVar(&o.tokenValue, "token-value", o.tokenValue, "set latest token-name with token-value")
+	fs.StringVar(&o.tokenName, "token-name", o.tokenName, "set token value root-token with token-name.")
+}
+
+func (o *delTokenOptions) AddDelTokenFlag(fs *pflag.FlagSet) {
+	fs.StringVar(&o.tokenName, "token-name", o.tokenName, "delete root-token with token-name. delete the latest root-token otherwise.")
 }
 
 func NewCmdRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
@@ -127,6 +143,7 @@ func NewCmdSetToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Comm
 }
 
 func NewCmdDeleteToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
+	o := newDelTokenOptions()
 	cmd := &cobra.Command{
 		Use:               "delete",
 		Short:             "delete root-token short cmd",
@@ -139,13 +156,14 @@ func NewCmdDeleteToken(clientGetter genericclioptions.RESTClientGetter) *cobra.C
 				ObjectNames = args[1:]
 			}
 
-			if err := del(clientGetter); err != nil {
+			if err := o.del(clientGetter); err != nil {
 				Fatal(err)
 			}
 			os.Exit(0)
 		},
 	}
 
+	o.AddDelTokenFlag(cmd.Flags())
 	return cmd
 }
 
@@ -213,24 +231,29 @@ func (o *getTokenOptions) getRootToken(vs *vaultapi.VaultServer, kubeClient kube
 		ti.Clean()
 	}()
 
+	// if --token-name if provided, get token with this name
+	if len(o.tokenName) > 0 {
+		rToken, err := ti.Get(o.tokenName)
+		if err != nil {
+			return err
+		}
+		o.Print(o.tokenName, rToken)
+		return nil
+	}
+
+	// --token-name isn't provided, look for the token with the latest naming format
 	name := ti.NewTokenName()
 	rToken, err := ti.Get(name)
-	if err == nil {
-		o.Print(name, rToken)
-		return nil
+	if err != nil {
+		return err
 	}
 
-	name = ti.OldTokenName()
-	rToken, err = ti.Get(name)
-	if err == nil {
-		o.Print(name, rToken)
-		return nil
-	}
+	o.Print(name, rToken)
 
-	return err
+	return nil
 }
 
-func del(clientGetter genericclioptions.RESTClientGetter) error {
+func (o *delTokenOptions) del(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
 	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
@@ -275,7 +298,7 @@ func del(clientGetter genericclioptions.RESTClientGetter) error {
 		switch info.Object.(type) {
 		case *vaultapi.VaultServer:
 			obj := info.Object.(*vaultapi.VaultServer)
-			err2 = deleteRootToken(obj, kubeClient)
+			err2 = o.deleteRootToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -284,7 +307,7 @@ func del(clientGetter genericclioptions.RESTClientGetter) error {
 	return err
 }
 
-func deleteRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *delTokenOptions) deleteRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -295,20 +318,18 @@ func deleteRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) 
 	}()
 
 	name := ti.NewTokenName()
-	err = ti.Delete(name)
-	if err == nil {
-		fmt.Printf("root-token with name %s successfully deleted\n", name)
-		return nil
+	if len(o.tokenName) > 0 {
+		name = o.tokenName
 	}
 
-	name = ti.OldTokenName()
 	err = ti.Delete(name)
-	if err == nil {
-		fmt.Printf("root-token with name %s successfully deleted\n", name)
-		return nil
+	if err != nil {
+		return err
 	}
 
-	return err
+	fmt.Printf("root-token with name %s successfully deleted\n", name)
+
+	return nil
 }
 
 func (o *setTokenOptions) set(clientGetter genericclioptions.RESTClientGetter) error {
@@ -375,7 +396,15 @@ func (o *setTokenOptions) setRootToken(vs *vaultapi.VaultServer, kubeClient kube
 		ti.Clean()
 	}()
 
+	if len(o.tokenValue) == 0 {
+		return errors.New("token value is empty")
+	}
+
 	name := ti.NewTokenName()
+	if len(o.tokenName) > 0 {
+		name = o.tokenName
+	}
+
 	if err = ti.Set(name, o.tokenValue); err != nil {
 		return err
 	}
