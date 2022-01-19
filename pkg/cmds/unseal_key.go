@@ -304,7 +304,7 @@ func (o *keyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernete
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	name := ti.NewUnsealKeyName(o.keyId)
@@ -385,7 +385,7 @@ func (o *keyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kubern
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	name := ti.NewUnsealKeyName(o.keyId)
@@ -466,7 +466,7 @@ func (o *keyValueOptions) setUnsealKey(vs *vaultapi.VaultServer, kubeClient kube
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	name := ti.NewUnsealKeyName(o.keyId)

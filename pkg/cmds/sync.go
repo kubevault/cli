@@ -130,7 +130,7 @@ func syncRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) er
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	newKey := ti.NewTokenName()
@@ -161,12 +161,12 @@ func syncUnsealKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) e
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	for i := 0; int64(i) < vs.Spec.Unsealer.SecretShares; i++ {
 		fmt.Println("trying for vault-unseal-key: ", i)
-		err := syncUnsealKey(i, ti)
+		err = syncUnsealKey(i, ti)
 		if err != nil {
 			return err
 		}

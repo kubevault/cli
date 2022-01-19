@@ -268,6 +268,7 @@ func randomString(n int) string {
 	return string(s)
 }
 
-func (ti *TokenKeyInfo) Clean() error {
-	return os.RemoveAll(ti.path)
+func (ti *TokenKeyInfo) Clean() {
+	_ = os.RemoveAll(ti.path)
+	_ = os.Unsetenv(GoogleApplicationCred)
 }

@@ -210,7 +210,7 @@ func (o *getTokenOptions) getRootToken(vs *vaultapi.VaultServer, kubeClient kube
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	name := ti.NewTokenName()
@@ -291,7 +291,7 @@ func deleteRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) 
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	name := ti.NewTokenName()
@@ -372,7 +372,7 @@ func (o *setTokenOptions) setRootToken(vs *vaultapi.VaultServer, kubeClient kube
 	}
 
 	defer func() {
-		err = ti.Clean()
+		ti.Clean()
 	}()
 
 	name := ti.NewTokenName()

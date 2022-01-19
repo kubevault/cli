@@ -20,7 +20,7 @@ type TokenKeyInterface interface {
 	Get(string) (string, error)
 	Set(string, string) error
 	Delete(string) error
-	Clean() error
+	Clean()
 	NewTokenName() string
 	OldTokenName() string
 	NewUnsealKeyName(int) string
