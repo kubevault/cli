@@ -146,18 +146,20 @@ func syncRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) er
 		ti.Clean()
 	}()
 
+	// if new key already exists just return
 	newKey := ti.NewTokenName()
+	if _, err = ti.Get(newKey); err == nil {
+		return nil
+	}
+
+	// new key doesn't exist, check for old key
 	oldKey := ti.OldTokenName()
 	value, err := ti.Get(oldKey)
 	if err != nil {
-		_, err = ti.Get(newKey)
-		if err == nil {
-			return nil
-		}
-
 		return err
 	}
 
+	// old key exist, set the value to new key
 	if err = ti.Set(newKey, value); err != nil {
 		return err
 	}
@@ -191,6 +193,12 @@ func syncUnsealKey(id int, ti api.TokenKeyInterface) error {
 		return err
 	}
 
+	// if new key already exists just return
+	if _, err = ti.Get(newKey); err == nil {
+		return nil
+	}
+
+	// new key doesn't exist, check for old key
 	oldKey, err := ti.OldUnsealKeyName(id)
 	if err != nil {
 		return err
@@ -198,14 +206,10 @@ func syncUnsealKey(id int, ti api.TokenKeyInterface) error {
 
 	value, err := ti.Get(oldKey)
 	if err != nil {
-		_, err = ti.Get(newKey)
-		if err == nil {
-			return nil
-		}
-
 		return err
 	}
 
+	// old key exist, set the value to new key
 	if err = ti.Set(newKey, value); err != nil {
 		return err
 	}
