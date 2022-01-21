@@ -77,7 +77,7 @@ func (o *delTokenOptions) AddDelTokenFlag(fs *pflag.FlagSet) {
 func NewCmdRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "root-token",
-		Short: "get, set, delete root-token",
+		Short: "get, set, delete and sync root-token",
 		Long: `
 $ kubectl vault root-token [command] [flags] to get, set or delete vault root-token
 
@@ -85,6 +85,7 @@ Examples:
  $ kubectl vault root-token get [flags]
  $ kubectl vault root-token set [flags]
  $ kubectl vault root-token delete [flags]
+ $ kubectl vault root-token sync [flags]
 `,
 
 		DisableAutoGenTag: true,
@@ -97,6 +98,7 @@ Examples:
 	cmd.AddCommand(NewCmdGetToken(clientGetter))
 	cmd.AddCommand(NewCmdSetToken(clientGetter))
 	cmd.AddCommand(NewCmdDeleteToken(clientGetter))
+	cmd.AddCommand(NewCmdSyncToken(clientGetter))
 	return cmd
 }
 
@@ -421,6 +423,121 @@ func (o *setTokenOptions) set(clientGetter genericclioptions.RESTClientGetter) e
 		return err2
 	})
 	return err
+}
+
+func NewCmdSyncToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "sync",
+		Short: "sync vault root-token",
+		Long: `
+$ kubectl vault root-token sync vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # sync the vaultserver root-token 
+ # old naming conventions: vault-root-token
+ # new naming convention for root-token: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-root-token
+ $ kubectl vault root-token sync vaultserver vault -n demo
+`,
+		DisableAutoGenTag: true,
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) > 0 {
+				ResourceName = args[0]
+				ObjectNames = args[1:]
+			}
+
+			if err := syncRootToken(clientGetter); err != nil {
+				Fatal(err)
+			}
+			os.Exit(0)
+		},
+	}
+
+	return cmd
+}
+
+func syncRootToken(clientGetter genericclioptions.RESTClientGetter) error {
+	var resourceName string
+	switch ResourceName {
+	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
+		resourceName = vaultapi.ResourceVaultServer
+	default:
+		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
+	}
+
+	namespace, _, err := clientGetter.ToRawKubeConfigLoader().Namespace()
+	if err != nil {
+		return err
+	}
+
+	cfg, err := clientGetter.ToRESTConfig()
+	if err != nil {
+		return errors.Wrap(err, "failed to read kubeconfig")
+	}
+
+	kubeClient, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
+	r := builder.
+		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
+		ContinueOnError().
+		NamespaceParam(namespace).DefaultNamespace().
+		FilenameParam(false, &FilenameOptions).
+		ResourceNames(resourceName, ObjectNames...).
+		RequireObject(true).
+		Flatten().
+		Latest().
+		Do()
+
+	err = r.Visit(func(info *resource.Info, err error) error {
+		if err != nil {
+			return err
+		}
+
+		var err2 error
+		switch info.Object.(type) {
+		case *vaultapi.VaultServer:
+			obj := info.Object.(*vaultapi.VaultServer)
+			err2 = syncToken(obj, kubeClient)
+		default:
+			err2 = errors.New("unknown/unsupported type")
+		}
+		return err2
+	})
+	return err
+}
+
+func syncToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		ti.Clean()
+	}()
+
+	// if new key already exists just return
+	newKey := ti.NewTokenName()
+	if _, err = ti.Get(newKey); err == nil {
+		return nil
+	}
+
+	// new key doesn't exist, check for old key
+	oldKey := ti.OldTokenName()
+	value, err := ti.Get(oldKey)
+	if err != nil {
+		return err
+	}
+
+	// old key exist, set the value to new key
+	if err = ti.Set(newKey, value); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (o *setTokenOptions) setRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {

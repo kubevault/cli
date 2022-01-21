@@ -23,6 +23,7 @@ import (
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	token_key_store "kubevault.dev/cli/pkg/token-keys-store"
+	"kubevault.dev/cli/pkg/token-keys-store/api"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -81,7 +82,7 @@ func (o *delKeyOptions) addDelKeyFlags(fs *pflag.FlagSet) {
 func NewCmdUnsealKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "unseal-key",
-		Short: "get, set, delete, list unseal-key",
+		Short: "get, set, delete, list and sync unseal-key",
 		Long: `
 $ kubectl vault unseal-key [command] [flags] to get, set, delete or list vault unseal-keys
 
@@ -90,6 +91,7 @@ Examples:
  $ kubectl vault unseal-key set [flags]
  $ kubectl vault unseal-key delete [flags]
  $ kubectl vault unseal-key list [flags]
+ $ kubectl vault unseal-key sync [flags]
 `,
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -102,6 +104,7 @@ Examples:
 	cmd.AddCommand(NewCmdSetKey(clientGetter))
 	cmd.AddCommand(NewCmdDeleteKey(clientGetter))
 	cmd.AddCommand(NewCmdListKey(clientGetter))
+	cmd.AddCommand(NewCmdSyncKeys(clientGetter))
 	return cmd
 }
 
@@ -236,6 +239,140 @@ Examples:
 	}
 
 	return cmd
+}
+
+func NewCmdSyncKeys(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "sync",
+		Short: "sync vault unseal-key",
+		Long: `
+$ kubectl vault unseal-key get vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # sync the vaultserver unseal-keys
+ # old naming conventions: vault-unseal-key-0, vault-unseal-key-1, etc.
+ # new naming convention for unseal-key: k8s.{cluster-name or UID}.{vault-namespace}.{vault-name}-unseal-key-{id}
+ $ kubectl vault unseal-key sync vaultserver vault -n demo
+`,
+		DisableAutoGenTag: true,
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) > 0 {
+				ResourceName = args[0]
+				ObjectNames = args[1:]
+			}
+
+			if err := syncUnsealKeys(clientGetter); err != nil {
+				Fatal(err)
+			}
+			os.Exit(0)
+		},
+	}
+
+	return cmd
+}
+
+func syncUnsealKeys(clientGetter genericclioptions.RESTClientGetter) error {
+	var resourceName string
+	switch ResourceName {
+	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
+		resourceName = vaultapi.ResourceVaultServer
+	default:
+		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
+	}
+
+	namespace, _, err := clientGetter.ToRawKubeConfigLoader().Namespace()
+	if err != nil {
+		return err
+	}
+
+	cfg, err := clientGetter.ToRESTConfig()
+	if err != nil {
+		return errors.Wrap(err, "failed to read kubeconfig")
+	}
+
+	kubeClient, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
+	r := builder.
+		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
+		ContinueOnError().
+		NamespaceParam(namespace).DefaultNamespace().
+		FilenameParam(false, &FilenameOptions).
+		ResourceNames(resourceName, ObjectNames...).
+		RequireObject(true).
+		Flatten().
+		Latest().
+		Do()
+
+	err = r.Visit(func(info *resource.Info, err error) error {
+		if err != nil {
+			return err
+		}
+
+		var err2 error
+		switch info.Object.(type) {
+		case *vaultapi.VaultServer:
+			obj := info.Object.(*vaultapi.VaultServer)
+			err2 = syncKeys(obj, kubeClient)
+		default:
+			err2 = errors.New("unknown/unsupported type")
+		}
+		return err2
+	})
+	return err
+}
+
+func syncKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		ti.Clean()
+	}()
+
+	for i := 0; int64(i) < vs.Spec.Unsealer.SecretShares; i++ {
+		err = syncKey(i, ti)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func syncKey(id int, ti api.TokenKeyInterface) error {
+	newKey, err := ti.NewUnsealKeyName(id)
+	if err != nil {
+		return err
+	}
+
+	// if new key already exists just return
+	if _, err = ti.Get(newKey); err == nil {
+		return nil
+	}
+
+	// new key doesn't exist, check for old key
+	oldKey, err := ti.OldUnsealKeyName(id)
+	if err != nil {
+		return err
+	}
+
+	value, err := ti.Get(oldKey)
+	if err != nil {
+		return err
+	}
+
+	// old key exist, set the value to new key
+	if err = ti.Set(newKey, value); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (o *getKeyOptions) list(clientGetter genericclioptions.RESTClientGetter) error {
