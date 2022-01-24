@@ -84,7 +84,7 @@ func NewCmdUnsealKey(clientGetter genericclioptions.RESTClientGetter) *cobra.Com
 		Use:   "unseal-key",
 		Short: "get, set, delete, list and sync unseal-key",
 		Long: `
-$ kubectl vault unseal-key [command] [flags] to get, set, delete or list vault unseal-keys
+$ kubectl vault unseal-key [command] [flags] to get, set, delete, list or sync vault unseal-keys
 
 Examples:
  $ kubectl vault unseal-key get [flags]

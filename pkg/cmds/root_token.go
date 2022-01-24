@@ -79,7 +79,7 @@ func NewCmdRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Com
 		Use:   "root-token",
 		Short: "get, set, delete and sync root-token",
 		Long: `
-$ kubectl vault root-token [command] [flags] to get, set or delete vault root-token
+$ kubectl vault root-token [command] [flags] to get, set, delete or sync vault root-token
 
 Examples:
  $ kubectl vault root-token get [flags]
