@@ -522,6 +522,8 @@ func syncToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error 
 	// if new key already exists just return
 	newKey := ti.NewTokenName()
 	if _, err = ti.Get(newKey); err == nil {
+		fmt.Printf("%s already up-to-date\n", newKey)
+		fmt.Println("successfully synced root-token")
 		return nil
 	}
 
@@ -529,14 +531,18 @@ func syncToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error 
 	oldKey := ti.OldTokenName()
 	value, err := ti.Get(oldKey)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
 	// old key exist, set the value to new key
 	if err = ti.Set(newKey, value); err != nil {
+		fmt.Println(err)
 		return err
 	}
 
+	fmt.Printf("%s successfully synced\n", newKey)
+	fmt.Println("successfully synced root-token")
 	return nil
 }
 

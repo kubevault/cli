@@ -338,10 +338,12 @@ func syncKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
 	for i := 0; int64(i) < vs.Spec.Unsealer.SecretShares; i++ {
 		err = syncKey(i, ti)
 		if err != nil {
+			fmt.Println(err)
 			return err
 		}
 	}
 
+	fmt.Println("successfully synced unseal-keys")
 	return nil
 }
 
@@ -353,25 +355,30 @@ func syncKey(id int, ti api.TokenKeyInterface) error {
 
 	// if new key already exists just return
 	if _, err = ti.Get(newKey); err == nil {
+		fmt.Printf("%s already up-to-date\n", newKey)
 		return nil
 	}
 
 	// new key doesn't exist, check for old key
 	oldKey, err := ti.OldUnsealKeyName(id)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
 	value, err := ti.Get(oldKey)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
 	// old key exist, set the value to new key
 	if err = ti.Set(newKey, value); err != nil {
+		fmt.Println(err)
 		return err
 	}
 
+	fmt.Printf("%s successfully synced\n", newKey)
 	return nil
 }
 
