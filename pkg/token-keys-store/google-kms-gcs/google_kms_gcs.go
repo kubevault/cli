@@ -18,6 +18,7 @@ package google_kms_gcs
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"hash/crc32"
 	"io/ioutil"
@@ -28,11 +29,13 @@ import (
 	"time"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
-	"kubevault.dev/cli/pkg/get-root-token/api"
+	"kubevault.dev/cli/pkg/token-keys-store/api"
 
 	kms "cloud.google.com/go/kms/apiv1"
 	"cloud.google.com/go/storage"
 	"github.com/pkg/errors"
+	"google.golang.org/api/cloudkms/v1"
+	"google.golang.org/api/option"
 	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -44,16 +47,16 @@ const (
 	GoogleApplicationCred = "GOOGLE_APPLICATION_CREDENTIALS"
 )
 
-type TokenInfo struct {
+type TokenKeyInfo struct {
 	storageClient *storage.Client
 	kubeClient    kubernetes.Interface
 	vs            *vaultapi.VaultServer
 	path          string
 }
 
-var _ api.TokenInterface = &TokenInfo{}
+var _ api.TokenKeyInterface = &TokenKeyInfo{}
 
-func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo, error) {
+func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyInfo, error) {
 	if vs == nil {
 		return nil, errors.New("vs spec is empty")
 	}
@@ -94,7 +97,7 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 		return nil, err
 	}
 
-	return &TokenInfo{
+	return &TokenKeyInfo{
 		storageClient: client,
 		kubeClient:    kubeClient,
 		vs:            vs,
@@ -102,14 +105,9 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenInfo,
 	}, nil
 }
 
-func (ti *TokenInfo) Token() (string, error) {
-	defer func() {
-		_ = os.RemoveAll(ti.path)
-	}()
-
-	token := ti.TokenName()
+func (ti *TokenKeyInfo) Get(key string) (string, error) {
 	googleKmsGcsSpec := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs
-	rc, err := ti.storageClient.Bucket(googleKmsGcsSpec.Bucket).Object(token).NewReader(context.TODO())
+	rc, err := ti.storageClient.Bucket(googleKmsGcsSpec.Bucket).Object(key).NewReader(context.TODO())
 	if err != nil {
 		return "", err
 	}
@@ -130,6 +128,53 @@ func (ti *TokenInfo) Token() (string, error) {
 	}
 
 	return decryptedToken, nil
+}
+
+func (ti *TokenKeyInfo) Delete(key string) error {
+
+	bucket := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs.Bucket
+
+	o := ti.storageClient.Bucket(bucket).Object(key)
+	if err := o.Delete(context.TODO()); err != nil && err != storage.ErrObjectNotExist {
+		return errors.Errorf("failed to delete key %s with %s", key, err.Error())
+	}
+
+	return nil
+}
+
+func (ti *TokenKeyInfo) Set(key, value string) error {
+	kmsService, err := cloudkms.NewService(context.TODO(), option.WithScopes(cloudkms.CloudPlatformScope))
+	if err != nil {
+		return errors.Errorf("error creating google kms service client: %s", err.Error())
+	}
+
+	googleKmsGcsSpec := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs
+
+	name := fmt.Sprintf("projects/%s/locations/%s/keyRings/%s/cryptoKeys/%s",
+		googleKmsGcsSpec.KmsProject, googleKmsGcsSpec.KmsLocation,
+		googleKmsGcsSpec.KmsKeyRing, googleKmsGcsSpec.KmsCryptoKey)
+
+	resp, err := kmsService.Projects.Locations.KeyRings.CryptoKeys.Encrypt(name, &cloudkms.EncryptRequest{
+		Plaintext: base64.StdEncoding.EncodeToString([]byte(value)),
+	}).Do()
+
+	if err != nil {
+		return errors.Errorf("error encrypting data: %s", err.Error())
+	}
+
+	cipherText, err := base64.StdEncoding.DecodeString(resp.Ciphertext)
+	if err != nil {
+		return err
+	}
+
+	bucket := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs.Bucket
+
+	w := ti.storageClient.Bucket(bucket).Object(key).NewWriter(context.TODO())
+	if _, err := w.Write(cipherText); err != nil {
+		return fmt.Errorf("error writing key '%s' to gcs bucket '%s'", key, bucket)
+	}
+
+	return w.Close()
 }
 
 func decryptSymmetric(name string, ciphertext []byte) (string, error) {
@@ -163,7 +208,7 @@ func decryptSymmetric(name string, ciphertext []byte) (string, error) {
 	return string(result.Plaintext), nil
 }
 
-func (ti *TokenInfo) TokenName() string {
+func (ti *TokenKeyInfo) NewTokenName() string {
 	sts, err := ti.kubeClient.AppsV1().StatefulSets(ti.vs.Namespace).Get(context.TODO(), ti.vs.Name, metav1.GetOptions{})
 	if err != nil {
 		return ""
@@ -184,6 +229,43 @@ func (ti *TokenInfo) TokenName() string {
 	return fmt.Sprintf("%s-root-token", keyPrefix)
 }
 
+func (ti *TokenKeyInfo) OldTokenName() string {
+	return "vault-root-token"
+}
+
+func (ti *TokenKeyInfo) NewUnsealKeyName(id int) (string, error) {
+	sts, err := ti.kubeClient.AppsV1().StatefulSets(ti.vs.Namespace).Get(context.TODO(), ti.vs.Name, metav1.GetOptions{})
+	if err != nil {
+		return "", err
+	}
+
+	if int64(id) >= ti.vs.Spec.Unsealer.SecretShares {
+		return "", errors.Errorf("unseal-key-%d not available, available id range 0 to %d", id, ti.vs.Spec.Unsealer.SecretShares-1)
+	}
+
+	var keyPrefix string
+	for _, cont := range sts.Spec.Template.Spec.Containers {
+		if cont.Name != vaultapi.VaultUnsealerContainerName {
+			continue
+		}
+		for _, arg := range cont.Args {
+			if strings.HasPrefix(arg, "--key-prefix=") {
+				keyPrefix = arg[1+strings.Index(arg, "="):]
+			}
+		}
+	}
+
+	return fmt.Sprintf("%s-unseal-key-%d", keyPrefix, id), nil
+}
+
+func (ti *TokenKeyInfo) OldUnsealKeyName(id int) (string, error) {
+	if int64(id) >= ti.vs.Spec.Unsealer.SecretShares {
+		return "", errors.Errorf("unseal-key-%d not available, available id range 0 to %d", id, ti.vs.Spec.Unsealer.SecretShares-1)
+	}
+
+	return fmt.Sprintf("vault-unseal-key-%d", id), nil
+}
+
 func randomString(n int) string {
 	rand.Seed(time.Now().Unix())
 	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
@@ -192,4 +274,9 @@ func randomString(n int) string {
 		s[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(s)
+}
+
+func (ti *TokenKeyInfo) Clean() {
+	_ = os.RemoveAll(ti.path)
+	_ = os.Unsetenv(GoogleApplicationCred)
 }

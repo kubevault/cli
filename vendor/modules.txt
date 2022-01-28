@@ -12,6 +12,7 @@ cloud.google.com/go/kms/apiv1
 ## explicit
 cloud.google.com/go/storage
 # github.com/Azure/azure-sdk-for-go/sdk/azcore v0.20.0
+## explicit
 github.com/Azure/azure-sdk-for-go/sdk/azcore
 github.com/Azure/azure-sdk-for-go/sdk/azcore/arm
 github.com/Azure/azure-sdk-for-go/sdk/azcore/arm/internal/pollers
@@ -371,6 +372,8 @@ gomodules.xyz/wait
 gomodules.xyz/x/analytics
 gomodules.xyz/x/version
 # google.golang.org/api v0.20.0 => google.golang.org/api v0.20.0
+## explicit
+google.golang.org/api/cloudkms/v1
 google.golang.org/api/googleapi
 google.golang.org/api/googleapi/transport
 google.golang.org/api/internal
