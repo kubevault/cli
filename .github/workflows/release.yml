@@ -37,6 +37,7 @@ jobs:
         with:
           files: |
             bin/kubectl-vault-darwin-amd64.tar.gz
+            bin/kubectl-vault-darwin-arm64.tar.gz
             bin/kubectl-vault-linux-amd64.tar.gz
             bin/kubectl-vault-linux-arm.tar.gz
             bin/kubectl-vault-linux-arm64.tar.gz
