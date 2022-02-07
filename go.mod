@@ -8,16 +8,17 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.20.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.12.0
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v0.3.0
-	github.com/aws/aws-sdk-go v1.27.0
+	github.com/aws/aws-sdk-go v1.38.31
 	github.com/go-errors/errors v1.0.1
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/pkg/errors v0.9.1
-	github.com/spf13/cobra v1.1.3
+	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/x v0.0.8
-	google.golang.org/api v0.20.0
+	gomodules.xyz/wait v0.2.0 // indirect
+	gomodules.xyz/x v0.0.10
+	google.golang.org/api v0.44.0
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
 	google.golang.org/protobuf v1.26.0
 	k8s.io/api v0.22.2
@@ -26,9 +27,11 @@ require (
 	k8s.io/client-go v0.22.2
 	k8s.io/component-base v0.22.0
 	k8s.io/kubectl v0.21.0
-	kmodules.xyz/client-go v0.0.0-20211028132207-0cf6ea46b030
-	kmodules.xyz/custom-resources v0.0.0-20211007080833-72bd9e8cae6e
-	kubevault.dev/apimachinery v0.6.0
+	kmodules.xyz/client-go v0.0.0-20220203031013-1de48437aaf3
+	kmodules.xyz/custom-resources v0.0.0-20220126201139-be014631db0c
+	kmodules.xyz/monitoring-agent-api v0.0.0-20211207173549-028e6430395e // indirect
+	kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf // indirect
+	kubevault.dev/apimachinery v0.6.1-0.20220127002423-a2ece4ccb164
 	sigs.k8s.io/secrets-store-csi-driver v1.0.0
 	sigs.k8s.io/yaml v1.2.0
 )
@@ -125,7 +128,7 @@ replace k8s.io/api => k8s.io/api v0.21.0
 
 replace k8s.io/apimachinery => github.com/kmodules/apimachinery v0.21.1-rc.0.0.20210405112358-ad4c2289ba4c
 
-replace k8s.io/apiserver => github.com/kmodules/apiserver v0.21.2-0.20210716212718-83e5493ac170
+replace k8s.io/apiserver => github.com/kmodules/apiserver v0.21.2-0.20220112070009-e3f6e88991d9
 
 replace k8s.io/cli-runtime => k8s.io/cli-runtime v0.21.0
 
