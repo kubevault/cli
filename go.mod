@@ -28,10 +28,8 @@ require (
 	k8s.io/component-base v0.22.0
 	k8s.io/kubectl v0.21.0
 	kmodules.xyz/client-go v0.0.0-20220203031013-1de48437aaf3
-	kmodules.xyz/custom-resources v0.0.0-20220126201139-be014631db0c
-	kmodules.xyz/monitoring-agent-api v0.0.0-20211207173549-028e6430395e // indirect
-	kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf // indirect
-	kubevault.dev/apimachinery v0.6.1-0.20220127002423-a2ece4ccb164
+	kmodules.xyz/custom-resources v0.0.0-20220208103158-61b298634e43
+	kubevault.dev/apimachinery v0.6.1-0.20220207230546-6125f9ff0ef8
 	sigs.k8s.io/secrets-store-csi-driver v1.0.0
 	sigs.k8s.io/yaml v1.2.0
 )
