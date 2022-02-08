@@ -235,7 +235,7 @@ github.com/pmezard/go-difflib/difflib
 github.com/russross/blackfriday
 # github.com/russross/blackfriday/v2 v2.0.1
 github.com/russross/blackfriday/v2
-# github.com/sergi/go-diff v1.1.0
+# github.com/sergi/go-diff v1.2.0
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
@@ -826,7 +826,7 @@ kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/tools/analytics
 kmodules.xyz/client-go/tools/cli
 kmodules.xyz/client-go/tools/clusterid
-# kmodules.xyz/custom-resources v0.0.0-20220126201139-be014631db0c
+# kmodules.xyz/custom-resources v0.0.0-20220208103158-61b298634e43
 ## explicit
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
@@ -837,12 +837,10 @@ kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
 # kmodules.xyz/monitoring-agent-api v0.0.0-20211207173549-028e6430395e
-## explicit
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf
-## explicit
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.6.1-0.20220127002423-a2ece4ccb164
+# kubevault.dev/apimachinery v0.6.1-0.20220207230546-6125f9ff0ef8
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
