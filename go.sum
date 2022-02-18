@@ -982,8 +982,8 @@ kmodules.xyz/offshoot-api v0.0.0-20210829122105-6f4d481b0c61/go.mod h1:3LECbAL3F
 kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf h1:cVaxFPsZyaymGsx4XoTii1MEvtwGxmLg75qwMxNHB4w=
 kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf/go.mod h1:sJYyxf84ZvbVz4SivxMgSelGRYn19wOLUtObiEncCxk=
 kmodules.xyz/resource-metrics v0.0.6/go.mod h1:M7rWuo2qh3BpHhogiEVPnvGY9Xx4Pfygqn1Rex8YbgM=
-kubevault.dev/apimachinery v0.6.1-0.20220208195407-29e4aefeefca h1:SIgmQC/9X4bFVlyyiuXEu4DEpTADJIdTdEGJou5uuCQ=
-kubevault.dev/apimachinery v0.6.1-0.20220208195407-29e4aefeefca/go.mod h1:uMRH672cdQ7jtDjTVjkGzcGzHGoHAn3Ckl/jGn/fW/E=
+kubevault.dev/apimachinery v0.7.0 h1:tpx443igffubVvufIcrmaoRq6OeHrMgOQAKqQXeKF0M=
+kubevault.dev/apimachinery v0.7.0/go.mod h1:uMRH672cdQ7jtDjTVjkGzcGzHGoHAn3Ckl/jGn/fW/E=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.15/go.mod h1:LEScyzhFmoF5pso/YSeBstl57mOzx9xlU9n85RGrDQg=
