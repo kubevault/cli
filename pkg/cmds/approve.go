@@ -35,14 +35,12 @@ var (
 	ResourceName    string
 )
 
-var (
-	secretAccessApprovedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestApproved,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlApprove",
-		Message: "This was approved by: kubectl vault approve secretaccessrequest",
-	}
-)
+var secretAccessApprovedCond = kmapi.Condition{
+	Type:    kmapi.ConditionRequestApproved,
+	Status:  core.ConditionTrue,
+	Reason:  "KubectlApprove",
+	Message: "This was approved by: kubectl vault approve secretaccessrequest",
+}
 
 func NewCmdApprove(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{

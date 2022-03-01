@@ -167,5 +167,4 @@ func (ti *TokenKeyInfo) OldUnsealKeyName(id int) (string, error) {
 }
 
 func (ti *TokenKeyInfo) Clean() {
-
 }

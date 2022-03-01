@@ -29,14 +29,12 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
-var (
-	secretAccessDeniedCond = kmapi.Condition{
-		Type:    kmapi.ConditionRequestDenied,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlDeny",
-		Message: "This was denied by: kubectl vault deny secretaccessrequest",
-	}
-)
+var secretAccessDeniedCond = kmapi.Condition{
+	Type:    kmapi.ConditionRequestDenied,
+	Status:  core.ConditionTrue,
+	Reason:  "KubectlDeny",
+	Message: "This was denied by: kubectl vault deny secretaccessrequest",
+}
 
 func NewCmdDeny(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{

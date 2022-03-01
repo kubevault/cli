@@ -86,7 +86,8 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 			f := true
 			return &f
 		}(),
-		Region: aws.String(vs.Spec.Unsealer.Mode.AwsKmsSsm.Region)},
+		Region: aws.String(vs.Spec.Unsealer.Mode.AwsKmsSsm.Region),
+	},
 	)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create session")
@@ -160,7 +161,6 @@ func (ti *TokenKeyInfo) Set(key, value string) error {
 		},
 		GrantTokens: []*string{},
 	})
-
 	if err != nil {
 		return err
 	}

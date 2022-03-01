@@ -30,14 +30,12 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
-var (
-	secretAccessRevokeCond = kmapi.Condition{
-		Type:    engineapi.ConditionRequestExpired,
-		Status:  core.ConditionTrue,
-		Reason:  "KubectlRevoke",
-		Message: "This was revoked by: kubectl vault revoke secretaccessrequest",
-	}
-)
+var secretAccessRevokeCond = kmapi.Condition{
+	Type:    engineapi.ConditionRequestExpired,
+	Status:  core.ConditionTrue,
+	Reason:  "KubectlRevoke",
+	Message: "This was revoked by: kubectl vault revoke secretaccessrequest",
+}
 
 func NewCmdRevoke(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
