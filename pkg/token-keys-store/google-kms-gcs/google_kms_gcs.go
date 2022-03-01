@@ -131,7 +131,6 @@ func (ti *TokenKeyInfo) Get(key string) (string, error) {
 }
 
 func (ti *TokenKeyInfo) Delete(key string) error {
-
 	bucket := ti.vs.Spec.Unsealer.Mode.GoogleKmsGcs.Bucket
 
 	o := ti.storageClient.Bucket(bucket).Object(key)
@@ -157,7 +156,6 @@ func (ti *TokenKeyInfo) Set(key, value string) error {
 	resp, err := kmsService.Projects.Locations.KeyRings.CryptoKeys.Encrypt(name, &cloudkms.EncryptRequest{
 		Plaintext: base64.StdEncoding.EncodeToString([]byte(value)),
 	}).Do()
-
 	if err != nil {
 		return errors.Errorf("error encrypting data: %s", err.Error())
 	}
@@ -268,7 +266,7 @@ func (ti *TokenKeyInfo) OldUnsealKeyName(id int) (string, error) {
 
 func randomString(n int) string {
 	rand.Seed(time.Now().Unix())
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	s := make([]rune, n)
 	for i := range s {
 		s[i] = letters[rand.Intn(len(letters))]
