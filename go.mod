@@ -5,6 +5,7 @@ go 1.15
 require (
 	cloud.google.com/go v0.54.0
 	cloud.google.com/go/storage v1.6.0
+	github.com/Azure/azure-sdk-for-go v43.0.0+incompatible // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.20.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.12.0
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v0.3.0
@@ -29,7 +30,7 @@ require (
 	k8s.io/kubectl v0.21.0
 	kmodules.xyz/client-go v0.0.0-20220203031013-1de48437aaf3
 	kmodules.xyz/custom-resources v0.0.0-20220208103158-61b298634e43
-	kubevault.dev/apimachinery v0.7.1-0.20220221130327-6c1890497045
+	kubevault.dev/apimachinery v0.7.1-0.20220314074510-78081ee63079
 	sigs.k8s.io/secrets-store-csi-driver v1.0.0
 	sigs.k8s.io/yaml v1.2.0
 )

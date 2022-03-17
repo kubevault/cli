@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1alpha2
 
 import (
 	"time"
@@ -37,6 +37,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:resource:path=vaultservers,singular=vaultserver,shortName=vs,categories={vault,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Replicas",type="string",JSONPath=".spec.replicas"

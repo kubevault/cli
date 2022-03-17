@@ -11,6 +11,8 @@ cloud.google.com/go/kms/apiv1
 # cloud.google.com/go/storage v1.6.0 => cloud.google.com/go/storage v1.6.0
 ## explicit
 cloud.google.com/go/storage
+# github.com/Azure/azure-sdk-for-go v43.0.0+incompatible => github.com/Azure/azure-sdk-for-go v43.0.0+incompatible
+## explicit
 # github.com/Azure/azure-sdk-for-go/sdk/azcore v0.20.0
 ## explicit
 github.com/Azure/azure-sdk-for-go/sdk/azcore
@@ -840,7 +842,7 @@ kmodules.xyz/custom-resources/crds
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.7.1-0.20220221130327-6c1890497045
+# kubevault.dev/apimachinery v0.7.1-0.20220314074510-78081ee63079
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
@@ -851,6 +853,7 @@ kubevault.dev/apimachinery/apis/engine
 kubevault.dev/apimachinery/apis/engine/v1alpha1
 kubevault.dev/apimachinery/apis/kubevault
 kubevault.dev/apimachinery/apis/kubevault/v1alpha1
+kubevault.dev/apimachinery/apis/kubevault/v1alpha2
 kubevault.dev/apimachinery/apis/policy
 kubevault.dev/apimachinery/apis/policy/v1alpha1
 kubevault.dev/apimachinery/client/clientset/versioned/scheme

@@ -43,50 +43,50 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type VaultServerVersion struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              VaultServerVersionSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              VaultServerVersionSpec `json:"spec,omitempty"`
 }
 
 // VaultServerVersionSpec is the spec for postgres version
 type VaultServerVersionSpec struct {
 	// Version
-	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
+	Version string `json:"version"`
 	// Vault Image
-	Vault VaultServerVersionVault `json:"vault" protobuf:"bytes,2,opt,name=vault"`
+	Vault VaultServerVersionVault `json:"vault"`
 	// Unsealer Image
-	Unsealer VaultServerVersionUnsealer `json:"unsealer" protobuf:"bytes,3,opt,name=unsealer"`
+	Unsealer VaultServerVersionUnsealer `json:"unsealer"`
 	// Exporter Image
-	Exporter VaultServerVersionExporter `json:"exporter" protobuf:"bytes,4,opt,name=exporter"`
+	Exporter VaultServerVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
-	Deprecated bool `json:"deprecated,omitempty" protobuf:"varint,5,opt,name=deprecated"`
+	Deprecated bool `json:"deprecated,omitempty"`
 }
 
 // VaultServerVersionVault is the vault image
 type VaultServerVersionVault struct {
 	// Image is the Docker image name
-	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
+	Image string `json:"image"`
 	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent overwise.
 	// +optional
-	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=imagePullPolicy,casttype=PullPolicy"`
+	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 }
 
 // VaultServerVersionUnsealer is the image for the vault unsealer
 type VaultServerVersionUnsealer struct {
 	// Image is the Docker image name
-	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
+	Image string `json:"image"`
 	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent overwise.
 	// +optional
-	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=imagePullPolicy,casttype=PullPolicy"`
+	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 }
 
 // VaultServerVersionExporter is the image for the vault exporter
 type VaultServerVersionExporter struct {
 	// Image is the Docker image name
-	Image string `json:"image" protobuf:"bytes,1,opt,name=image"`
+	Image string `json:"image"`
 	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent overwise.
 	// +optional
-	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty" protobuf:"bytes,2,opt,name=imagePullPolicy,casttype=PullPolicy"`
+	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -95,7 +95,7 @@ type VaultServerVersionExporter struct {
 // VaultServerVersionList is a list of VaultserverVersions
 type VaultServerVersionList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	// Items is a list of VaultServerVersion CRD objects
-	Items []VaultServerVersion `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	Items []VaultServerVersion `json:"items,omitempty"`
 }

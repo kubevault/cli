@@ -41,9 +41,9 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type AWSRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              AWSRoleSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            RoleStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              AWSRoleSpec `json:"spec,omitempty"`
+	Status            RoleStatus  `json:"status,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=iam_user;assumed_role;federation_token
@@ -59,41 +59,41 @@ const (
 // More info: https://www.vaultproject.io/api/secret/aws/index.html#parameters-3
 type AWSRoleSpec struct {
 	// SecretEngineRef is the name of a Secret Engine
-	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef" protobuf:"bytes,1,opt,name=secretEngineRef"`
+	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef"`
 
 	// Specifies the type of credential to be used when retrieving credentials from the role
-	CredentialType AWSCredentialType `json:"credentialType" protobuf:"bytes,2,opt,name=credentialType,casttype=AWSCredentialType"`
+	CredentialType AWSCredentialType `json:"credentialType"`
 
 	// Specifies the ARNs of the AWS roles this Vault role is allowed to assume.
 	// Required when credential_type is assumed_role and prohibited otherwise
-	RoleARNs []string `json:"roleARNs,omitempty" protobuf:"bytes,3,rep,name=roleARNs"`
+	RoleARNs []string `json:"roleARNs,omitempty"`
 
 	// Specifies the ARNs of the AWS managed policies to be attached to IAM users when they are requested.
 	// Valid only when credential_type is iam_user. When credential_type is iam_user,
 	// at least one of policy_arns or policy_document must be specified.
-	PolicyARNs []string `json:"policyARNs,omitempty" protobuf:"bytes,4,rep,name=policyARNs"`
+	PolicyARNs []string `json:"policyARNs,omitempty"`
 
 	// The IAM policy document for the role. The behavior depends on the credential type.
 	// With iam_user, the policy document will be attached to the IAM user generated and
 	// augment the permissions the IAM user has. With assumed_role and federation_token,
 	// the policy document will act as a filter on what the credentials can do.
 	// +optional
-	PolicyDocument string `json:"policyDocument,omitempty" protobuf:"bytes,5,opt,name=policyDocument"`
+	PolicyDocument string `json:"policyDocument,omitempty"`
 
 	// Specifies the IAM policy in JSON format.
 	// +optional
 	// +kubebuilder:validation:EmbeddedResource
 	// +kubebuilder:pruning:PreserveUnknownFields
-	Policy *runtime.RawExtension `json:"policy,omitempty" protobuf:"bytes,6,opt,name=policy"`
+	Policy *runtime.RawExtension `json:"policy,omitempty"`
 
 	// The default TTL for STS credentials. When a TTL is not specified when STS credentials are requested,
 	// and a default TTL is specified on the role, then this default TTL will be used.
 	// Valid only when credential_type is one of assumed_role or federation_token
-	DefaultSTSTTL string `json:"defaultSTSTTL,omitempty" protobuf:"bytes,7,opt,name=defaultSTSTTL"`
+	DefaultSTSTTL string `json:"defaultSTSTTL,omitempty"`
 
 	// The max allowed TTL for STS credentials (credentials TTL are capped to max_sts_ttl).
 	// Valid only when credential_type is one of assumed_role or federation_token
-	MaxSTSTTL string `json:"maxSTSTTL,omitempty" protobuf:"bytes,8,opt,name=maxSTSTTL"`
+	MaxSTSTTL string `json:"maxSTSTTL,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -101,10 +101,10 @@ type AWSRoleSpec struct {
 
 type AWSRoleList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// Items is a list of AWSRole objects
-	Items []AWSRole `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	Items []AWSRole `json:"items,omitempty"`
 }
 
 const (

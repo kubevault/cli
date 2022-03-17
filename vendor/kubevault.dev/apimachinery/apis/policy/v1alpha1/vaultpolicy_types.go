@@ -40,20 +40,20 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type VaultPolicy struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              VaultPolicySpec   `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            VaultPolicyStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              VaultPolicySpec   `json:"spec,omitempty"`
+	Status            VaultPolicyStatus `json:"status,omitempty"`
 }
 
 // More info: https://www.vaultproject.io/docs/concepts/policies.html
 type VaultPolicySpec struct {
 	// VaultRef is the name of a AppBinding referencing to a Vault Server
-	VaultRef core.LocalObjectReference `json:"vaultRef" protobuf:"bytes,1,opt,name=vaultRef"`
+	VaultRef core.LocalObjectReference `json:"vaultRef"`
 
 	// VaultPolicyName is the policy name set inside Vault.
 	// This defaults to following format: k8s.${cluster}.${metadata.namespace}.${metadata.name}
 	// +optional
-	VaultPolicyName string `json:"vaultPolicyName,omitempty" protobuf:"bytes,2,opt,name=vaultPolicyName"`
+	VaultPolicyName string `json:"vaultPolicyName,omitempty"`
 
 	// PolicyDocument specifies a vault policy in hcl format.
 	// For example:
@@ -61,13 +61,13 @@ type VaultPolicySpec struct {
 	//   capabilities = ["create", "read", "update", "delete", "list"]
 	// }
 	// +optional
-	PolicyDocument string `json:"policyDocument,omitempty" protobuf:"bytes,3,opt,name=policyDocument"`
+	PolicyDocument string `json:"policyDocument,omitempty"`
 
 	// Policy specifies a vault policy in json format.
 	// +optional
 	// +kubebuilder:validation:EmbeddedResource
 	// +kubebuilder:pruning:PreserveUnknownFields
-	Policy *runtime.RawExtension `json:"policy,omitempty" protobuf:"bytes,4,opt,name=policy"`
+	Policy *runtime.RawExtension `json:"policy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -75,8 +75,8 @@ type VaultPolicySpec struct {
 
 type VaultPolicyList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []VaultPolicy `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []VaultPolicy `json:"items,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Success;Failed
@@ -91,13 +91,13 @@ type VaultPolicyStatus struct {
 	// ObservedGeneration is the most recent generation observed for this resource. It corresponds to the
 	// resource's generation, which is updated on mutation by the API Server.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// Phase indicates whether the policy successfully applied in vault or not or in progress
 	// +optional
-	Phase PolicyPhase `json:"phase,omitempty" protobuf:"bytes,2,opt,name=phase,casttype=PolicyPhase"`
+	Phase PolicyPhase `json:"phase,omitempty"`
 
 	// Represents the latest available observations of a VaultPolicy.
 	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

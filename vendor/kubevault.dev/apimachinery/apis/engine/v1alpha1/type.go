@@ -24,13 +24,13 @@ import (
 // Lease contains lease info
 type Lease struct {
 	// lease id
-	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
+	ID string `json:"id,omitempty"`
 
 	// lease duration
-	Duration metav1.Duration `json:"duration,omitempty" protobuf:"bytes,2,opt,name=duration"`
+	Duration metav1.Duration `json:"duration,omitempty"`
 
 	// Specifies whether this lease is renewable
-	Renewable bool `json:"renewable,omitempty" protobuf:"varint,3,opt,name=renewable"`
+	Renewable bool `json:"renewable,omitempty"`
 }
 
 // SecretAccessRequest Conditions
@@ -57,16 +57,16 @@ const (
 )
 
 type RoleStatus struct {
-	Phase RolePhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=RolePhase"`
+	Phase RolePhase `json:"phase,omitempty"`
 
 	// ObservedGeneration is the most recent generation observed for this MySQLRole. It corresponds to the
 	// MySQLRole's generation, which is updated on mutation by the API Server.
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,2,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// Represents the latest available observations of a MySQLRole current state.
-	Conditions []kmapi.Condition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 
-	PolicyRef *kmapi.ObjectReference `json:"policyRef,omitempty" protobuf:"bytes,4,opt,name=policyRef"`
+	PolicyRef *kmapi.ObjectReference `json:"policyRef,omitempty"`
 }
 
 const (

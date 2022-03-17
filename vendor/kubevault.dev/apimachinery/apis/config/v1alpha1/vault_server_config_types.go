@@ -32,41 +32,41 @@ type VaultServerConfiguration struct {
 	// Specifies the path which is used for authentication by this AppBinding.
 	// If vault server is provisioned by KubeVault, this is usually `kubernetes`.
 	// +optional
-	Path string `json:"path,omitempty" protobuf:"bytes,1,opt,name=path"`
+	Path string `json:"path,omitempty"`
 
 	// Specifies the vault role name for policy controller
 	// It has permission to create policy in vault
 	// +optional
-	VaultRole string `json:"vaultRole,omitempty" protobuf:"bytes,2,opt,name=vaultRole"`
+	VaultRole string `json:"vaultRole,omitempty"`
 
 	// Specifies the Kubernetes authentication information
 	// +optional
-	Kubernetes *KubernetesAuthConfig `json:"kubernetes,omitempty" protobuf:"bytes,3,opt,name=kubernetes"`
+	Kubernetes *KubernetesAuthConfig `json:"kubernetes,omitempty"`
 
 	// Specifies the Azure authentication information
 	// +optional
-	Azure *AzureAuthConfig `json:"azure,omitempty" protobuf:"bytes,4,opt,name=azure"`
+	Azure *AzureAuthConfig `json:"azure,omitempty"`
 
 	// Specifies the AWS authentication information
 	// +optional
-	AWS *AWSAuthConfig `json:"aws,omitempty" protobuf:"bytes,5,opt,name=aws"`
+	AWS *AWSAuthConfig `json:"aws,omitempty"`
 }
 
 // KubernetesAuthConfiguration contains necessary information for
 // performing Kubernetes authentication to the Vault server.
 type KubernetesAuthConfig struct {
 	// Specifies the service account name
-	ServiceAccountName string `json:"serviceAccountName" protobuf:"bytes,1,opt,name=serviceAccountName"`
+	ServiceAccountName string `json:"serviceAccountName"`
 
 	// Specifies the service account name for token reviewer
 	// It has system:auth-delegator permission
 	// It's jwt token is used on vault kubernetes auth config
 	// +optional
-	TokenReviewerServiceAccountName string `json:"tokenReviewerServiceAccountName,omitempty" protobuf:"bytes,2,opt,name=tokenReviewerServiceAccountName"`
+	TokenReviewerServiceAccountName string `json:"tokenReviewerServiceAccountName,omitempty"`
 
 	// Specifies to use pod service account for vault csi driver
 	// +optional
-	UsePodServiceAccountForCSIDriver bool `json:"usePodServiceAccountForCSIDriver,omitempty" protobuf:"varint,3,opt,name=usePodServiceAccountForCSIDriver"`
+	UsePodServiceAccountForCSIDriver bool `json:"usePodServiceAccountForCSIDriver,omitempty"`
 }
 
 // AzureAuthConfig contains necessary information for
@@ -75,23 +75,23 @@ type AzureAuthConfig struct {
 	// Specifies the subscription ID for the machine
 	// that generated the MSI token.
 	// +optional
-	SubscriptionID string `json:"subscriptionID,omitempty" protobuf:"bytes,1,opt,name=subscriptionID"`
+	SubscriptionID string `json:"subscriptionID,omitempty"`
 
 	// Specifies the resource group for the machine
 	// that generated the MSI token.
 	// +optional
-	ResourceGroupName string `json:"resourceGroupName,omitempty" protobuf:"bytes,2,opt,name=resourceGroupName"`
+	ResourceGroupName string `json:"resourceGroupName,omitempty"`
 
 	// Specifies the virtual machine name for the machine
 	// that generated the MSI token. If VmssName is provided,
 	// this value is ignored.
 	// +optional
-	VmName string `json:"vmName,omitempty" protobuf:"bytes,3,opt,name=vmName"`
+	VmName string `json:"vmName,omitempty"`
 
 	// Specifies the virtual machine scale set name
 	// for the machine that generated the MSI token.
 	// +optional
-	VmssName string `json:"vmssName,omitempty" protobuf:"bytes,4,opt,name=vmssName"`
+	VmssName string `json:"vmssName,omitempty"`
 }
 
 // AWSAuthConfig contains necessary information for
@@ -100,5 +100,5 @@ type AWSAuthConfig struct {
 	// Specifies the header value that required
 	// if X-Vault-AWS-IAM-Server-ID Header is set in Vault.
 	// +optional
-	HeaderValue string `json:"headerValue,omitempty" protobuf:"bytes,1,opt,name=headerValue"`
+	HeaderValue string `json:"headerValue,omitempty"`
 }
