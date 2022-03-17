@@ -14,6 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
+	golang.org/x/text v0.3.7
 	gomodules.xyz/kglog v0.0.1
 	gomodules.xyz/runtime v0.2.0
 	gomodules.xyz/wait v0.2.0 // indirect
