@@ -864,7 +864,6 @@ kubevault.dev/apimachinery/apis/policy/v1alpha1
 kubevault.dev/apimachinery/client/clientset/versioned/scheme
 kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1
 kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1/util
-kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha1
 kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2
 kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1
 kubevault.dev/apimachinery/crds
