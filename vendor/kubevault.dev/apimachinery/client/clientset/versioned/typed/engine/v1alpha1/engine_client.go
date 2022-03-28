@@ -31,6 +31,7 @@ type EngineV1alpha1Interface interface {
 	AzureRolesGetter
 	ElasticsearchRolesGetter
 	GCPRolesGetter
+	MariaDBRolesGetter
 	MongoDBRolesGetter
 	MySQLRolesGetter
 	PostgresRolesGetter
@@ -58,6 +59,10 @@ func (c *EngineV1alpha1Client) ElasticsearchRoles(namespace string) Elasticsearc
 
 func (c *EngineV1alpha1Client) GCPRoles(namespace string) GCPRoleInterface {
 	return newGCPRoles(c, namespace)
+}
+
+func (c *EngineV1alpha1Client) MariaDBRoles(namespace string) MariaDBRoleInterface {
+	return newMariaDBRoles(c, namespace)
 }
 
 func (c *EngineV1alpha1Client) MongoDBRoles(namespace string) MongoDBRoleInterface {

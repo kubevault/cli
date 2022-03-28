@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"strings"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 
 	"github.com/pkg/errors"

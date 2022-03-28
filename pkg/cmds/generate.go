@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha1"
+	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2"
 	policycs "kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate"
 
@@ -171,7 +171,7 @@ func (o *generateOption) generate(clientGetter genericclioptions.RESTClientGette
 	return nil
 }
 
-func (s *SecretProviderClassOptions) generateSecretObjects(engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha1Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (string, error) {
+func (s *SecretProviderClassOptions) generateSecretObjects(engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha2Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (string, error) {
 	if engineClient == nil || vaultClient == nil || policyClient == nil || kubeClient == nil {
 		return "", errors.New("engineClient/vaultClient/policyClient/kubeClient is nil")
 	}
@@ -277,7 +277,7 @@ func (s *SecretProviderClassOptions) generateSecretProviderClass(objectsList str
 	return nil
 }
 
-func initClients(cfg *rest.Config) (*enginecs.EngineV1alpha1Client, *vaultcs.KubevaultV1alpha1Client, *policycs.PolicyV1alpha1Client, *kubernetes.Clientset, error) {
+func initClients(cfg *rest.Config) (*enginecs.EngineV1alpha1Client, *vaultcs.KubevaultV1alpha2Client, *policycs.PolicyV1alpha1Client, *kubernetes.Clientset, error) {
 	engineClient, err := enginecs.NewForConfig(cfg)
 	if err != nil {
 		return nil, nil, nil, nil, err

@@ -38,9 +38,9 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type GCPRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              GCPRoleSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            RoleStatus  `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              GCPRoleSpec `json:"spec,omitempty"`
+	Status            RoleStatus  `json:"status,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=access_token;service_account_key
@@ -55,29 +55,29 @@ const (
 // More info: https://www.vaultproject.io/api/secret/gcp/index.html#parameters
 type GCPRoleSpec struct {
 	// SecretEngineRef is the name of a Secret Engine
-	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef" protobuf:"bytes,1,opt,name=secretEngineRef"`
+	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef"`
 
 	// Path defines the path of the Google Cloud secret engine
 	// default: gcp
 	// More info: https://www.vaultproject.io/docs/auth/gcp.html#via-the-cli-helper
 	// +optional
-	Path string `json:"path,omitempty" protobuf:"bytes,2,opt,name=path"`
+	Path string `json:"path,omitempty"`
 
 	// Specifies the type of secret generated for this role set
-	SecretType GCPSecretType `json:"secretType" protobuf:"bytes,3,opt,name=secretType,casttype=GCPSecretType"`
+	SecretType GCPSecretType `json:"secretType"`
 
 	// Name of the GCP project that this roleset's service account will belong to.
 	// Cannot be updated.
-	Project string `json:"project" protobuf:"bytes,4,opt,name=project"`
+	Project string `json:"project"`
 
 	// Bindings configuration string (expects HCL or JSON format in raw
 	// or base64-encoded string)
-	Bindings string `json:"bindings" protobuf:"bytes,5,opt,name=bindings"`
+	Bindings string `json:"bindings"`
 
 	// List of OAuth scopes to assign to access_token secrets generated
 	// under this role set (access_token role sets only)
 	// +optional
-	TokenScopes []string `json:"tokenScopes,omitempty" protobuf:"bytes,6,rep,name=tokenScopes"`
+	TokenScopes []string `json:"tokenScopes,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -85,10 +85,10 @@ type GCPRoleSpec struct {
 
 type GCPRoleList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// Items is a list of GCPRole objects
-	Items []GCPRole `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	Items []GCPRole `json:"items,omitempty"`
 }
 
 const (

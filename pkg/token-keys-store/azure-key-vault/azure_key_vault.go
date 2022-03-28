@@ -24,7 +24,7 @@ import (
 	"strings"
 	"time"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
@@ -63,7 +63,7 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 		return nil, errors.New("kubeClient is nil")
 	}
 
-	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AzureKeyVault.AADClientSecret, metav1.GetOptions{})
+	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AzureKeyVault.CredentialSecretRef.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}

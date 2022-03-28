@@ -19,7 +19,7 @@ package v1alpha1
 import (
 	"fmt"
 
-	api "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
+	api "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
@@ -80,6 +80,8 @@ func (se SecretEngine) GetSecretEngineType() api.SecretEngineType {
 		return api.SecretEngineTypeMySQL
 	case seSpec.Postgres != nil:
 		return api.SecretEngineTypePostgres
+	case seSpec.MariaDB != nil:
+		return api.SecretEngineTypeMariaDB
 	default:
 		return ""
 	}

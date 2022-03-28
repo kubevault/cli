@@ -22,9 +22,9 @@ import (
 )
 
 const (
-	ResourceKindElasticsearchRole = "ElasticsearchRole"
-	ResourceElasticsearchRole     = "elasticsearchrole"
-	ResourceElasticsearchRoles    = "elasticsearchroles"
+	ResourceKindMariaDBRole = "MariaDBRole"
+	ResourceMariaDBRole     = "mariadbrole"
+	ResourceMariaDBRoles    = "mariadbroles"
 )
 
 // +genclient
@@ -32,25 +32,25 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=elasticsearchroles,singular=elasticsearchrole,categories={vault,appscode,all}
+// +kubebuilder:resource:path=mariadbroles,singular=mariadbrole,categories={vault,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-type ElasticsearchRole struct {
+type MariaDBRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ElasticsearchRoleSpec `json:"spec,omitempty"`
-	Status            RoleStatus            `json:"status,omitempty"`
+	Spec              MariaDBRoleSpec `json:"spec,omitempty"`
+	Status            RoleStatus      `json:"status,omitempty"`
 }
 
-// ElasticsearchRoleSpec contains connection information, Elasticsearch role info etc
-type ElasticsearchRoleSpec struct {
+// MariaDBRoleSpec contains connection information, mariadb role info etc
+type MariaDBRoleSpec struct {
 	// SecretEngineRef is the name of a Secret Engine
 	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef"`
 
 	// links:
 	// 	- https://www.vaultproject.io/api/secret/databases/index.html
-	//	- https://www.vaultproject.io/api/secret/databases/elasticdb.html
+	//	- https://www.vaultproject.io/api/secret/databases/mysql-maria.html
 
 	// Specifies the TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
@@ -62,21 +62,21 @@ type ElasticsearchRoleSpec struct {
 	// Defaults to system/engine default TTL time.
 	MaxTTL string `json:"maxTTL,omitempty"`
 
-	// https://www.vaultproject.io/api/secret/databases/elasticdb.html#creation_statements
+	// https://www.vaultproject.io/api/secret/databases/mysql-maria.html#creation_statements
 	// Specifies the database statements executed to create and configure a user.
 	CreationStatements []string `json:"creationStatements"`
 
-	// https://www.vaultproject.io/api/secret/databases/elasticdb.html#revocation_statements
+	// https://www.vaultproject.io/api/secret/databases/mysql-maria.html#revocation_statements
 	// Specifies the database statements to be executed to revoke a user.
 	RevocationStatements []string `json:"revocationStatements,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type ElasticsearchRoleList struct {
+type MariaDBRoleList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 
-	// Items is a list of ElasticsearchRole objects
-	Items []ElasticsearchRole `json:"items,omitempty"`
+	// Items is a list of MariaDBRole objects
+	Items []MariaDBRole `json:"items,omitempty"`
 }

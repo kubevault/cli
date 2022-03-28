@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1alpha2
 
 import (
 	"time"
@@ -22,6 +22,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
@@ -37,6 +38,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:resource:path=vaultservers,singular=vaultserver,shortName=vs,categories={vault,appscode,all}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Replicas",type="string",JSONPath=".spec.replicas"
@@ -202,7 +204,7 @@ type AllowedSecretEngines struct {
 	SecretEngines []SecretEngineType `json:"secretEngines,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=kv;pki;aws;azure;gcp;postgres;mongodb;mysql;elasticsearch
+// +kubebuilder:validation:Enum=kv;pki;aws;azure;gcp;postgres;mongodb;mysql;mariadb;elasticsearch
 type SecretEngineType string
 
 const (
@@ -214,6 +216,7 @@ const (
 	SecretEngineTypePostgres      SecretEngineType = "postgres"
 	SecretEngineTypeMongoDB       SecretEngineType = "mongodb"
 	SecretEngineTypeMySQL         SecretEngineType = "mysql"
+	SecretEngineTypeMariaDB       SecretEngineType = "mariadb"
 	SecretEngineTypeElasticsearch SecretEngineType = "elasticsearch"
 )
 
@@ -468,7 +471,7 @@ type EtcdSpec struct {
 	//  - username:<value>
 	//  - password:<value>
 	// +optional
-	CredentialSecretName string `json:"credentialSecretName,omitempty"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for etcd communication
 	// secret data:
@@ -476,7 +479,7 @@ type EtcdSpec struct {
 	//  - client.crt
 	//  - client.key
 	// +optional
-	TLSSecretName string `json:"tlsSecretName,omitempty"`
+	TLSSecretRef *core.LocalObjectReference `json:"tlsSecretRef,omitempty"`
 }
 
 // vault doc: https://www.vaultproject.io/docs/configuration/storage/google-cloud-storage.html
@@ -503,7 +506,7 @@ type GcsSpec struct {
 	// secret data:
 	//  - sa.json:<value>
 	// +optional
-	CredentialSecret string `json:"credentialSecret,omitempty"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 }
 
 // vault doc: https://www.vaultproject.io/docs/configuration/storage/s3.html
@@ -521,18 +524,13 @@ type S3Spec struct {
 	// +optional
 	Region string `json:"region,omitempty"`
 
-	// Specifies the secret name containing AWS access key and AWS secret key
+	// Specifies the secret name containing AWS session token, AWS access key and AWS secret key
 	// secret data:
 	//  - access_key=<value>
 	//  - secret_key=<value>
+	//  - session_token=<value>
 	// +optional
-	CredentialSecret string `json:"credentialSecret,omitempty"`
-
-	// Specifies the secret name containing AWS session token
-	// secret data:
-	//  - session_token:<value>
-	// +optional
-	SessionTokenSecret string `json:"sessionTokenSecret,omitempty"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Specifies the maximum number of parallel operations to take place.
 	// +optional
@@ -557,7 +555,8 @@ type AzureSpec struct {
 	// Specifies the secret containing Azure Storage account key.
 	// secret data:
 	//  - account_key:<value>
-	AccountKeySecret string `json:"accountKeySecret"`
+	// +optional
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Specifies the Azure Storage Blob container name.
 	Container string `json:"container"`
@@ -571,53 +570,131 @@ type AzureSpec struct {
 //
 // PostgreSQLSpec defines configuration to set up PostgreSQL storage as backend storage in vault
 type PostgreSQLSpec struct {
-	// Specifies the name of the secret containing the connection string to use to authenticate and connect to PostgreSQL.
-	// A full list of supported parameters can be found in the pq library documentation(https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters).
+	// Specifies the MySQL username and password to connect to the database
 	// secret data:
-	//  - connection_url:<data>
-	ConnectionURLSecret string `json:"connectionURLSecret"`
+	//  - username=<value>
+	//  - password=<value>
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
+
+	// DatabaseRef contains the info of KubeDB managed Database
+	// This will be used to generate the "Address" field
+	DatabaseRef *appcat.AppReference `json:"databaseRef,omitempty"`
+
+	// SSLMode for both standalone and clusters. [disable;verify-full]
+	SSLMode PostgresSSLMode `json:"sslMode,omitempty"`
 
 	// Specifies the name of the table in which to write Vault data.
 	// This table must already exist (Vault will not attempt to create it).
 	// +optional
+	// +kubebuilder:default:="vault_kv_store"
 	Table string `json:"table,omitempty"`
 
 	//  Specifies the maximum number of concurrent requests to take place.
 	// +optional
 	MaxParallel int64 `json:"maxParallel,omitempty"`
+
+	// Default not set. Sets the maximum number of connections in the idle connection pool.
+	// See golang docs on SetMaxIdleConns(https://pkg.go.dev/database/sql#DB.SetMaxIdleConns) for more information. Requires 1.2 or later.
+	// +optional
+	MaxIdleConnection int64 `json:"maxIdleConnection,omitempty"`
+
+	// High Availability Parameter
+	// Default not enabled, requires 9.5 or later
+	// Specifies if high availability mode is enabled. This is a boolean value, but it is specified as a string like "true" or "false".
+	// +optional
+	// +kubebuilder:default:="false"
+	HAEnabled string `json:"haEnabled,omitempty"`
+
+	// Specifies the name of the table to use for storing high availability information. This table must already exist (Vault will not attempt to create it).
+	// +optional
+	// +kubebuilder:default:="vault_ha_locks"
+	HATable string `json:"haTable,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=disable;require;verify-ca;verify-full
+type PostgresSSLMode string
+
+const (
+	// PostgresSSLModeDisable represents `disable` sslMode. It ensures that the server does not use TLS/SSL.
+	PostgresSSLModeDisable PostgresSSLMode = "disable"
+
+	// Always SSL (skip verification)
+	PostgressSSLModeRequire PostgresSSLMode = "require"
+
+	// Always SSL (verify that the certificate presented by the server was signed by a trusted CA)
+	PostgressSSLModeVerifyCA PostgresSSLMode = "verify-ca"
+
+	// PostgresSSLModeVerifyFull represents `verify-full` sslmode. I want my data encrypted, and I accept the overhead.
+	// I want to be sure that I connect to a server I trust, and that it's the one I specify.
+	PostgresSSLModeVerifyFull PostgresSSLMode = "verify-full"
+)
 
 // vault doc: https://www.vaultproject.io/docs/configuration/storage/mysql.html
 //
 // MySQLSpec defines configuration to set up MySQL Storage as backend storage in vault
 type MySQLSpec struct {
 	// Specifies the address of the MySQL host.
+	// if DatabaseRef is set then Address will be generated from it
+	// This must be set if DatabaseRef is empty, validate from ValidatingWebhook
+	// host example: <db-name>.<db-ns>.svc:3306
 	// +optional
 	Address string `json:"address"`
 
 	// Specifies the name of the database. If the database does not exist, Vault will attempt to create it.
 	// +optional
+	// +kubebuilder:default:="vault"
 	Database string `json:"database,omitempty"`
 
 	// Specifies the name of the table. If the table does not exist, Vault will attempt to create it.
 	// +optional
+	// +kubebuilder:default:="vault"
 	Table string `json:"table,omitempty"`
 
 	// Specifies the MySQL username and password to connect to the database
 	// secret data:
 	//  - username=<value>
 	//  - password=<value>
-	UserCredentialSecret string `json:"userCredentialSecret"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Specifies the name of the secret containing the CA certificate to connect using TLS.
 	// secret data:
 	//  - tls_ca_file=<ca_cert>
 	// +optional
-	TLSCASecret string `json:"tlsCASecret,omitempty"`
+	TLSSecretRef *core.LocalObjectReference `json:"tlsSecretRef,omitempty"`
 
 	//  Specifies the maximum number of concurrent requests to take place.
 	// +optional
 	MaxParallel int64 `json:"maxParallel,omitempty"`
+
+	// DatabaseRef contains the info of KubeDB managed Database
+	// This will be used to generate the "Address" field
+	// +optional
+	DatabaseRef *appcat.AppReference `json:"databaseRef,omitempty"`
+
+	PlaintextCredentialTransmission string `json:"plaintextCredentialTransmission,omitempty"`
+
+	// Specifies the maximum number of idle connections to the database.
+	// A zero uses value defaults to 2 idle connections and a negative value disables idle connections.
+	// If larger than max_parallel it will be reduced to be equal.
+	// +optional
+	MaxIdleConnection int64 `json:"maxIdleConnection,omitempty"`
+
+	// Specifies the maximum amount of time in seconds that a connection may be reused. If <= 0s connections are reused forever.
+	// +optional
+	MaxConnectionLifetime int64 `json:"maxConnectionLifetime,omitempty"`
+
+	// High Availability Parameter
+	// Specifies if high availability mode is enabled. This is a boolean value, but it is specified as a string like "true" or "false".
+	// +optional
+	// +kubebuilder:default:="true"
+	HAEnabled string `json:"haEnabled,omitempty"`
+
+	// High Availability Parameter
+	// Specifies the name of the table to use for storing high availability information.
+	// By default, this is the name of the table suffixed with _lock. If the table does not exist, Vault will attempt to create it.
+	// +optional
+	// +kubebuilder:default:="vault_lock"
+	LockTable string `json:"lockTable,omitempty"`
 }
 
 // vault doc: https://www.vaultproject.io/docs/configuration/storage/filesystem.html
@@ -664,18 +741,13 @@ type DynamoDBSpec struct {
 	// +optional
 	Table string `json:"table,omitempty"`
 
-	// Specifies the secret name containing AWS access key and AWS secret key
+	// Specifies the secret name containing AWS session token, AWS access key and AWS secret key
 	// secret data:
 	//  - access_key=<value>
 	//  - secret_key=<value>
+	//  - session_token=<value>
 	// +optional
-	CredentialSecret string `json:"credentialSecret,omitempty"`
-
-	// Specifies the secret name containing AWS session token
-	// secret data:
-	//  - session_token:<value>
-	// +optional
-	SessionTokenSecret string `json:"sessionTokenSecret,omitempty"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Specifies the maximum number of parallel operations to take place.
 	// +optional
@@ -693,10 +765,13 @@ type SwiftSpec struct {
 	Container string `json:"container"`
 
 	// Specifies the name of the secret containing the OpenStack account/username and password
+	// Specifies secret containing auth token from alternate authentication.
 	// secret data:
 	//  - username=<value>
 	//  - password=<value>
-	CredentialSecret string `json:"credentialSecret"`
+	//  - auth_token=<value>
+	// +optional
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Specifies the name of the tenant. If left blank, this will default to the default tenant of the username.
 	// +optional
@@ -725,12 +800,6 @@ type SwiftSpec struct {
 	// Specifies storage URL from alternate authentication.
 	// +optional
 	StorageURL string `json:"storageURL,omitempty"`
-
-	// Specifies secret containing auth token from alternate authentication.
-	// secret data:
-	//  - auth_token=<value>
-	// +optional
-	AuthTokenSecret string `json:"authTokenSecret,omitempty"`
 
 	//  Specifies the maximum number of concurrent requests to take place.
 	// +optional
@@ -805,7 +874,7 @@ type GoogleKmsGcsSpec struct {
 	// secret data:
 	//  - sa.json:<value>
 	// +optional
-	CredentialSecret string `json:"credentialSecret,omitempty"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 }
 
 // AwsKmsSsmSpec contain the fields that required to unseal vault using aws kms ssm
@@ -824,7 +893,7 @@ type AwsKmsSsmSpec struct {
 	//  - access_key:<value>
 	//  - secret_key:<value>
 	// +optional
-	CredentialSecret string `json:"credentialSecret,omitempty"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Used to make AWS KMS requests. This is useful,
 	// for example, when connecting to KMS over a VPC Endpoint.
@@ -835,12 +904,6 @@ type AwsKmsSsmSpec struct {
 // RaftSpec defines the configuration for the Raft integrated storage.
 // https://www.vaultproject.io/docs/configuration/storage/raft
 type RaftSpec struct {
-	// Path (string: "") specifies the filesystem path where the vault data gets stored.
-	// This value can be overridden by setting the VAULT_RAFT_PATH environment variable.
-	// default: ""
-	// +optional
-	Path string `json:"path,omitempty"`
-
 	// An integer multiplier used by servers to scale key Raft timing parameters.
 	// Tuning this affects the time it takes Vault to detect leader failures and to perform leader elections,
 	// at the expense of requiring more network and CPU resources for better performance.
@@ -890,14 +953,14 @@ type AzureKeyVault struct {
 	//  - client-cert:<value>
 	// 	- client-cert-password: <value>
 	// +optional
-	ClientCertSecret string `json:"clientCertSecret,omitempty"`
+	TLSSecretRef *core.LocalObjectReference `json:"tlsSecretRef,omitempty"`
 
 	// Specifies the name of secret containing client id and client secret of AAD application
 	// secret data:
 	//  - client-id:<value>
 	//  - client-secret:<value>
 	// +optional
-	AADClientSecret string `json:"aadClientSecret,omitempty"`
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// Use managed service identity for the virtual machine
 	// +optional
@@ -920,7 +983,7 @@ const (
 // links: https://www.vaultproject.io/api/system/auth.html
 type AuthMethod struct {
 	//  Specifies the name of the authentication method type, such as "github" or "token".
-	Type string `json:"type"`
+	Type AuthMethodType `json:"type"`
 
 	// Specifies the path in which to enable the auth method.
 	// Default value is the same as the 'type'
@@ -957,7 +1020,7 @@ const (
 // AuthMethodStatus specifies the status of the auth method maintained by the auth method controller
 type AuthMethodStatus struct {
 	//  Specifies the name of the authentication method type, such as "github" or "token".
-	Type string `json:"type"`
+	Type AuthMethodType `json:"type"`
 
 	// Specifies the path in which to enable the auth method.
 	Path string `json:"path"`

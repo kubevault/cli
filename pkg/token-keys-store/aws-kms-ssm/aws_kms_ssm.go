@@ -23,7 +23,7 @@ import (
 	"os"
 	"strings"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -62,7 +62,7 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 		return nil, errors.New("kubeClient is nil")
 	}
 
-	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AwsKmsSsm.CredentialSecret, metav1.GetOptions{})
+	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AwsKmsSsm.CredentialSecretRef.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}

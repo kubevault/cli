@@ -14,17 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1alpha2
 
 import (
-	"kubevault.dev/apimachinery/apis/engine"
+	"kubevault.dev/apimachinery/apis/kubevault"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-var SchemeGroupVersion = schema.GroupVersion{Group: engine.GroupName, Version: "v1alpha1"}
+var SchemeGroupVersion = schema.GroupVersion{Group: kubevault.GroupName, Version: "v1alpha2"}
 
 var (
 	// TODO: move SchemeBuilder with zz_generated.deepcopy.go to k8s.io/api.
@@ -54,29 +54,10 @@ func Resource(resource string) schema.GroupResource {
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
-		&SecretEngine{},
-		&SecretEngineList{},
-		&SecretAccessRequest{},
-		&SecretAccessRequestList{},
-		&SecretRoleBinding{},
-		&SecretRoleBindingList{},
-		&AWSRole{},
-		&AWSRoleList{},
-		&AzureRole{},
-		&AzureRoleList{},
-		&GCPRole{},
-		&GCPRoleList{},
-		&MongoDBRole{},
-		&MongoDBRoleList{},
-		&MySQLRole{},
-		&MySQLRoleList{},
-		&MariaDBRole{},
-		&MariaDBRoleList{},
-		&PostgresRole{},
-		&PostgresRoleList{},
-		&ElasticsearchRole{},
-		&ElasticsearchRoleList{},
+		&VaultServer{},
+		&VaultServerList{},
 	)
+
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&metav1.Status{},
 	)

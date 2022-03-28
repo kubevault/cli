@@ -38,15 +38,15 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type MySQLRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              MySQLRoleSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            RoleStatus    `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              MySQLRoleSpec `json:"spec,omitempty"`
+	Status            RoleStatus    `json:"status,omitempty"`
 }
 
 // MySQLRoleSpec contains connection information, mysql role info etc
 type MySQLRoleSpec struct {
 	// SecretEngineRef is the name of a Secret Engine
-	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef" protobuf:"bytes,1,opt,name=secretEngineRef"`
+	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef"`
 
 	// links:
 	// 	- https://www.vaultproject.io/api/secret/databases/index.html
@@ -55,28 +55,28 @@ type MySQLRoleSpec struct {
 	// Specifies the TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to system/engine default TTL time
-	DefaultTTL string `json:"defaultTTL,omitempty" protobuf:"bytes,2,opt,name=defaultTTL"`
+	DefaultTTL string `json:"defaultTTL,omitempty"`
 
 	// Specifies the maximum TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to system/engine default TTL time.
-	MaxTTL string `json:"maxTTL,omitempty" protobuf:"bytes,3,opt,name=maxTTL"`
+	MaxTTL string `json:"maxTTL,omitempty"`
 
 	// https://www.vaultproject.io/api/secret/databases/mysql-maria.html#creation_statements
 	// Specifies the database statements executed to create and configure a user.
-	CreationStatements []string `json:"creationStatements" protobuf:"bytes,4,rep,name=creationStatements"`
+	CreationStatements []string `json:"creationStatements"`
 
 	// https://www.vaultproject.io/api/secret/databases/mysql-maria.html#revocation_statements
 	// Specifies the database statements to be executed to revoke a user.
-	RevocationStatements []string `json:"revocationStatements,omitempty" protobuf:"bytes,5,rep,name=revocationStatements"`
+	RevocationStatements []string `json:"revocationStatements,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type MySQLRoleList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// Items is a list of MySQLRole objects
-	Items []MySQLRole `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	Items []MySQLRole `json:"items,omitempty"`
 }

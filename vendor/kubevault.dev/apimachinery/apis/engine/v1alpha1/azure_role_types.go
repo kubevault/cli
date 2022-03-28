@@ -38,9 +38,9 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type AzureRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              AzureRoleSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            RoleStatus    `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              AzureRoleSpec `json:"spec,omitempty"`
+	Status            RoleStatus    `json:"status,omitempty"`
 }
 
 type AzureSecretType string
@@ -56,26 +56,26 @@ const (
 // More info: https://www.vaultproject.io/api/secret/azure/index.html#create-update-role
 type AzureRoleSpec struct {
 	// SecretEngineRef is the name of a Secret Engine
-	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef" protobuf:"bytes,1,opt,name=secretEngineRef"`
+	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef"`
 
 	// List of Azure roles to be assigned to the generated service principal.
 	// The array must be in JSON format, properly escaped as a string
-	AzureRoles string `json:"azureRoles,omitempty" protobuf:"bytes,2,opt,name=azureRoles"`
+	AzureRoles string `json:"azureRoles,omitempty"`
 
 	// Application Object ID for an existing service principal
 	// that will be used instead of creating dynamic service principals.
 	// If present, azure_roles will be ignored.
-	ApplicationObjectID string `json:"applicationObjectID,omitempty" protobuf:"bytes,3,opt,name=applicationObjectID"`
+	ApplicationObjectID string `json:"applicationObjectID,omitempty"`
 
 	// Specifies the default TTL for service principals generated using this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to the system/engine default TTL time.
-	TTL string `json:"ttl,omitempty" protobuf:"bytes,4,opt,name=ttl"`
+	TTL string `json:"ttl,omitempty"`
 
 	// Specifies the maximum TTL for service principals
 	// generated using this role. Accepts time suffixed strings ("1h")
 	// or an integer number of seconds. Defaults to the system/engine max TTL time.
-	MaxTTL string `json:"maxTTL,omitempty" protobuf:"bytes,5,opt,name=maxTTL"`
+	MaxTTL string `json:"maxTTL,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -83,8 +83,8 @@ type AzureRoleSpec struct {
 
 type AzureRoleList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// Items is a list of AzureRole objects
-	Items []AzureRole `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	Items []AzureRole `json:"items,omitempty"`
 }

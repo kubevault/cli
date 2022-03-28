@@ -19,7 +19,7 @@ package token_keys_store
 import (
 	"errors"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 	aws_kms_ssm "kubevault.dev/cli/pkg/token-keys-store/aws-kms-ssm"
 	azure_key_vault "kubevault.dev/cli/pkg/token-keys-store/azure-key-vault"

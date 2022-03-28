@@ -10,7 +10,6 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets v0.3.0
 	github.com/aws/aws-sdk-go v1.38.31
 	github.com/go-errors/errors v1.0.1
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.2.1
@@ -31,7 +30,7 @@ require (
 	k8s.io/kubectl v0.21.0
 	kmodules.xyz/client-go v0.0.0-20220203031013-1de48437aaf3
 	kmodules.xyz/custom-resources v0.0.0-20220208103158-61b298634e43
-	kubevault.dev/apimachinery v0.7.1-0.20220221130327-6c1890497045
+	kubevault.dev/apimachinery v0.7.1-0.20220325102543-768dc512b256
 	sigs.k8s.io/secrets-store-csi-driver v1.0.0
 	sigs.k8s.io/yaml v1.2.0
 )
