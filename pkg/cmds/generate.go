@@ -36,7 +36,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	secretsstore "sigs.k8s.io/secrets-store-csi-driver/apis/v1alpha1"
+	secretsstore "sigs.k8s.io/secrets-store-csi-driver/apis/v1"
 	"sigs.k8s.io/yaml"
 )
 
@@ -70,7 +70,7 @@ type SecretProviderClassOptions struct {
 func NewSecretProviderClassOptions(op *generateOption, namespace, name string) *SecretProviderClassOptions {
 	return &SecretProviderClassOptions{
 		options:    op,
-		apiVersion: fmt.Sprintf("%s/v1alpha1", secretsstore.GroupName),
+		apiVersion: fmt.Sprintf("%s/v1", secretsstore.GroupName),
 		kind:       "SecretProviderClass",
 		provider:   "vault",
 		namespace:  namespace,

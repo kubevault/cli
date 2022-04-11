@@ -27,6 +27,7 @@ require (
 	k8s.io/cli-runtime v0.21.1
 	k8s.io/client-go v0.22.2
 	k8s.io/component-base v0.22.0
+	k8s.io/klog/v2 v2.10.0
 	k8s.io/kubectl v0.21.0
 	kmodules.xyz/client-go v0.0.0-20220203031013-1de48437aaf3
 	kmodules.xyz/custom-resources v0.0.0-20220208103158-61b298634e43
