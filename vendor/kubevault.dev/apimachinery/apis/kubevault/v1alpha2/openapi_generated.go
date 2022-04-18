@@ -19869,7 +19869,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"credentialSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the MySQL username and password to connect to the database secret data:\n - username=<value>\n - password=<value>",
+							Description: "\n - connection_url=\"postgres://<username>:<password>@<host>:<port>/<db_name>\"",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},

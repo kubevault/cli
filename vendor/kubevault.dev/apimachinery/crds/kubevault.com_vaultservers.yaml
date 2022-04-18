@@ -7703,9 +7703,7 @@ spec:
                       storage as backend storage in vault"
                     properties:
                       credentialSecretRef:
-                        description: 'Specifies the MySQL username and password to
-                          connect to the database secret data:  - username=<value>  -
-                          password=<value>'
+                        description: ' - connection_url="postgres://<username>:<password>@<host>:<port>/<db_name>"'
                         properties:
                           name:
                             description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names

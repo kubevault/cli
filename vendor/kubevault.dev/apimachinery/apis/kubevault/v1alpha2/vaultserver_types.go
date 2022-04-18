@@ -570,10 +570,7 @@ type AzureSpec struct {
 //
 // PostgreSQLSpec defines configuration to set up PostgreSQL storage as backend storage in vault
 type PostgreSQLSpec struct {
-	// Specifies the MySQL username and password to connect to the database
-	// secret data:
-	//  - username=<value>
-	//  - password=<value>
+	//  - connection_url="postgres://<username>:<password>@<host>:<port>/<db_name>"
 	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
 	// DatabaseRef contains the info of KubeDB managed Database

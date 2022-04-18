@@ -38,6 +38,8 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
+func (*VaultServer) Hub() {}
+
 func (_ VaultServer) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceVaultServers))
 }

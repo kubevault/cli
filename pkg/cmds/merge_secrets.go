@@ -42,7 +42,7 @@ func newMergeSecretsOptions() *mergeSecretsOptions {
 }
 
 func (o *mergeSecretsOptions) addMergeSecretsFlags(fs *pflag.FlagSet) {
-	fs.BoolVar(&o.overwrite, "overwrite-keys", o.overwrite, "will overwrite keys in destination if set.")
+	fs.BoolVar(&o.overwrite, "overwrite-keys", o.overwrite, "will overwrite keys in destination if set to true.")
 	fs.StringVar(&o.src, "src", o.src, "source secret.")
 	fs.StringVar(&o.dst, "dst", o.dst, "destination secret.")
 }
@@ -52,9 +52,16 @@ func NewCmdMergeSecrets(clientGetter genericclioptions.RESTClientGetter) *cobra.
 
 	cmd := &cobra.Command{
 		Use:   "merge-secrets",
-		Short: "merge two secrets",
-		Long: `Example: 
-kubectl vault merge-secrets --src=<ns1>/<name1> --dst=<ns2>/<name2>`,
+		Short: "merge-secrets merges secrets",
+		Long: `merge-secrets command merges two given secrets. Both the src & dst secrets must exists for successful merge operation.
+
+Example: 
+ # merge two secret name1 & name2 from ns1 & ns2 namespaces respectively
+ $ kubectl vault merge-secrets --src=<ns1>/<name1> --dst=<ns2>/<name2>
+
+ # --overwrite-keys flag will overwrite keys in destination if set to true.
+ $ kubectl vault merge-secrets --src=<ns1>/<name1> --dst=<ns2>/<name2> --overwrite-keys=true
+`,
 
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -104,16 +111,6 @@ func (o *mergeSecretsOptions) merge(clientGetter genericclioptions.RESTClientGet
 		fmt.Println("dst secret doesn't exist")
 		return err
 	}
-
-	//klog.Infoln("===== src secret =====")
-	//for key, value := range srcSecret.Data {
-	//	klog.Infoln("key, value: ", key, string(value))
-	//}
-
-	//klog.Infoln("===== dst secret ====")
-	//for key, value := range dstSecret.Data {
-	//	klog.Infoln("key, value: ", key, string(value))
-	//}
 
 	for key, value := range srcSecret.Data {
 		if _, ok := dstSecret.Data[key]; !ok || (ok && o.overwrite) {
