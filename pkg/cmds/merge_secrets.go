@@ -53,7 +53,7 @@ func NewCmdMergeSecrets(clientGetter genericclioptions.RESTClientGetter) *cobra.
 	cmd := &cobra.Command{
 		Use:   "merge-secrets",
 		Short: "merge-secrets merges secrets",
-		Long: `merge-secrets command merges two given secrets. Both the src & dst secrets must exists for successful merge operation.
+		Long: `merge-secrets command merges two given secrets. Both the src & dst secrets must exist for successful merge operation.
 
 Example: 
  # merge two secret name1 & name2 from ns1 & ns2 namespaces respectively
