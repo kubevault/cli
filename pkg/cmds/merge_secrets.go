@@ -96,9 +96,6 @@ func (o *mergeSecretsOptions) merge(clientGetter genericclioptions.RESTClientGet
 	srcNs, srcName := split(o.src)
 	dstNs, dstName := split(o.dst)
 
-	klog.Infof("src: %s, %s\n", srcNs, srcName)
-	klog.Infof("dst: %s, %s\n", dstNs, dstName)
-
 	srcSecret, err := kubeClient.CoreV1().Secrets(srcNs).Get(context.TODO(), srcName, metav1.GetOptions{})
 	if err != nil {
 		if !errors.IsNotFound(err) {
@@ -123,11 +120,7 @@ func (o *mergeSecretsOptions) merge(clientGetter genericclioptions.RESTClientGet
 		}
 	}
 
-	klog.Infoln("===== now dst secret ====")
-	for key, value := range dstSecret.Data {
-		klog.Infoln("key, value: ", key, string(value))
-	}
-
+	klog.Infoln("secrets successfully merged")
 	return nil
 }
 
