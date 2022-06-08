@@ -24,7 +24,6 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/kubernetes"
@@ -98,9 +97,8 @@ func (o *mergeSecretsOptions) merge(clientGetter genericclioptions.RESTClientGet
 
 	srcSecret, err := kubeClient.CoreV1().Secrets(srcNs).Get(context.TODO(), srcName, metav1.GetOptions{})
 	if err != nil {
-		if !errors.IsNotFound(err) {
-			return err
-		}
+		fmt.Println("src secret doesn't exist")
+		return err
 	}
 
 	dstSecret, err := kubeClient.CoreV1().Secrets(dstNs).Get(context.TODO(), dstName, metav1.GetOptions{})
@@ -120,7 +118,6 @@ func (o *mergeSecretsOptions) merge(clientGetter genericclioptions.RESTClientGet
 		}
 	}
 
-	klog.Infoln("secrets successfully merged")
 	return nil
 }
 
