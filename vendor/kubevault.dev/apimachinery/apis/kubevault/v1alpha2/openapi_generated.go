@@ -385,7 +385,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AllowedSecretEngines":     schema_apimachinery_apis_kubevault_v1alpha2_AllowedSecretEngines(ref),
-		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthConfig":               schema_apimachinery_apis_kubevault_v1alpha2_AuthConfig(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethod":               schema_apimachinery_apis_kubevault_v1alpha2_AuthMethod(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethodStatus":         schema_apimachinery_apis_kubevault_v1alpha2_AuthMethodStatus(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AwsKmsSsmSpec":            schema_apimachinery_apis_kubevault_v1alpha2_AwsKmsSsmSpec(ref),
@@ -399,6 +398,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.GcsSpec":                  schema_apimachinery_apis_kubevault_v1alpha2_GcsSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.GoogleKmsGcsSpec":         schema_apimachinery_apis_kubevault_v1alpha2_GoogleKmsGcsSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.InmemSpec":                schema_apimachinery_apis_kubevault_v1alpha2_InmemSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.JWTOIDCConfig":            schema_apimachinery_apis_kubevault_v1alpha2_JWTOIDCConfig(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.KubernetesConfig":         schema_apimachinery_apis_kubevault_v1alpha2_KubernetesConfig(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.KubernetesSecretSpec":     schema_apimachinery_apis_kubevault_v1alpha2_KubernetesSecretSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ModeSpec":                 schema_apimachinery_apis_kubevault_v1alpha2_ModeSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MySQLSpec":                schema_apimachinery_apis_kubevault_v1alpha2_MySQLSpec(ref),
@@ -18914,91 +18915,6 @@ func schema_apimachinery_apis_kubevault_v1alpha2_AllowedSecretEngines(ref common
 	}
 }
 
-func schema_apimachinery_apis_kubevault_v1alpha2_AuthConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"defaultLeaseTTL": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The default lease duration, specified as a string duration like \"5s\" or \"30m\".",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"maxLeaseTTL": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The maximum lease duration, specified as a string duration like \"5s\" or \"30m\".",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"pluginName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The name of the plugin in the plugin catalog to use.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"auditNonHMACRequestKeys": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of keys that will not be HMAC'd by audit devices in the request data object.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"auditNonHMACResponseKeys": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of keys that will not be HMAC'd by audit devices in the response data object.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"listingVisibility": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Speficies whether to show this mount in the UI-specific listing endpoint.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"passthroughRequestHeaders": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of headers to whitelist and pass from the request to the backend.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_kubevault_v1alpha2_AuthMethod(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19029,10 +18945,22 @@ func schema_apimachinery_apis_kubevault_v1alpha2_AuthMethod(ref common.Reference
 							Format:      "",
 						},
 					},
-					"config": {
+					"kubernetesConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies configuration options for this auth method.",
-							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthConfig"),
+							Description: "Kubernetes auth config",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.KubernetesConfig"),
+						},
+					},
+					"oidcConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OIDC auth config",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.JWTOIDCConfig"),
+						},
+					},
+					"jwtConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JWT auth config",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.JWTOIDCConfig"),
 						},
 					},
 					"pluginName": {
@@ -19054,7 +18982,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_AuthMethod(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthConfig"},
+			"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.JWTOIDCConfig", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.KubernetesConfig"},
 	}
 }
 
@@ -19430,11 +19358,10 @@ func schema_apimachinery_apis_kubevault_v1alpha2_ConsulSpec(ref common.Reference
 							Format:      "",
 						},
 					},
-					"tlsSecretName": {
+					"tlsSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for consul communication Secret data:\n - ca.crt\n - client.crt\n - client.key",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for consul communication Secret data:\n - ca.crt\n - tls.crt\n - tls.key",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"tlsMinVersion": {
@@ -19454,6 +19381,8 @@ func schema_apimachinery_apis_kubevault_v1alpha2_ConsulSpec(ref common.Reference
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -19585,7 +19514,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_EtcdSpec(ref common.ReferenceCa
 					},
 					"tlsSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for etcd communication secret data:\n - ca.crt\n - client.crt\n - client.key",
+							Description: "Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for etcd communication secret data:\n - ca.crt\n - tls.crt\n - tls.key",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -19753,6 +19682,285 @@ func schema_apimachinery_apis_kubevault_v1alpha2_InmemSpec(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_JWTOIDCConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaultLeaseTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The default lease duration, specified as a string duration like \"5s\" or \"30m\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxLeaseTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The maximum lease duration, specified as a string duration like \"5s\" or \"30m\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pluginName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the plugin in the plugin catalog to use.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"auditNonHMACRequestKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of keys that will not be HMAC'd by audit devices in the request data object.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"auditNonHMACResponseKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of keys that will not be HMAC'd by audit devices in the response data object.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"listingVisibility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Speficies whether to show this mount in the UI-specific listing endpoint.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"passthroughRequestHeaders": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of headers to whitelist and pass from the request to the backend.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CredentialSecretRef",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"tlsSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLSSecretRef",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"oidcDiscoveryURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "common configuration parameters The OIDC Discovery URL, without any .well-known component (base path). Cannot be used with \"jwks_url\" or \"jwt_validation_pubkeys\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"oidcClientID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The OAuth Client ID from the provider for OIDC roles.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"oidcResponseMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The response mode to be used in the OAuth2 request. Allowed values are \"query\" and \"form_post\". Defaults to \"query\". If using Vault namespaces, and oidc_response_mode is \"form_post\", then \"namespace_in_state\" should be set to false.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"oidcResponseTypes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "(comma-separated string, or array of strings: <optional>) - The response types to request. Allowed values are \"code\" and \"id_token\". Defaults to \"code\". Note: \"id_token\" may only be used if \"oidc_response_mode\" is set to \"form_post\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"defaultRole": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The default role to use if none is provided during login",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"providerConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration options for provider-specific handling. Providers with specific handling include: Azure, Google. The options are described in each provider's section in OIDC Provider Setup.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"jwksURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JWKS URL to use to authenticate signatures. Cannot be used with \"oidc_discovery_url\" or \"jwt_validation_pubkeys\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"jwtValidationPubkeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "(comma-separated string, or array of strings: <optional>) A list of PEM-encoded public keys to use to authenticate signatures locally. Cannot be used with \"jwks_url\" or \"oidc_discovery_url\".",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"jwtSupportedAlgs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "(comma-separated string, or array of strings: <optional>) A list of supported signing algorithms. Defaults to [RS256] for OIDC roles. Defaults to all available algorithms for JWT roles.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"boundIssuer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The value against which to match the iss claim in a JWT.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_KubernetesConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaultLeaseTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The default lease duration, specified as a string duration like \"5s\" or \"30m\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxLeaseTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The maximum lease duration, specified as a string duration like \"5s\" or \"30m\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pluginName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the plugin in the plugin catalog to use.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"auditNonHMACRequestKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of keys that will not be HMAC'd by audit devices in the request data object.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"auditNonHMACResponseKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of keys that will not be HMAC'd by audit devices in the response data object.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"listingVisibility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Speficies whether to show this mount in the UI-specific listing endpoint.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"passthroughRequestHeaders": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of headers to whitelist and pass from the request to the backend.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_KubernetesSecretSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19846,7 +20054,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_MySQLSpec(ref common.ReferenceC
 					},
 					"tlsSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the name of the secret containing the CA certificate to connect using TLS. secret data:\n - tls_ca_file=<ca_cert>",
+							Description: "Specifies the name of the secret containing the CA certificate to connect using TLS. secret data:\n - ca.crt=<value>",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -19949,9 +20157,17 @@ func schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref common.Refer
 				Description: "vault doc: https://www.vaultproject.io/docs/configuration/storage/postgresql.html\n\nPostgreSQLSpec defines configuration to set up PostgreSQL storage as backend storage in vault",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the address of the Postgres host. if DatabaseRef is set then Address will be generated from it This must be set if DatabaseRef is empty, validate from ValidatingWebhook host example: <db-name>.<db-ns>.svc:3306",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"credentialSecretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "\n - connection_url=\"postgres://<username>:<password>@<host>:<port>/<db_name>\"",
+							Description: "\n - username=<value>\n - password=<value>\n - connection_url=\"postgres://<username>:<password>@<host>:<port>/<db_name>\"",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -19963,7 +20179,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref common.Refer
 					},
 					"sslMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SSLMode for both standalone and clusters. [disable;verify-full]",
+							Description: "SSLMode for both standalone and clusters. [disable;require;verify-ca;verify-full]",
 							Type:        []string{"string"},
 							Format:      "",
 						},

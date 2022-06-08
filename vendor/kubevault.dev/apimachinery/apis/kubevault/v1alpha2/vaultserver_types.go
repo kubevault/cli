@@ -419,10 +419,10 @@ type ConsulSpec struct {
 	// for consul communication
 	// Secret data:
 	//  - ca.crt
-	//  - client.crt
-	//  - client.key
+	//  - tls.crt
+	//  - tls.key
 	// +optional
-	TLSSecretName string `json:"tlsSecretName,omitempty"`
+	TLSSecretRef *core.LocalObjectReference `json:"tlsSecretRef,omitempty"`
 
 	// Specifies the minimum TLS version to use.
 	// Accepted values are "tls10", "tls11" or "tls12".
@@ -476,8 +476,8 @@ type EtcdSpec struct {
 	// Specifies the secret name that contains tls_ca_file, tls_cert_file and tls_key_file for etcd communication
 	// secret data:
 	//  - ca.crt
-	//  - client.crt
-	//  - client.key
+	//  - tls.crt
+	//  - tls.key
 	// +optional
 	TLSSecretRef *core.LocalObjectReference `json:"tlsSecretRef,omitempty"`
 }
@@ -570,6 +570,15 @@ type AzureSpec struct {
 //
 // PostgreSQLSpec defines configuration to set up PostgreSQL storage as backend storage in vault
 type PostgreSQLSpec struct {
+	// Specifies the address of the Postgres host.
+	// if DatabaseRef is set then Address will be generated from it
+	// This must be set if DatabaseRef is empty, validate from ValidatingWebhook
+	// host example: <db-name>.<db-ns>.svc:3306
+	// +optional
+	Address string `json:"address"`
+
+	//  - username=<value>
+	//  - password=<value>
 	//  - connection_url="postgres://<username>:<password>@<host>:<port>/<db_name>"
 	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
 
@@ -577,7 +586,7 @@ type PostgreSQLSpec struct {
 	// This will be used to generate the "Address" field
 	DatabaseRef *appcat.AppReference `json:"databaseRef,omitempty"`
 
-	// SSLMode for both standalone and clusters. [disable;verify-full]
+	// SSLMode for both standalone and clusters. [disable;require;verify-ca;verify-full]
 	SSLMode PostgresSSLMode `json:"sslMode,omitempty"`
 
 	// Specifies the name of the table in which to write Vault data.
@@ -655,7 +664,7 @@ type MySQLSpec struct {
 
 	// Specifies the name of the secret containing the CA certificate to connect using TLS.
 	// secret data:
-	//  - tls_ca_file=<ca_cert>
+	//  - ca.crt=<value>
 	// +optional
 	TLSSecretRef *core.LocalObjectReference `json:"tlsSecretRef,omitempty"`
 
@@ -964,7 +973,7 @@ type AzureKeyVault struct {
 	UseManagedIdentity bool `json:"useManagedIdentity,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=kubernetes;aws;gcp;userpass;cert;azure
+// +kubebuilder:validation:Enum=kubernetes;aws;gcp;userpass;cert;azure;jwt;oidc
 type AuthMethodType string
 
 const (
@@ -974,6 +983,8 @@ const (
 	AuthTypeUserPass   AuthMethodType = "userpass"
 	AuthTypeCert       AuthMethodType = "cert"
 	AuthTypeAzure      AuthMethodType = "azure"
+	AuthTypeJWT        AuthMethodType = "jwt"
+	AuthTypeOIDC       AuthMethodType = "oidc"
 )
 
 // AuthMethod contains the information to enable vault auth method
@@ -990,9 +1001,14 @@ type AuthMethod struct {
 	// +optional
 	Description string `json:"description,omitempty"`
 
-	// Specifies configuration options for this auth method.
-	// +optional
-	Config *AuthConfig `json:"config,omitempty"`
+	// Kubernetes auth config
+	KubernetesConfig *KubernetesConfig `json:"kubernetesConfig,omitempty"`
+
+	// OIDC auth config
+	OIDCConfig *JWTOIDCConfig `json:"oidcConfig,omitempty"`
+
+	// JWT auth config
+	JWTConfig *JWTOIDCConfig `json:"jwtConfig,omitempty"`
 
 	// Specifies the name of the auth plugin to use based from the name in the plugin catalog.
 	// Applies only to plugin methods.
@@ -1030,7 +1046,7 @@ type AuthMethodStatus struct {
 	Reason string `json:"reason,omitempty"`
 }
 
-type AuthConfig struct {
+type KubernetesConfig struct {
 	// The default lease duration, specified as a string duration like "5s" or "30m".
 	// +optional
 	DefaultLeaseTTL string `json:"defaultLeaseTTL,omitempty"`
@@ -1058,4 +1074,87 @@ type AuthConfig struct {
 	// List of headers to whitelist and pass from the request to the backend.
 	// +optional
 	PassthroughRequestHeaders []string `json:"passthroughRequestHeaders,omitempty"`
+}
+
+type JWTOIDCConfig struct {
+	// The default lease duration, specified as a string duration like "5s" or "30m".
+	// +optional
+	DefaultLeaseTTL string `json:"defaultLeaseTTL,omitempty"`
+
+	// The maximum lease duration, specified as a string duration like "5s" or "30m".
+	// +optional
+	MaxLeaseTTL string `json:"maxLeaseTTL,omitempty"`
+
+	// The name of the plugin in the plugin catalog to use.
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of keys that will not be HMAC'd by audit devices in the request data object.
+	// +optional
+	AuditNonHMACRequestKeys []string `json:"auditNonHMACRequestKeys,omitempty"`
+
+	// List of keys that will not be HMAC'd by audit devices in the response data object.
+	// +optional
+	AuditNonHMACResponseKeys []string `json:"auditNonHMACResponseKeys,omitempty"`
+
+	// Speficies whether to show this mount in the UI-specific listing endpoint.
+	// +optional
+	ListingVisibility string `json:"listingVisibility,omitempty"`
+
+	// List of headers to whitelist and pass from the request to the backend.
+	// +optional
+	PassthroughRequestHeaders []string `json:"passthroughRequestHeaders,omitempty"`
+
+	// CredentialSecretRef
+	// +optional
+	CredentialSecretRef *core.LocalObjectReference `json:"credentialSecretRef,omitempty"`
+
+	// TLSSecretRef
+	// +optional
+	TLSSecretRef *core.LocalObjectReference `json:"tlsSecretRef,omitempty"`
+
+	// common configuration parameters
+	// The OIDC Discovery URL, without any .well-known component (base path). Cannot be used with "jwks_url" or "jwt_validation_pubkeys".
+	// +optional
+	OIDCDiscoveryURL string `json:"oidcDiscoveryURL,omitempty"`
+
+	// The OAuth Client ID from the provider for OIDC roles.
+	// +optional
+	OIDCClientID string `json:"oidcClientID,omitempty"`
+
+	// The response mode to be used in the OAuth2 request. Allowed values are "query" and "form_post". Defaults to "query".
+	// If using Vault namespaces, and oidc_response_mode is "form_post", then "namespace_in_state" should be set to false.
+	// +optional
+	OIDCResponseMode string `json:"oidcResponseMode,omitempty"`
+
+	// (comma-separated string, or array of strings: <optional>) - The response types to request.
+	// Allowed values are "code" and "id_token". Defaults to "code". Note: "id_token" may only be used if "oidc_response_mode" is set to "form_post".
+	// +optional
+	OIDCResponseTypes string `json:"oidcResponseTypes,omitempty"`
+
+	// The default role to use if none is provided during login
+	// +optional
+	DefaultRole string `json:"defaultRole,omitempty"`
+
+	// Configuration options for provider-specific handling.
+	// Providers with specific handling include: Azure, Google. The options are described in each provider's section in OIDC Provider Setup.
+	// +optional
+	ProviderConfig map[string]string `json:"providerConfig,omitempty"`
+
+	// JWKS URL to use to authenticate signatures. Cannot be used with "oidc_discovery_url" or "jwt_validation_pubkeys".
+	// +optional
+	JWKSURL string `json:"jwksURL,omitempty"`
+
+	// (comma-separated string, or array of strings: <optional>)
+	// A list of PEM-encoded public keys to use to authenticate signatures locally. Cannot be used with "jwks_url" or "oidc_discovery_url".
+	JWTValidationPubkeys []string `json:"jwtValidationPubkeys,omitempty"`
+
+	// (comma-separated string, or array of strings: <optional>)
+	// A list of supported signing algorithms. Defaults to [RS256] for OIDC roles. Defaults to all available algorithms for JWT roles.
+	// +optional
+	JWTSupportedAlgs []string `json:"jwtSupportedAlgs,omitempty"`
+
+	// The value against which to match the iss claim in a JWT.
+	// +optional
+	BoundIssuer string `json:"boundIssuer,omitempty"`
 }

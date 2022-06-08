@@ -385,7 +385,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.AppRoleSubjectRef":           schema_apimachinery_apis_policy_v1alpha1_AppRoleSubjectRef(ref),
-		"kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTSubjectRef":               schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref),
+		"kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef":           schema_apimachinery_apis_policy_v1alpha1_JWTOIDCSubjectRef(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.KubernetesSubjectRef":        schema_apimachinery_apis_policy_v1alpha1_KubernetesSubjectRef(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapGroupSubjectRef":         schema_apimachinery_apis_policy_v1alpha1_LdapGroupSubjectRef(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapUserSubjectRef":          schema_apimachinery_apis_policy_v1alpha1_LdapUserSubjectRef(ref),
@@ -19013,7 +19013,7 @@ func schema_apimachinery_apis_policy_v1alpha1_AppRoleSubjectRef(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_policy_v1alpha1_JWTOIDCSubjectRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -19022,7 +19022,8 @@ func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the path where jwt/oidc auth is enabled default : jwt",
+							Description: "Specifies the path where jwt/oidc auth is enabled",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -19030,13 +19031,6 @@ func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.Reference
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Name of the role. This defaults to following format: k8s.${cluster}.${metadata.namespace}.${metadata.name}",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"roleType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Type of role, either \"oidc\" (default) or \"jwt\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -19233,7 +19227,7 @@ func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"userClaim", "allowedRedirectUris"},
+				Required: []string{"path", "userClaim", "allowedRedirectUris"},
 			},
 		},
 	}
@@ -19507,14 +19501,19 @@ func schema_apimachinery_apis_policy_v1alpha1_SubjectRef(ref common.ReferenceCal
 					"jwt": {
 						SchemaProps: spec.SchemaProps{
 							Description: "More info: https://www.vaultproject.io/api-docs/auth/jwt#configure",
-							Ref:         ref("kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTSubjectRef"),
+							Ref:         ref("kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef"),
+						},
+					},
+					"oidc": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/policy/v1alpha1.AppRoleSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.KubernetesSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapGroupSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapUserSubjectRef"},
+			"kubevault.dev/apimachinery/apis/policy/v1alpha1.AppRoleSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.KubernetesSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapGroupSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapUserSubjectRef"},
 	}
 }
 

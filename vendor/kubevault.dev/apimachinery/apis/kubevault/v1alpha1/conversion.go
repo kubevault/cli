@@ -369,3 +369,87 @@ func Convert_v1alpha2_S3Spec_To_v1alpha1_S3Spec(in *v1alpha2.S3Spec, out *S3Spec
 	out.DisableSSL = in.DisableSSL
 	return nil
 }
+
+func Convert_v1alpha1_ConsulSpec_To_v1alpha2_ConsulSpec(in *ConsulSpec, out *v1alpha2.ConsulSpec, s conversion.Scope) error {
+	out.Address = in.Address
+	out.CheckTimeout = in.CheckTimeout
+	out.ConsistencyMode = in.ConsistencyMode
+	out.DisableRegistration = in.DisableRegistration
+	out.MaxParallel = in.MaxParallel
+	out.Path = in.Path
+	out.Scheme = in.Scheme
+	out.Service = in.Service
+	out.ServiceTags = in.ServiceTags
+	out.ServiceAddress = in.ServiceAddress
+	out.ACLTokenSecretName = in.ACLTokenSecretName
+	out.SessionTTL = in.SessionTTL
+	out.LockWaitTime = in.LockWaitTime
+	out.TLSSecretRef = &core.LocalObjectReference{
+		Name: in.TLSSecretName,
+	}
+	out.TLSMinVersion = in.TLSMinVersion
+	out.TLSSkipVerify = in.TLSSkipVerify
+	return nil
+}
+
+func Convert_v1alpha2_ConsulSpec_To_v1alpha1_ConsulSpec(in *v1alpha2.ConsulSpec, out *ConsulSpec, s conversion.Scope) error {
+	out.Address = in.Address
+	out.CheckTimeout = in.CheckTimeout
+	out.ConsistencyMode = in.ConsistencyMode
+	out.DisableRegistration = in.DisableRegistration
+	out.MaxParallel = in.MaxParallel
+	out.Path = in.Path
+	out.Scheme = in.Scheme
+	out.Service = in.Service
+	out.ServiceTags = in.ServiceTags
+	out.ServiceAddress = in.ServiceAddress
+	out.ACLTokenSecretName = in.ACLTokenSecretName
+	out.SessionTTL = in.SessionTTL
+	out.LockWaitTime = in.LockWaitTime
+	if in.TLSSecretRef != nil {
+		out.TLSSecretName = in.TLSSecretRef.Name
+	}
+	out.TLSMinVersion = in.TLSMinVersion
+	out.TLSSkipVerify = in.TLSSkipVerify
+	return nil
+}
+
+func Convert_v1alpha2_AuthMethod_To_v1alpha1_AuthMethod(in *v1alpha2.AuthMethod, out *AuthMethod, s conversion.Scope) error {
+	out.Type = string(in.Type)
+	out.Path = in.Path
+	out.Description = in.Description
+	if out.Type == string(AuthTypeKubernetes) {
+		if in.KubernetesConfig != nil {
+			out.Config.DefaultLeaseTTL = in.KubernetesConfig.DefaultLeaseTTL
+			out.Config.MaxLeaseTTL = in.KubernetesConfig.MaxLeaseTTL
+			out.Config.PluginName = in.KubernetesConfig.PluginName
+			out.Config.PassthroughRequestHeaders = in.KubernetesConfig.PassthroughRequestHeaders
+			out.Config.ListingVisibility = in.KubernetesConfig.ListingVisibility
+			out.Config.AuditNonHMACResponseKeys = in.KubernetesConfig.AuditNonHMACResponseKeys
+			out.Config.AuditNonHMACRequestKeys = in.KubernetesConfig.AuditNonHMACRequestKeys
+		}
+	}
+	out.PluginName = in.PluginName
+	out.Local = in.Local
+	return nil
+}
+
+func Convert_v1alpha1_AuthMethod_To_v1alpha2_AuthMethod(in *AuthMethod, out *v1alpha2.AuthMethod, s conversion.Scope) error {
+	out.Type = v1alpha2.AuthMethodType(in.Type)
+	out.Path = in.Path
+	out.Description = in.Description
+	if out.Type == v1alpha2.AuthTypeKubernetes {
+		if in.Config != nil {
+			out.KubernetesConfig.DefaultLeaseTTL = in.Config.DefaultLeaseTTL
+			out.KubernetesConfig.MaxLeaseTTL = in.Config.MaxLeaseTTL
+			out.KubernetesConfig.PluginName = in.Config.PluginName
+			out.KubernetesConfig.ListingVisibility = in.Config.ListingVisibility
+			out.KubernetesConfig.PassthroughRequestHeaders = in.Config.PassthroughRequestHeaders
+			out.KubernetesConfig.AuditNonHMACResponseKeys = in.Config.AuditNonHMACResponseKeys
+			out.KubernetesConfig.AuditNonHMACRequestKeys = in.Config.AuditNonHMACRequestKeys
+		}
+	}
+	out.PluginName = in.PluginName
+	out.Local = in.Local
+	return nil
+}

@@ -85,7 +85,8 @@ type SubjectRef struct {
 	LdapGroup *LdapGroupSubjectRef `json:"ldapGroup,omitempty"`
 	LdapUser  *LdapUserSubjectRef  `json:"ldapUser,omitempty"`
 	// More info: https://www.vaultproject.io/api-docs/auth/jwt#configure
-	JWT *JWTSubjectRef `json:"jwt,omitempty"`
+	JWT  *JWTOIDCSubjectRef `json:"jwt,omitempty"`
+	OIDC *JWTOIDCSubjectRef `json:"oidc,omitempty"`
 }
 
 // More info: https://www.vaultproject.io/api/auth/kubernetes/index.html#create-role
@@ -205,18 +206,13 @@ type LdapUserSubjectRef struct {
 }
 
 // More info: https://www.vaultproject.io/api-docs/auth/jwt#create-role
-type JWTSubjectRef struct {
+type JWTOIDCSubjectRef struct {
 	// Specifies the path where jwt/oidc auth is enabled
-	// default : jwt
-	// +optional
-	Path string `json:"path,omitempty"`
+	Path string `json:"path"`
 
 	// Name of the role.
 	// This defaults to following format: k8s.${cluster}.${metadata.namespace}.${metadata.name}
 	Name string `json:"name,omitempty"`
-
-	// Type of role, either "oidc" (default) or "jwt".
-	RoleType string `json:"roleType,omitempty"`
 
 	// List of aud claims to match against. Any match is sufficient. Required for "jwt" roles, optional for "oidc" roles.
 	BoundAudiences []string `json:"boundAudiences,omitempty"`

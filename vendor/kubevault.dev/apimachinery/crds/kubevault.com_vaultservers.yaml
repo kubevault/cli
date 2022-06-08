@@ -7053,8 +7053,124 @@ spec:
                   description: 'AuthMethod contains the information to enable vault
                     auth method links: https://www.vaultproject.io/api/system/auth.html'
                   properties:
-                    config:
-                      description: Specifies configuration options for this auth method.
+                    description:
+                      description: Specifies a human-friendly description of the auth
+                        method.
+                      type: string
+                    jwtConfig:
+                      description: JWT auth config
+                      properties:
+                        auditNonHMACRequestKeys:
+                          description: List of keys that will not be HMAC'd by audit
+                            devices in the request data object.
+                          items:
+                            type: string
+                          type: array
+                        auditNonHMACResponseKeys:
+                          description: List of keys that will not be HMAC'd by audit
+                            devices in the response data object.
+                          items:
+                            type: string
+                          type: array
+                        boundIssuer:
+                          description: The value against which to match the iss claim
+                            in a JWT.
+                          type: string
+                        credentialSecretRef:
+                          description: CredentialSecretRef
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                          type: object
+                        defaultLeaseTTL:
+                          description: The default lease duration, specified as a
+                            string duration like "5s" or "30m".
+                          type: string
+                        defaultRole:
+                          description: The default role to use if none is provided
+                            during login
+                          type: string
+                        jwksURL:
+                          description: JWKS URL to use to authenticate signatures.
+                            Cannot be used with "oidc_discovery_url" or "jwt_validation_pubkeys".
+                          type: string
+                        jwtSupportedAlgs:
+                          description: '(comma-separated string, or array of strings:
+                            <optional>) A list of supported signing algorithms. Defaults
+                            to [RS256] for OIDC roles. Defaults to all available algorithms
+                            for JWT roles.'
+                          items:
+                            type: string
+                          type: array
+                        jwtValidationPubkeys:
+                          description: '(comma-separated string, or array of strings:
+                            <optional>) A list of PEM-encoded public keys to use to
+                            authenticate signatures locally. Cannot be used with "jwks_url"
+                            or "oidc_discovery_url".'
+                          items:
+                            type: string
+                          type: array
+                        listingVisibility:
+                          description: Speficies whether to show this mount in the
+                            UI-specific listing endpoint.
+                          type: string
+                        maxLeaseTTL:
+                          description: The maximum lease duration, specified as a
+                            string duration like "5s" or "30m".
+                          type: string
+                        oidcClientID:
+                          description: The OAuth Client ID from the provider for OIDC
+                            roles.
+                          type: string
+                        oidcDiscoveryURL:
+                          description: common configuration parameters The OIDC Discovery
+                            URL, without any .well-known component (base path). Cannot
+                            be used with "jwks_url" or "jwt_validation_pubkeys".
+                          type: string
+                        oidcResponseMode:
+                          description: The response mode to be used in the OAuth2
+                            request. Allowed values are "query" and "form_post". Defaults
+                            to "query". If using Vault namespaces, and oidc_response_mode
+                            is "form_post", then "namespace_in_state" should be set
+                            to false.
+                          type: string
+                        oidcResponseTypes:
+                          description: '(comma-separated string, or array of strings:
+                            <optional>) - The response types to request. Allowed values
+                            are "code" and "id_token". Defaults to "code". Note: "id_token"
+                            may only be used if "oidc_response_mode" is set to "form_post".'
+                          type: string
+                        passthroughRequestHeaders:
+                          description: List of headers to whitelist and pass from
+                            the request to the backend.
+                          items:
+                            type: string
+                          type: array
+                        pluginName:
+                          description: The name of the plugin in the plugin catalog
+                            to use.
+                          type: string
+                        providerConfig:
+                          additionalProperties:
+                            type: string
+                          description: 'Configuration options for provider-specific
+                            handling. Providers with specific handling include: Azure,
+                            Google. The options are described in each provider''s
+                            section in OIDC Provider Setup.'
+                          type: object
+                        tlsSecretRef:
+                          description: TLSSecretRef
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                          type: object
+                      type: object
+                    kubernetesConfig:
+                      description: Kubernetes auth config
                       properties:
                         auditNonHMACRequestKeys:
                           description: List of keys that will not be HMAC'd by audit
@@ -7091,15 +7207,123 @@ spec:
                             to use.
                           type: string
                       type: object
-                    description:
-                      description: Specifies a human-friendly description of the auth
-                        method.
-                      type: string
                     local:
                       description: Specifies if the auth method is a local only. Local
                         auth methods are not replicated nor (if a secondary) removed
                         by replication.
                       type: boolean
+                    oidcConfig:
+                      description: OIDC auth config
+                      properties:
+                        auditNonHMACRequestKeys:
+                          description: List of keys that will not be HMAC'd by audit
+                            devices in the request data object.
+                          items:
+                            type: string
+                          type: array
+                        auditNonHMACResponseKeys:
+                          description: List of keys that will not be HMAC'd by audit
+                            devices in the response data object.
+                          items:
+                            type: string
+                          type: array
+                        boundIssuer:
+                          description: The value against which to match the iss claim
+                            in a JWT.
+                          type: string
+                        credentialSecretRef:
+                          description: CredentialSecretRef
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                          type: object
+                        defaultLeaseTTL:
+                          description: The default lease duration, specified as a
+                            string duration like "5s" or "30m".
+                          type: string
+                        defaultRole:
+                          description: The default role to use if none is provided
+                            during login
+                          type: string
+                        jwksURL:
+                          description: JWKS URL to use to authenticate signatures.
+                            Cannot be used with "oidc_discovery_url" or "jwt_validation_pubkeys".
+                          type: string
+                        jwtSupportedAlgs:
+                          description: '(comma-separated string, or array of strings:
+                            <optional>) A list of supported signing algorithms. Defaults
+                            to [RS256] for OIDC roles. Defaults to all available algorithms
+                            for JWT roles.'
+                          items:
+                            type: string
+                          type: array
+                        jwtValidationPubkeys:
+                          description: '(comma-separated string, or array of strings:
+                            <optional>) A list of PEM-encoded public keys to use to
+                            authenticate signatures locally. Cannot be used with "jwks_url"
+                            or "oidc_discovery_url".'
+                          items:
+                            type: string
+                          type: array
+                        listingVisibility:
+                          description: Speficies whether to show this mount in the
+                            UI-specific listing endpoint.
+                          type: string
+                        maxLeaseTTL:
+                          description: The maximum lease duration, specified as a
+                            string duration like "5s" or "30m".
+                          type: string
+                        oidcClientID:
+                          description: The OAuth Client ID from the provider for OIDC
+                            roles.
+                          type: string
+                        oidcDiscoveryURL:
+                          description: common configuration parameters The OIDC Discovery
+                            URL, without any .well-known component (base path). Cannot
+                            be used with "jwks_url" or "jwt_validation_pubkeys".
+                          type: string
+                        oidcResponseMode:
+                          description: The response mode to be used in the OAuth2
+                            request. Allowed values are "query" and "form_post". Defaults
+                            to "query". If using Vault namespaces, and oidc_response_mode
+                            is "form_post", then "namespace_in_state" should be set
+                            to false.
+                          type: string
+                        oidcResponseTypes:
+                          description: '(comma-separated string, or array of strings:
+                            <optional>) - The response types to request. Allowed values
+                            are "code" and "id_token". Defaults to "code". Note: "id_token"
+                            may only be used if "oidc_response_mode" is set to "form_post".'
+                          type: string
+                        passthroughRequestHeaders:
+                          description: List of headers to whitelist and pass from
+                            the request to the backend.
+                          items:
+                            type: string
+                          type: array
+                        pluginName:
+                          description: The name of the plugin in the plugin catalog
+                            to use.
+                          type: string
+                        providerConfig:
+                          additionalProperties:
+                            type: string
+                          description: 'Configuration options for provider-specific
+                            handling. Providers with specific handling include: Azure,
+                            Google. The options are described in each provider''s
+                            section in OIDC Provider Setup.'
+                          type: object
+                        tlsSecretRef:
+                          description: TLSSecretRef
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                          type: object
+                      type: object
                     path:
                       description: Specifies the path in which to enable the auth
                         method. Default value is the same as the 'type'
@@ -7119,6 +7343,8 @@ spec:
                       - userpass
                       - cert
                       - azure
+                      - jwt
+                      - oidc
                       type: string
                   required:
                   - path
@@ -7226,11 +7452,16 @@ spec:
                         description: Specifies the minimum TLS version to use. Accepted
                           values are "tls10", "tls11" or "tls12".
                         type: string
-                      tlsSecretName:
+                      tlsSecretRef:
                         description: 'Specifies the secret name that contains tls_ca_file,
                           tls_cert_file and tls_key_file for consul communication
-                          Secret data:  - ca.crt  - client.crt  - client.key'
-                        type: string
+                          Secret data:  - ca.crt  - tls.crt  - tls.key'
+                        properties:
+                          name:
+                            description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              TODO: Add other useful fields. apiVersion, kind, uid?'
+                            type: string
+                        type: object
                       tlsSkipVerify:
                         description: Specifies if the TLS host verification should
                           be disabled. It is highly discouraged that you disable this
@@ -7325,7 +7556,7 @@ spec:
                       tlsSecretRef:
                         description: 'Specifies the secret name that contains tls_ca_file,
                           tls_cert_file and tls_key_file for etcd communication secret
-                          data:  - ca.crt  - client.crt  - client.key'
+                          data:  - ca.crt  - tls.crt  - tls.key'
                         properties:
                           name:
                             description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
@@ -7803,7 +8034,7 @@ spec:
                       tlsSecretRef:
                         description: 'Specifies the name of the secret containing
                           the CA certificate to connect using TLS. secret data:  -
-                          tls_ca_file=<ca_cert>'
+                          ca.crt=<value>'
                         properties:
                           name:
                             description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
@@ -7816,8 +8047,14 @@ spec:
                       \n PostgreSQLSpec defines configuration to set up PostgreSQL
                       storage as backend storage in vault"
                     properties:
+                      address:
+                        description: 'Specifies the address of the Postgres host.
+                          if DatabaseRef is set then Address will be generated from
+                          it This must be set if DatabaseRef is empty, validate from
+                          ValidatingWebhook host example: <db-name>.<db-ns>.svc:3306'
+                        type: string
                       credentialSecretRef:
-                        description: ' - connection_url="postgres://<username>:<password>@<host>:<port>/<db_name>"'
+                        description: ' - username=<value>  - password=<value>  - connection_url="postgres://<username>:<password>@<host>:<port>/<db_name>"'
                         properties:
                           name:
                             description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
@@ -7873,7 +8110,7 @@ spec:
                         format: int64
                         type: integer
                       sslMode:
-                        description: SSLMode for both standalone and clusters. [disable;verify-full]
+                        description: SSLMode for both standalone and clusters. [disable;require;verify-ca;verify-full]
                         enum:
                         - disable
                         - require
@@ -13831,6 +14068,8 @@ spec:
                       - userpass
                       - cert
                       - azure
+                      - jwt
+                      - oidc
                       type: string
                   required:
                   - path
