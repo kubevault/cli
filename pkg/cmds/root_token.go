@@ -21,7 +21,7 @@ import (
 	"os"
 	"strings"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	token_key_store "kubevault.dev/cli/pkg/token-keys-store"
 
 	"github.com/pkg/errors"

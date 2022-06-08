@@ -22,9 +22,9 @@ import (
 	"strings"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha1"
+	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2"
 	policycs "kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate/api"
 
@@ -53,14 +53,14 @@ type ElasticsearchGenerator struct {
 	se           *engineapi.SecretEngine
 	keys         map[string]string
 	engineClient *enginecs.EngineV1alpha1Client
-	vaultClient  *vaultcs.KubevaultV1alpha1Client
+	vaultClient  *vaultcs.KubevaultV1alpha2Client
 	policyClient *policycs.PolicyV1alpha1Client
 	clusterName  string
 }
 
 var _ api.GeneratorInterface = &ElasticsearchGenerator{}
 
-func NewElasticsearchGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha1Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (*ElasticsearchGenerator, error) {
+func NewElasticsearchGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha2Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (*ElasticsearchGenerator, error) {
 	esRole, err := engineClient.ElasticsearchRoles(srb.Namespace).Get(context.TODO(), role[1], metav1.GetOptions{})
 	if err != nil {
 		return nil, err

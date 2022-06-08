@@ -385,7 +385,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.AppRoleSubjectRef":           schema_apimachinery_apis_policy_v1alpha1_AppRoleSubjectRef(ref),
-		"kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTSubjectRef":               schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref),
+		"kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef":           schema_apimachinery_apis_policy_v1alpha1_JWTOIDCSubjectRef(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.KubernetesSubjectRef":        schema_apimachinery_apis_policy_v1alpha1_KubernetesSubjectRef(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapGroupSubjectRef":         schema_apimachinery_apis_policy_v1alpha1_LdapGroupSubjectRef(ref),
 		"kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapUserSubjectRef":          schema_apimachinery_apis_policy_v1alpha1_LdapUserSubjectRef(ref),
@@ -18196,6 +18196,22 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"podAnnotations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodAnnotations are the annotations that will be attached with the respective Pod",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
 							Description: "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
@@ -18217,6 +18233,22 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 							Description: "ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"serviceAccountAnnotations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceAccountAnnotations are the annotations that will be attached with the respective ServiceAccount",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
 						},
 					},
 					"automountServiceAccountToken": {
@@ -18322,11 +18354,36 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 							Format:      "",
 						},
 					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"topologyKey",
+									"whenUnsatisfiable",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "topologyKey",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Toleration"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 
@@ -18541,11 +18598,36 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
 						},
 					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"topologyKey",
+									"whenUnsatisfiable",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "topologyKey",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 
@@ -18931,7 +19013,7 @@ func schema_apimachinery_apis_policy_v1alpha1_AppRoleSubjectRef(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_policy_v1alpha1_JWTOIDCSubjectRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -18940,7 +19022,8 @@ func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the path where jwt/oidc auth is enabled default : jwt",
+							Description: "Specifies the path where jwt/oidc auth is enabled",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -18948,13 +19031,6 @@ func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.Reference
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Name of the role. This defaults to following format: k8s.${cluster}.${metadata.namespace}.${metadata.name}",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"roleType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Type of role, either \"oidc\" (default) or \"jwt\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -19151,7 +19227,7 @@ func schema_apimachinery_apis_policy_v1alpha1_JWTSubjectRef(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"userClaim", "allowedRedirectUris"},
+				Required: []string{"path", "userClaim", "allowedRedirectUris"},
 			},
 		},
 	}
@@ -19425,14 +19501,19 @@ func schema_apimachinery_apis_policy_v1alpha1_SubjectRef(ref common.ReferenceCal
 					"jwt": {
 						SchemaProps: spec.SchemaProps{
 							Description: "More info: https://www.vaultproject.io/api-docs/auth/jwt#configure",
-							Ref:         ref("kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTSubjectRef"),
+							Ref:         ref("kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef"),
+						},
+					},
+					"oidc": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/policy/v1alpha1.AppRoleSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.KubernetesSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapGroupSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapUserSubjectRef"},
+			"kubevault.dev/apimachinery/apis/policy/v1alpha1.AppRoleSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.JWTOIDCSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.KubernetesSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapGroupSubjectRef", "kubevault.dev/apimachinery/apis/policy/v1alpha1.LdapUserSubjectRef"},
 	}
 }
 

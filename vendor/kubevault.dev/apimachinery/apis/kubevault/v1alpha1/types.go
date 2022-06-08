@@ -70,11 +70,11 @@ const (
 
 type NamedServiceTemplateSpec struct {
 	// Alias represents the identifier of the service.
-	Alias ServiceAlias `json:"alias" protobuf:"bytes,1,opt,name=alias"`
+	Alias ServiceAlias `json:"alias"`
 
 	// ServiceTemplate is an optional configuration for a service used to expose VaultServer
 	// +optional
-	ofst.ServiceTemplateSpec `json:",inline,omitempty" protobuf:"bytes,2,opt,name=serviceTemplateSpec"`
+	ofst.ServiceTemplateSpec `json:",inline,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=ca;server;client;storage

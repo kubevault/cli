@@ -38,15 +38,15 @@ const (
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type PostgresRole struct {
 	metav1.TypeMeta   `json:",inline,omitempty"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Spec              PostgresRoleSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
-	Status            RoleStatus       `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              PostgresRoleSpec `json:"spec,omitempty"`
+	Status            RoleStatus       `json:"status,omitempty"`
 }
 
 // PostgresRoleSpec contains connection information, postgres role info etc
 type PostgresRoleSpec struct {
 	// SecretEngineRef is the name of a Secret Engine
-	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef" protobuf:"bytes,1,opt,name=secretEngineRef"`
+	SecretEngineRef core.LocalObjectReference `json:"secretEngineRef"`
 
 	// links:
 	// 	- https://www.vaultproject.io/api/secret/databases/index.html
@@ -55,36 +55,36 @@ type PostgresRoleSpec struct {
 	// Specifies the TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to system/engine default TTL time
-	DefaultTTL string `json:"defaultTTL,omitempty" protobuf:"bytes,2,opt,name=defaultTTL"`
+	DefaultTTL string `json:"defaultTTL,omitempty"`
 
 	// Specifies the maximum TTL for the leases associated with this role.
 	// Accepts time suffixed strings ("1h") or an integer number of seconds.
 	// Defaults to system/engine default TTL time.
-	MaxTTL string `json:"maxTTL,omitempty" protobuf:"bytes,3,opt,name=maxTTL"`
+	MaxTTL string `json:"maxTTL,omitempty"`
 
 	// https://www.vaultproject.io/api/secret/databases/postgresql.html#creation_statements
 	// Specifies the database statements executed to create and configure a user.
-	CreationStatements []string `json:"creationStatements" protobuf:"bytes,4,rep,name=creationStatements"`
+	CreationStatements []string `json:"creationStatements"`
 
 	// https://www.vaultproject.io/api/secret/databases/postgresql.html#revocation_statements
 	// Specifies the database statements to be executed to revoke a user.
-	RevocationStatements []string `json:"revocationStatements,omitempty" protobuf:"bytes,5,rep,name=revocationStatements"`
+	RevocationStatements []string `json:"revocationStatements,omitempty"`
 
 	// https://www.vaultproject.io/api/secret/databases/postgresql.html#rollback_statements
 	// Specifies the database statements to be executed rollback a create operation in the event of an error.
-	RollbackStatements []string `json:"rollbackStatements,omitempty" protobuf:"bytes,6,rep,name=rollbackStatements"`
+	RollbackStatements []string `json:"rollbackStatements,omitempty"`
 
 	// https://www.vaultproject.io/api/secret/databases/postgresql.html#renew_statements
 	// Specifies the database statements to be executed to renew a user.
-	RenewStatements []string `json:"renewStatements,omitempty" protobuf:"bytes,7,rep,name=renewStatements"`
+	RenewStatements []string `json:"renewStatements,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type PostgresRoleList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// Items is a list of PostgresRole objects
-	Items []PostgresRole `json:"items,omitempty" protobuf:"bytes,2,rep,name=items"`
+	Items []PostgresRole `json:"items,omitempty"`
 }

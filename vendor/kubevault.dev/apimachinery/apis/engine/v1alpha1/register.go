@@ -70,6 +70,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MongoDBRoleList{},
 		&MySQLRole{},
 		&MySQLRoleList{},
+		&MariaDBRole{},
+		&MariaDBRoleList{},
 		&PostgresRole{},
 		&PostgresRoleList{},
 		&ElasticsearchRole{},

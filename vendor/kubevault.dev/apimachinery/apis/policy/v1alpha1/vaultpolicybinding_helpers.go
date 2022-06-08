@@ -109,6 +109,15 @@ func (v *VaultPolicyBinding) SetDefaults() {
 			v.Spec.SubjectRef.JWT.Name = v.PolicyBindingName()
 		}
 	}
+
+	if v.Spec.SubjectRef.OIDC != nil {
+		if v.Spec.SubjectRef.OIDC.Path == "" {
+			v.Spec.SubjectRef.OIDC.Path = "oidc"
+		}
+		if v.Spec.SubjectRef.OIDC.Name == "" {
+			v.Spec.SubjectRef.OIDC.Name = v.PolicyBindingName()
+		}
+	}
 }
 
 func (v VaultPolicyBinding) GeneratePayload(i interface{}) (map[string]interface{}, error) {

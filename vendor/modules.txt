@@ -194,7 +194,6 @@ github.com/jmespath/go-jmespath
 # github.com/jpillora/go-ogle-analytics v0.0.0-20161213085824-14b04e0594ef
 github.com/jpillora/go-ogle-analytics
 # github.com/json-iterator/go v1.1.12
-## explicit
 github.com/json-iterator/go
 # github.com/jstemmer/go-junit-report v0.9.1
 github.com/jstemmer/go-junit-report
@@ -801,6 +800,7 @@ k8s.io/client-go/util/workqueue
 k8s.io/component-base/cli/flag
 k8s.io/component-base/version
 # k8s.io/klog/v2 v2.10.0
+## explicit
 k8s.io/klog/v2
 # k8s.io/kube-openapi v0.0.0-20210421082810-95288971da7e => k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
 k8s.io/kube-openapi/pkg/common
@@ -822,7 +822,7 @@ k8s.io/utils/exec
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20220203031013-1de48437aaf3
+# kmodules.xyz/client-go v0.0.0-20220215012708-9963581d69a7
 ## explicit
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -846,9 +846,9 @@ kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
 # kmodules.xyz/monitoring-agent-api v0.0.0-20211207173549-028e6430395e
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20211207130839-cc7187e020cf
+# kmodules.xyz/offshoot-api v0.0.0-20220419215722-c7fc995091d3
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.7.1-0.20220221130327-6c1890497045
+# kubevault.dev/apimachinery v0.7.1-0.20220608045340-2970666dc3ce
 ## explicit
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
@@ -859,17 +859,19 @@ kubevault.dev/apimachinery/apis/engine
 kubevault.dev/apimachinery/apis/engine/v1alpha1
 kubevault.dev/apimachinery/apis/kubevault
 kubevault.dev/apimachinery/apis/kubevault/v1alpha1
+kubevault.dev/apimachinery/apis/kubevault/v1alpha2
 kubevault.dev/apimachinery/apis/policy
 kubevault.dev/apimachinery/apis/policy/v1alpha1
 kubevault.dev/apimachinery/client/clientset/versioned/scheme
 kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1
 kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1/util
-kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha1
+kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2
 kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1
 kubevault.dev/apimachinery/crds
 # sigs.k8s.io/controller-runtime v0.9.0
 sigs.k8s.io/controller-runtime/pkg/client
 sigs.k8s.io/controller-runtime/pkg/client/apiutil
+sigs.k8s.io/controller-runtime/pkg/conversion
 sigs.k8s.io/controller-runtime/pkg/log
 # sigs.k8s.io/kustomize/api v0.8.8
 sigs.k8s.io/kustomize/api/builtins
@@ -947,7 +949,7 @@ sigs.k8s.io/kustomize/kyaml/yaml/schema
 sigs.k8s.io/kustomize/kyaml/yaml/walk
 # sigs.k8s.io/secrets-store-csi-driver v1.0.0
 ## explicit
-sigs.k8s.io/secrets-store-csi-driver/apis/v1alpha1
+sigs.k8s.io/secrets-store-csi-driver/apis/v1
 # sigs.k8s.io/structured-merge-diff/v4 v4.1.2
 sigs.k8s.io/structured-merge-diff/v4/fieldpath
 sigs.k8s.io/structured-merge-diff/v4/schema

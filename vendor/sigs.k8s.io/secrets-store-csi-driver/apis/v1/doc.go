@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The Kubernetes Authors.
+Copyright 2021 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 contains API Schema definitions for the secrets-store v1alpha1 API group
+// Package v1 contains API Schema definitions for the secrets-store v1 API group
 // +kubebuilder:object:generate=true
 // +k8s:deepcopy-gen=package,register
 // +groupName=secrets-store.csi.x-k8s.io
-package v1alpha1
+package v1

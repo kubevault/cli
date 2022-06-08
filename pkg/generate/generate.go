@@ -19,12 +19,13 @@ package generate
 import (
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
 	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha1"
+	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2"
 	policycs "kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate/api"
 	"kubevault.dev/cli/pkg/generate/aws"
 	"kubevault.dev/cli/pkg/generate/azure"
 	es "kubevault.dev/cli/pkg/generate/database/elasticsearch"
+	maria "kubevault.dev/cli/pkg/generate/database/mariadb"
 	mongo "kubevault.dev/cli/pkg/generate/database/mongodb"
 	sql "kubevault.dev/cli/pkg/generate/database/mysql"
 	pg "kubevault.dev/cli/pkg/generate/database/postgres"
@@ -34,7 +35,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func NewGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha1Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (api.GeneratorInterface, error) {
+func NewGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha2Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (api.GeneratorInterface, error) {
 	switch role[0] {
 	case engineapi.ResourceKindGCPRole:
 		return gcp.NewGCPGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
@@ -48,6 +49,8 @@ func NewGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[stri
 		return es.NewElasticsearchGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	case engineapi.ResourceKindMySQLRole:
 		return sql.NewMySQLGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+	case engineapi.ResourceKindMariaDBRole:
+		return maria.NewMariaDBGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	case engineapi.ResourceKindPostgresRole:
 		return pg.NewPostgresGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	default:

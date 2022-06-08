@@ -405,6 +405,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration":                  schema_apimachinery_apis_engine_v1alpha1_KVConfiguration(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.Lease":                            schema_apimachinery_apis_engine_v1alpha1_Lease(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.LeaseConfig":                      schema_apimachinery_apis_engine_v1alpha1_LeaseConfig(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration":             schema_apimachinery_apis_engine_v1alpha1_MariaDBConfiguration(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBRole":                      schema_apimachinery_apis_engine_v1alpha1_MariaDBRole(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBRoleList":                  schema_apimachinery_apis_engine_v1alpha1_MariaDBRoleList(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBRoleSpec":                  schema_apimachinery_apis_engine_v1alpha1_MariaDBRoleSpec(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration":             schema_apimachinery_apis_engine_v1alpha1_MongoDBConfiguration(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBRole":                      schema_apimachinery_apis_engine_v1alpha1_MongoDBRole(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBRoleList":                  schema_apimachinery_apis_engine_v1alpha1_MongoDBRoleList(ref),
@@ -18228,6 +18232,22 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"podAnnotations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodAnnotations are the annotations that will be attached with the respective Pod",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
 							Description: "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
@@ -18249,6 +18269,22 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 							Description: "ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"serviceAccountAnnotations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceAccountAnnotations are the annotations that will be attached with the respective ServiceAccount",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
 						},
 					},
 					"automountServiceAccountToken": {
@@ -18354,11 +18390,36 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodRuntimeSettings(ref common.Refere
 							Format:      "",
 						},
 					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"topologyKey",
+									"whenUnsatisfiable",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "topologyKey",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Toleration"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 
@@ -18573,11 +18634,36 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
 						},
 					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"topologyKey",
+									"whenUnsatisfiable",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "topologyKey",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 
@@ -19855,6 +19941,233 @@ func schema_apimachinery_apis_engine_v1alpha1_LeaseConfig(ref common.ReferenceCa
 	}
 }
 
+func schema_apimachinery_apis_engine_v1alpha1_MariaDBConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBConfiguration defines a MariaDB app configuration. https://www.vaultproject.io/api/secret/databases/index.html https://www.vaultproject.io/api/secret/databases/mysql-maria.html#configure-connection",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef refers to a MariaDB database AppBinding in any namespace",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+					"pluginName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the plugin to use for this connection. Default plugin:\n - for mysql: mysql-database-plugin",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"allowedRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of the roles allowed to use this connection. Defaults to empty (no roles), if contains a \"*\" any role can use this connection.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"maxOpenConnections": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of open connections to the database.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"maxIdleConnections": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of idle connections to the database. A zero uses the value of max_open_connections and a negative value disables idle connections. If larger than max_open_connections it will be reduced to be equal.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"maxConnectionLifetime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum amount of time a connection may be reused. If <= 0s connections are reused forever.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"databaseRef"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_MariaDBRole(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBRoleSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.RoleStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBRoleSpec", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RoleStatus"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_MariaDBRoleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of MariaDBRole objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBRole"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBRole"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_MariaDBRoleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBRoleSpec contains connection information, mariadb role info etc",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretEngineRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretEngineRef is the name of a Secret Engine",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"defaultTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to system/engine default TTL time",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to system/engine default TTL time.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"creationStatements": {
+						SchemaProps: spec.SchemaProps{
+							Description: "https://www.vaultproject.io/api/secret/databases/mysql-maria.html#creation_statements Specifies the database statements executed to create and configure a user.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"revocationStatements": {
+						SchemaProps: spec.SchemaProps{
+							Description: "https://www.vaultproject.io/api/secret/databases/mysql-maria.html#revocation_statements Specifies the database statements to be executed to revoke a user.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"secretEngineRef", "creationStatements"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_engine_v1alpha1_MongoDBConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20906,6 +21219,11 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineConfiguration(ref comm
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration"),
 						},
 					},
+					"mariadb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration"),
+						},
+					},
 					"kv": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration"),
@@ -20920,7 +21238,7 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineConfiguration(ref comm
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration"},
+			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration"},
 	}
 }
 
@@ -21013,6 +21331,11 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineSpec(ref common.Refere
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration"),
 						},
 					},
+					"mariadb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration"),
+						},
+					},
 					"kv": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration"),
@@ -21028,7 +21351,7 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration"},
 	}
 }
 

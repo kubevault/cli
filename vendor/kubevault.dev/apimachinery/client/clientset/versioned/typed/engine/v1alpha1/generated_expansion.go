@@ -26,6 +26,8 @@ type ElasticsearchRoleExpansion interface{}
 
 type GCPRoleExpansion interface{}
 
+type MariaDBRoleExpansion interface{}
+
 type MongoDBRoleExpansion interface{}
 
 type MySQLRoleExpansion interface{}
