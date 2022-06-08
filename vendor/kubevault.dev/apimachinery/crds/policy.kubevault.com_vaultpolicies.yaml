@@ -54,7 +54,7 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
               policyDocument:
                 description: 'PolicyDocument specifies a vault policy in hcl format.
-                  For example: path "secret/*" {   capabilities = ["create", "read",
+                  For example: path "secret/*" { capabilities = ["create", "read",
                   "update", "delete", "list"] }'
                 type: string
               vaultPolicyName:
