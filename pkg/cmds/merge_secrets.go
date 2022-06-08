@@ -111,11 +111,11 @@ func (o *mergeSecretsOptions) merge(clientGetter genericclioptions.RESTClientGet
 		if _, ok := dstSecret.Data[key]; !ok || (ok && o.overwrite) {
 			dstSecret.Data[key] = value
 		}
+	}
 
-		dstSecret, err = kubeClient.CoreV1().Secrets(dstNs).Update(context.TODO(), dstSecret, metav1.UpdateOptions{})
-		if err != nil {
-			return err
-		}
+	_, err = kubeClient.CoreV1().Secrets(dstNs).Update(context.TODO(), dstSecret, metav1.UpdateOptions{})
+	if err != nil {
+		return err
 	}
 
 	return nil
