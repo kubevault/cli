@@ -27,10 +27,10 @@ import (
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azsecrets"
 	"github.com/pkg/errors"
+	"gomodules.xyz/pointer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -122,8 +122,8 @@ func (ti *TokenKeyInfo) Get(key string) (string, error) {
 		return "", err
 	}
 
-	if *resp.ContentType != ContentTypePassword {
-		return "", errors.Errorf("content type not matched with %v", *resp.ContentType)
+	if *resp.Secret.Properties.ContentType != ContentTypePassword {
+		return "", errors.Errorf("content type not matched with %v", *resp.Secret.Properties.ContentType)
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(*resp.Value)
@@ -169,7 +169,7 @@ func (ti *TokenKeyInfo) Set(key, value string) error {
 	}
 
 	_, err = client.SetSecret(context.TODO(), key, base64.StdEncoding.EncodeToString([]byte(value)), &azsecrets.SetSecretOptions{
-		ContentType: to.StringPtr("password"),
+		ContentType: pointer.StringP("password"),
 	})
 	if err != nil {
 		return errors.Wrap(err, "unable to set secrets in key vault")
@@ -188,11 +188,14 @@ func (ti *TokenKeyInfo) getLatestVersion(key string) (string, error) {
 
 	var version string
 	var dur time.Duration
-	pager := client.ListSecretVersions(key, nil)
-	for pager.NextPage(context.Background()) {
-		resp := pager.PageResponse()
+	pager := client.ListPropertiesOfSecretVersions(key, nil)
+	for pager.More() {
+		resp, err := pager.NextPage(context.Background())
+		if err != nil {
+			return "", err
+		}
 		for _, ver := range resp.Secrets {
-			cur := time.Since(*ver.Attributes.Created)
+			cur := time.Since(*ver.Properties.CreatedOn)
 			if version == "" {
 				version = *ver.ID
 				dur = cur

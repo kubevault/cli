@@ -17,19 +17,14 @@ limitations under the License.
 package cmds
 
 import (
-	"flag"
-
 	"kubevault.dev/apimachinery/client/clientset/versioned/scheme"
 
 	"github.com/spf13/cobra"
-	"gomodules.xyz/kglog"
 	v "gomodules.xyz/x/version"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
-	cliflag "k8s.io/component-base/cli/flag"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"kmodules.xyz/client-go/tools/cli"
 	appcatscheme "kmodules.xyz/custom-resources/client/clientset/versioned/scheme"
 )
 
@@ -39,27 +34,20 @@ func NewRootCmd() *cobra.Command {
 		Short:             `KubeVault cli by AppsCode`,
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
-			cli.SendAnalytics(c, v.Version.Version)
-
 			utilruntime.Must(scheme.AddToScheme(clientsetscheme.Scheme))
 			utilruntime.Must(appcatscheme.AddToScheme(clientsetscheme.Scheme))
 		},
 	}
 
 	flags := rootCmd.PersistentFlags()
-	// Normalize all flags that are coming from other packages or pre-configurations
-	// a.k.a. change all "_" to "-". e.g. glog package
-	flags.SetNormalizeFunc(cliflag.WordSepNormalizeFunc)
 
 	kubeConfigFlags := genericclioptions.NewConfigFlags(true)
 	kubeConfigFlags.AddFlags(flags)
 	matchVersionKubeConfigFlags := cmdutil.NewMatchVersionFlags(kubeConfigFlags)
 	matchVersionKubeConfigFlags.AddFlags(flags)
 
-	flags.AddGoFlagSet(flag.CommandLine)
-	kglog.ParseFlags()
-	flags.BoolVar(&cli.EnableAnalytics, "analytics", cli.EnableAnalytics, "Send analytical events to Google Analytics")
-	utilruntime.Must(flag.Set("stderrthreshold", "ERROR"))
+	rootCmd.AddCommand(NewCmdCompletion())
+	rootCmd.AddCommand(v.NewCmdVersion())
 
 	rootCmd.AddCommand(NewCmdApprove(matchVersionKubeConfigFlags))
 	rootCmd.AddCommand(NewCmdDeny(matchVersionKubeConfigFlags))
@@ -67,8 +55,6 @@ func NewRootCmd() *cobra.Command {
 	rootCmd.AddCommand(NewCmdGenerate(matchVersionKubeConfigFlags))
 	rootCmd.AddCommand(NewCmdRootToken(matchVersionKubeConfigFlags))
 	rootCmd.AddCommand(NewCmdUnsealKey(matchVersionKubeConfigFlags))
-	rootCmd.AddCommand(NewCmdCompletion())
-	rootCmd.AddCommand(v.NewCmdVersion())
 	rootCmd.AddCommand(NewCmdMergeSecrets(matchVersionKubeConfigFlags))
 	return rootCmd
 }

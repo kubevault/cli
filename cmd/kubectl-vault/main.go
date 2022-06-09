@@ -17,19 +17,19 @@ limitations under the License.
 package main
 
 import (
-	"os"
+	"fmt"
 
 	"kubevault.dev/cli/pkg/cmds"
 
-	"gomodules.xyz/kglog"
+	"gomodules.xyz/logs"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
 func main() {
-	kglog.InitLogs()
-	defer kglog.FlushLogs()
+	logs.InitLogs()
+	defer logs.FlushLogs()
 
 	if err := cmds.NewRootCmd().Execute(); err != nil {
-		os.Exit(1)
+		fmt.Println(err)
 	}
 }
