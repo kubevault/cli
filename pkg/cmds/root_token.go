@@ -17,6 +17,7 @@ limitations under the License.
 package cmds
 
 import (
+	"encoding/base64"
 	"fmt"
 	"os"
 	"strings"
@@ -24,6 +25,7 @@ import (
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	token_key_store "kubevault.dev/cli/pkg/token-keys-store"
 
+	"github.com/hashicorp/vault/sdk/helper/xor"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -77,15 +79,16 @@ func (o *delTokenOptions) AddDelTokenFlag(fs *pflag.FlagSet) {
 func NewCmdRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "root-token",
-		Short: "get, set, delete and sync root-token",
+		Short: "get, set, delete, sync and generate root-token",
 		Long: `
-$ kubectl vault root-token [command] [flags] to get, set, delete or sync vault root-token
+$ kubectl vault root-token [command] [flags] to get, set, delete, sync or generate vault root-token
 
 Examples:
  $ kubectl vault root-token get [flags]
  $ kubectl vault root-token set [flags]
  $ kubectl vault root-token delete [flags]
  $ kubectl vault root-token sync [flags]
+ $ kubectl vault root-token generate [flags]
 `,
 
 		DisableAutoGenTag: true,
@@ -99,6 +102,7 @@ Examples:
 	cmd.AddCommand(NewCmdSetToken(clientGetter))
 	cmd.AddCommand(NewCmdDeleteToken(clientGetter))
 	cmd.AddCommand(NewCmdSyncToken(clientGetter))
+	cmd.AddCommand(NewCmdGenerateToken(clientGetter))
 	return cmd
 }
 
@@ -579,4 +583,163 @@ func (o *getTokenOptions) Print(key, value string) {
 	} else {
 		fmt.Printf("%s: %s\n", key, value)
 	}
+}
+
+func NewCmdGenerateToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "generate",
+		Short: "generate vault root-token",
+		Long: `
+# generate vault root token using the unseal keys
+$ kubectl vault root-token generate vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # generate the vaultserver root-token
+ $ kubectl vault root-token generate vaultserver vault -n demo
+`,
+		DisableAutoGenTag: true,
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) > 0 {
+				ResourceName = args[0]
+				ObjectNames = args[1:]
+			}
+
+			if err := generateRootToken(clientGetter); err != nil {
+				Fatal(err)
+			}
+			os.Exit(0)
+		},
+	}
+
+	return cmd
+}
+
+func generateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
+	var resourceName string
+	switch ResourceName {
+	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
+		resourceName = vaultapi.ResourceVaultServer
+	default:
+		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
+	}
+
+	namespace, _, err := clientGetter.ToRawKubeConfigLoader().Namespace()
+	if err != nil {
+		return err
+	}
+
+	cfg, err := clientGetter.ToRESTConfig()
+	if err != nil {
+		return errors.Wrap(err, "failed to read kubeconfig")
+	}
+
+	kubeClient, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
+	r := builder.
+		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
+		ContinueOnError().
+		NamespaceParam(namespace).DefaultNamespace().
+		FilenameParam(false, &FilenameOptions).
+		ResourceNames(resourceName, ObjectNames...).
+		RequireObject(true).
+		Flatten().
+		Latest().
+		Do()
+
+	err = r.Visit(func(info *resource.Info, err error) error {
+		if err != nil {
+			return err
+		}
+
+		var err2 error
+		switch info.Object.(type) {
+		case *vaultapi.VaultServer:
+			obj := info.Object.(*vaultapi.VaultServer)
+			err2 = generateToken(obj, kubeClient)
+		default:
+			err2 = errors.New("unknown/unsupported type")
+		}
+		return err2
+	})
+	return err
+}
+
+func generateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+	keys, err := getKeys(vs, kubeClient)
+	if err != nil {
+		return err
+	}
+
+	client, err := NewVaultClient(vs)
+	if err != nil {
+		return err
+	}
+
+	status, err := client.Sys().GenerateRootInit("", "")
+	if err != nil {
+		return err
+	}
+
+	otp := status.OTP
+	for idx, key := range keys {
+		if int64(idx) >= vs.Spec.Unsealer.SecretThreshold {
+			break
+		}
+
+		status, err = client.Sys().GenerateRootUpdate(key, status.Nonce)
+		if err != nil {
+			return err
+		}
+	}
+
+	if !status.Complete {
+		return errors.New("failed to complete root token generation")
+	}
+
+	tokenBytes, err := base64.RawStdEncoding.DecodeString(status.EncodedToken)
+	if err != nil {
+		return err
+	}
+
+	tokenBytes, err = xor.XORBytes(tokenBytes, []byte(otp))
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("root token generation successful")
+	fmt.Println("root token: ", string(tokenBytes))
+	return nil
+}
+
+func getKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) ([]string, error) {
+	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		ti.Clean()
+	}()
+
+	var keys []string
+	shares := vs.Spec.Unsealer.SecretShares
+	for i := 0; int64(i) < shares; i++ {
+		name, err := ti.NewUnsealKeyName(i)
+		if err != nil {
+			return nil, err
+		}
+
+		key, err := ti.Get(name)
+		if err != nil {
+			return nil, err
+		}
+
+		keys = append(keys, key)
+	}
+
+	return keys, nil
 }
