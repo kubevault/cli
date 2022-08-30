@@ -79,9 +79,9 @@ func (o *delTokenOptions) AddDelTokenFlag(fs *pflag.FlagSet) {
 func NewCmdRootToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "root-token",
-		Short: "get, set, delete, sync and generate root-token",
+		Short: "get, set, delete, sync, generate, and rotate root-token",
 		Long: `
-$ kubectl vault root-token [command] [flags] to get, set, delete, sync or generate vault root-token
+$ kubectl vault root-token [command] [flags] to get, set, delete, sync, generate, and rotate vault root-token
 
 Examples:
  $ kubectl vault root-token get [flags]
@@ -89,6 +89,7 @@ Examples:
  $ kubectl vault root-token delete [flags]
  $ kubectl vault root-token sync [flags]
  $ kubectl vault root-token generate [flags]
+ $ kubectl vault root-token rotate [flags]
 `,
 
 		DisableAutoGenTag: true,
@@ -103,6 +104,7 @@ Examples:
 	cmd.AddCommand(NewCmdDeleteToken(clientGetter))
 	cmd.AddCommand(NewCmdSyncToken(clientGetter))
 	cmd.AddCommand(NewCmdGenerateToken(clientGetter))
+	cmd.AddCommand(NewCmdRotateToken(clientGetter))
 	return cmd
 }
 
@@ -655,11 +657,15 @@ func generateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 			return err
 		}
 
+		var token string
 		var err2 error
 		switch info.Object.(type) {
 		case *vaultapi.VaultServer:
 			obj := info.Object.(*vaultapi.VaultServer)
-			err2 = generateToken(obj, kubeClient)
+			token, err2 = generateToken(obj, kubeClient)
+			if err2 == nil && len(token) > 0 {
+				fmt.Println("generated root-token:", token)
+			}
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -668,20 +674,49 @@ func generateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	return err
 }
 
-func generateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func NewCmdRotateToken(clientGetter genericclioptions.RESTClientGetter) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "rotate",
+		Short: "rotate vault root-token",
+		Long: `
+# rotate vault root token using the unseal keys
+$ kubectl vault root-token rotate vaultserver <name> -n <namespace> [flags]
+
+Examples:
+ # rotate the vaultserver root-token
+ $ kubectl vault root-token rotate vaultserver vault -n demo
+`,
+		DisableAutoGenTag: true,
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) > 0 {
+				ResourceName = args[0]
+				ObjectNames = args[1:]
+			}
+
+			if err := rotateRootToken(clientGetter); err != nil {
+				Fatal(err)
+			}
+			os.Exit(0)
+		},
+	}
+
+	return cmd
+}
+
+func generateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (string, error) {
 	keys, err := getKeys(vs, kubeClient)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	client, err := NewVaultClient(vs)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	status, err := client.Sys().GenerateRootInit("", "")
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	otp := status.OTP
@@ -692,26 +727,126 @@ func generateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) er
 
 		status, err = client.Sys().GenerateRootUpdate(key, status.Nonce)
 		if err != nil {
-			return err
+			return "", err
 		}
 	}
 
 	if !status.Complete {
-		return errors.New("failed to complete root token generation")
+		return "", errors.New("failed to complete root token generation")
 	}
 
 	tokenBytes, err := base64.RawStdEncoding.DecodeString(status.EncodedToken)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	tokenBytes, err = xor.XORBytes(tokenBytes, []byte(otp))
 	if err != nil {
+		return "", err
+	}
+
+	fmt.Println("root-token generation successful")
+	return string(tokenBytes), nil
+}
+
+func rotateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
+	var resourceName string
+	switch ResourceName {
+	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
+		resourceName = vaultapi.ResourceVaultServer
+	default:
+		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
+	}
+
+	namespace, _, err := clientGetter.ToRawKubeConfigLoader().Namespace()
+	if err != nil {
 		return err
 	}
 
-	fmt.Println("root token generation successful")
-	fmt.Println("root token: ", string(tokenBytes))
+	cfg, err := clientGetter.ToRESTConfig()
+	if err != nil {
+		return errors.Wrap(err, "failed to read kubeconfig")
+	}
+
+	kubeClient, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
+	r := builder.
+		WithScheme(clientsetscheme.Scheme, clientsetscheme.Scheme.PrioritizedVersionsAllGroups()...).
+		ContinueOnError().
+		NamespaceParam(namespace).DefaultNamespace().
+		FilenameParam(false, &FilenameOptions).
+		ResourceNames(resourceName, ObjectNames...).
+		RequireObject(true).
+		Flatten().
+		Latest().
+		Do()
+
+	err = r.Visit(func(info *resource.Info, err error) error {
+		if err != nil {
+			return err
+		}
+
+		var err2 error
+		switch info.Object.(type) {
+		case *vaultapi.VaultServer:
+			obj := info.Object.(*vaultapi.VaultServer)
+			err2 = rotateToken(obj, kubeClient)
+		default:
+			err2 = errors.New("unknown/unsupported type")
+		}
+		return err2
+	})
+	return err
+}
+
+func rotateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+	token, err := generateToken(vs, kubeClient)
+	if err != nil {
+		return err
+	}
+
+	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		ti.Clean()
+	}()
+
+	client, err := NewVaultClient(vs)
+	if err != nil {
+		return err
+	}
+
+	name := ti.NewTokenName()
+	oldToken, err := ti.Get(name)
+	if err != nil {
+		return err
+	}
+
+	if err = ti.Delete(name); err != nil {
+		return err
+	}
+
+	client.SetToken(oldToken)
+	payload := map[string]interface{}{
+		"token": oldToken,
+	}
+	_, err = client.Logical().Write("auth/token/revoke", payload)
+	if err != nil {
+		return err
+	}
+
+	if err = ti.Set(name, token); err != nil {
+		return err
+	}
+
+	fmt.Println("root-token rotation successful")
 	return nil
 }
 
