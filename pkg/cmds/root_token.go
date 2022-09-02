@@ -704,6 +704,8 @@ Examples:
 }
 
 func generateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (string, error) {
+	// For root-token generation
+	// - threshold number of unseal-keys must be present
 	keys, err := getKeys(vs, kubeClient)
 	if err != nil {
 		return "", err
@@ -804,6 +806,11 @@ func rotateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 }
 
 func rotateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+	// For root-token rotation:
+	// - new root-token generation must be successful
+	// - old root-token must be present
+	// - old root-token lease must be successfully revoked
+	// - new root-token must be successfully set
 	token, err := generateToken(vs, kubeClient)
 	if err != nil {
 		return err
