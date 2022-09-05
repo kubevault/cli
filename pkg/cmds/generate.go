@@ -92,21 +92,34 @@ func NewCmdGenerate(clientGetter genericclioptions.RESTClientGetter) *cobra.Comm
 	cmd := &cobra.Command{
 		Use:   "generate",
 		Short: "Generate secretproviderclass",
-		Long: "Generate secretproviderclass from secretrolebinding. Provide flags secretrolebinding, role and keys to mount.\n\n" +
-			"See more about Secrets-Store-CSI-Driver and the usage of SecretProviderClass:\n Link: https://secrets-store-csi-driver.sigs.k8s.io/concepts.html#secretproviderclass \n\n" +
-			"secretrolebinding needs to be created and successful beforehand.\nProvided roles must be in the seretrolebinding and " +
-			"provided keys must be available for the RoleKind.\n" +
-			"Output format can be yaml or json, defaults to yaml\n\n" +
-			"Examples:\n" +
-			" # Generate secretproviderclass with name <name1> and namespace <ns1>\n" +
-			" # secretrolebinding with namespace <ns2> and name <name2>\n" +
-			" # vaultrole kind MongoDBRole and name <name3>\n" +
-			" # keys to mount <secretKey> and it's mapping name <objectName> \n" +
-			"\n $ kubectl vault generate secretproviderclass <name1> -n <ns1> \\\n  " +
-			"--secretrolebinding=<ns2>/<name2> \\\n  --vaultrole=MongoDBRole/<name3> \\\n  --keys <secretKey>=<objectName> -o yaml\n\n" +
-			" # Generate secretproviderclass for the MongoDB username and password\n" +
-			" $ kubectl vault generate secretproviderclass mongo-secret-provider -n test     " +
-			" \\\n  --secretrolebinding=dev/secret-r-binding \\\n  --vaultrole=MongoDBRole/mongo-role \\\n  --keys username=mongo-user --keys password=mongo-pass -o yaml\n",
+		Long: `Generate secretproviderclass from secretrolebinding. Provide flags secretrolebinding, role and keys to mount.
+
+See more about Secrets-Store-CSI-Driver and the usage of SecretProviderClass:
+	Link: https://secrets-store-csi-driver.sigs.k8s.io/concepts.html#secretproviderclass
+
+SecretRoleBinding needs to be created and successful beforehand. Provided roles must be in the SecretRoleBinding and provided keys must be available for the RoleKind.
+
+Output format can be yaml or json, defaults to yaml.
+
+Examples:
+ # Generate secretproviderclass with name <name1> and namespace <ns1>
+ # secretrolebinding with namespace <ns2> and name <name2>
+ # vaultrole kind MongoDBRole and name <name3>
+ # keys to mount <secretKey> and it's mapping name <objectName>
+
+ $ kubectl vault generate secretproviderclass <name1> -n <ns1> \
+ --secretrolebinding=<ns2>/<name2> \
+ --vaultrole=MongoDBRole/<name3> \
+ --keys <secretKey>=<objectName> -o yaml
+
+ # Generate secretproviderclass for the MongoDB username and password
+
+ $ kubectl vault generate secretproviderclass mongo-secret-provider -n test 
+ --secretrolebinding=dev/secret-r-binding \
+ --vaultrole=MongoDBRole/mongo-role \
+ --keys username=mongo-user --keys password=mongo-pass -o yaml
+`,
+
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) > 0 {

@@ -36,6 +36,10 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
+const (
+	VAULT_ADDR = "127.0.0.1:8200"
+)
+
 func Fatal(err error) {
 	fmt.Fprintln(os.Stderr, err)
 	os.Exit(1)
@@ -162,7 +166,7 @@ func NewVaultClient(vs *vaultapi.VaultServer) (*api.Client, error) {
 		Insecure: true,
 	}
 
-	cfg.Address = fmt.Sprintf("%s://127.0.0.1:8200", vs.Scheme())
+	cfg.Address = fmt.Sprintf("%s://%s", vs.Scheme(), VAULT_ADDR)
 	err := cfg.ConfigureTLS(tlsConfig)
 	if err != nil {
 		return nil, err
