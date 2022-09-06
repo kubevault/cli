@@ -22,9 +22,11 @@ import (
 	"os"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
 	engineutil "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1/util"
 
+	"github.com/hashicorp/vault/api"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
@@ -32,6 +34,10 @@ import (
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	kmapi "kmodules.xyz/client-go/api/v1"
+)
+
+const (
+	VAULT_ADDR = "127.0.0.1:8200"
 )
 
 func Fatal(err error) {
@@ -151,4 +157,20 @@ func isApplicable(engineClient *enginecs.EngineV1alpha1Client, req *engineapi.Se
 	}
 
 	return nil
+}
+
+func NewVaultClient(vs *vaultapi.VaultServer) (*api.Client, error) {
+	cfg := api.DefaultConfig()
+
+	tlsConfig := &api.TLSConfig{
+		Insecure: true,
+	}
+
+	cfg.Address = fmt.Sprintf("%s://%s", vs.Scheme(), VAULT_ADDR)
+	err := cfg.ConfigureTLS(tlsConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.NewClient(cfg)
 }
