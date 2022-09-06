@@ -24,6 +24,7 @@ import (
 	enginev1alpha1 "kubevault.dev/apimachinery/apis/engine/v1alpha1"
 	kubevaultv1alpha1 "kubevault.dev/apimachinery/apis/kubevault/v1alpha1"
 	kubevaultv1alpha2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	opsv1alpha1 "kubevault.dev/apimachinery/apis/ops/v1alpha1"
 	policyv1alpha1 "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -42,6 +43,7 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 	enginev1alpha1.AddToScheme,
 	kubevaultv1alpha1.AddToScheme,
 	kubevaultv1alpha2.AddToScheme,
+	opsv1alpha1.AddToScheme,
 	policyv1alpha1.AddToScheme,
 }
 

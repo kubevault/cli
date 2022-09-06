@@ -864,6 +864,7 @@ func (in *VaultServerSpec) DeepCopyInto(out *VaultServerSpec) {
 		*out = new(AllowedSecretEngines)
 		(*in).DeepCopyInto(*out)
 	}
+	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
 	return
 }
 

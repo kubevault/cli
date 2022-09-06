@@ -135,6 +135,11 @@ type VaultServerSpec struct {
 	// +kubebuilder:default={namespaces:{from: Same}}
 	// +optional
 	AllowedSecretEngines *AllowedSecretEngines `json:"allowedSecretEngines,omitempty"`
+
+	// HealthChecker defines attributes of the health checker
+	// +optional
+	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
+	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

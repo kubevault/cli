@@ -453,3 +453,7 @@ func Convert_v1alpha1_AuthMethod_To_v1alpha2_AuthMethod(in *AuthMethod, out *v1a
 	out.Local = in.Local
 	return nil
 }
+
+func Convert_v1alpha2_VaultServerSpec_To_v1alpha1_VaultServerSpec(in *v1alpha2.VaultServerSpec, out *VaultServerSpec, s conversion.Scope) error {
+	return autoConvert_v1alpha2_VaultServerSpec_To_v1alpha1_VaultServerSpec(in, out, s)
+}
