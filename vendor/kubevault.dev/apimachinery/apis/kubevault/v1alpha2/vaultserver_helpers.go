@@ -26,6 +26,7 @@ import (
 	"kubevault.dev/apimachinery/apis/kubevault"
 	"kubevault.dev/apimachinery/crds"
 
+	"gomodules.xyz/pointer"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -272,3 +273,15 @@ const (
 	VaultServerAnnotationName      = "vaultservers.kubevault.com/name"
 	VaultServerAnnotationNamespace = "vaultservers.kubevault.com/namespace"
 )
+
+func (vs *VaultServer) SetHealthCheckerDefaults() {
+	if vs.Spec.HealthChecker.PeriodSeconds == nil {
+		vs.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
+	}
+	if vs.Spec.HealthChecker.TimeoutSeconds == nil {
+		vs.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
+	}
+	if vs.Spec.HealthChecker.FailureThreshold == nil {
+		vs.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
+	}
+}

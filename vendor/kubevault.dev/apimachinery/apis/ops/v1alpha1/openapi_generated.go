@@ -388,10 +388,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServicePort":                                schema_kmodulesxyz_offshoot_api_api_v1_ServicePort(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                        schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
-		"kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig":               schema_apimachinery_apis_config_v1alpha1_AWSAuthConfig(ref),
-		"kubevault.dev/apimachinery/apis/config/v1alpha1.AzureAuthConfig":             schema_apimachinery_apis_config_v1alpha1_AzureAuthConfig(ref),
-		"kubevault.dev/apimachinery/apis/config/v1alpha1.KubernetesAuthConfig":        schema_apimachinery_apis_config_v1alpha1_KubernetesAuthConfig(ref),
-		"kubevault.dev/apimachinery/apis/config/v1alpha1.VaultServerConfiguration":    schema_apimachinery_apis_config_v1alpha1_VaultServerConfiguration(ref),
+		"kubevault.dev/apimachinery/apis/ops/v1alpha1.RestartSpec":                    schema_apimachinery_apis_ops_v1alpha1_RestartSpec(ref),
+		"kubevault.dev/apimachinery/apis/ops/v1alpha1.TLSSpec":                        schema_apimachinery_apis_ops_v1alpha1_TLSSpec(ref),
+		"kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequest":                schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequest(ref),
+		"kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequestList":            schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequestList(ref),
+		"kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequestSpec":            schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequestSpec(ref),
+		"kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequestStatus":          schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequestStatus(ref),
 	}
 }
 
@@ -19238,108 +19240,115 @@ func schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_config_v1alpha1_AWSAuthConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_RestartSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "AWSAuthConfig contains necessary information for performing AWS authentication to the Vault server.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"headerValue": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the header value that required if X-Vault-AWS-IAM-Server-ID Header is set in Vault.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
+				Type: []string{"object"},
 			},
 		},
 	}
 }
 
-func schema_apimachinery_apis_config_v1alpha1_AzureAuthConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_TLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "AzureAuthConfig contains necessary information for performing Azure authentication to the Vault server.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"subscriptionID": {
+					"issuerRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the subscription ID for the machine that generated the MSI token.",
-							Type:        []string{"string"},
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"rotateCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RotateCertificates tells operator to initiate certificate rotation",
+							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
-					"resourceGroupName": {
+					"remove": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the resource group for the machine that generated the MSI token.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"vmName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the virtual machine name for the machine that generated the MSI token. If VmssName is provided, this value is ignored.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"vmssName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the virtual machine scale set name for the machine that generated the MSI token.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_config_v1alpha1_KubernetesAuthConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KubernetesAuthConfiguration contains necessary information for performing Kubernetes authentication to the Vault server.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"serviceAccountName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the service account name",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"tokenReviewerServiceAccountName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the service account name for token reviewer It has system:auth-delegator permission It's jwt token is used on vault kubernetes auth config",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"usePodServiceAccountForCSIDriver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies to use pod service account for vault csi driver",
+							Description: "Remove tells operator to remove TLS configuration",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"serviceAccountName"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 
-func schema_apimachinery_apis_config_v1alpha1_VaultServerConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "VaultServerConfiguration defines a Vault Server configuration.",
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequestSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequestStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequestSpec", "kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequestStatus"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VaultOpsRequestList is a list of VaultOpsRequests",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -19356,42 +19365,122 @@ func schema_apimachinery_apis_config_v1alpha1_VaultServerConfiguration(ref commo
 							Format:      "",
 						},
 					},
-					"path": {
+					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the path which is used for authentication by this AppBinding. If vault server is provisioned by KubeVault, this is usually `kubernetes`.",
-							Type:        []string{"string"},
-							Format:      "",
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
 						},
 					},
-					"vaultRole": {
+					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the vault role name for policy controller It has permission to create policy in vault",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"kubernetes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the Kubernetes authentication information",
-							Ref:         ref("kubevault.dev/apimachinery/apis/config/v1alpha1.KubernetesAuthConfig"),
-						},
-					},
-					"azure": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the Azure authentication information",
-							Ref:         ref("kubevault.dev/apimachinery/apis/config/v1alpha1.AzureAuthConfig"),
-						},
-					},
-					"aws": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the AWS authentication information",
-							Ref:         ref("kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig"),
+							Description: "Items is a list of VaultOpsRequest CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequest"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.AzureAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.KubernetesAuthConfig"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevault.dev/apimachinery/apis/ops/v1alpha1.VaultOpsRequest"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequestSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VaultOpsRequestSpec is the spec for VaultOpsRequest",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vaultRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Vault reference",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the ops request type: ReconfigureTLS, Upgrade, etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring TLS",
+							Ref:         ref("kubevault.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restarting VaultServer",
+							Ref:         ref("kubevault.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+				Required: []string{"vaultRef", "type"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubevault.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubevault.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_VaultOpsRequestStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VaultOpsRequestStatus is the status for VaultOpsRequest",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the ops request",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the request, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }

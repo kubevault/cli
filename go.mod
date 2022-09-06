@@ -28,9 +28,9 @@ require (
 	k8s.io/client-go v0.24.1
 	k8s.io/klog/v2 v2.60.1
 	k8s.io/kubectl v0.24.1
-	kmodules.xyz/client-go v0.24.1
+	kmodules.xyz/client-go v0.24.8
 	kmodules.xyz/custom-resources v0.24.0
-	kubevault.dev/apimachinery v0.8.0
+	kubevault.dev/apimachinery v0.9.0-rc.0
 	sigs.k8s.io/secrets-store-csi-driver v1.1.2
 	sigs.k8s.io/yaml v1.3.0
 )

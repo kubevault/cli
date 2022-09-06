@@ -85,6 +85,11 @@ const (
 	VaultServerAcceptingConnection = "AcceptingConnection"
 	AllReplicasAreReady            = "AllReplicasReady"
 	SomeReplicasAreNotReady        = "SomeReplicasNotReady"
+	VaultServerPaused              = "Paused"
+	VaultReadWriteOK               = "ReadWriteOK"
+
+	// health check constants
+	VaultHealthCheckPaused = "HealthCheckPaused"
 )
 
 const (
