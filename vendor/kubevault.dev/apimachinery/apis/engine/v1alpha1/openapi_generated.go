@@ -18929,6 +18929,13 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 							Ref:         ref("k8s.io/api/core/v1.PodSecurityContext"),
 						},
 					},
+					"terminationGracePeriodSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). If this value is nil, the default grace period will be used instead. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. Defaults to 30 seconds.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"dnsPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Set DNS policy for the pod. Defaults to \"ClusterFirst\". Valid values are 'ClusterFirstWithHostNet', 'ClusterFirst', 'Default' or 'None'. DNS parameters given in DNSConfig will be merged with the policy selected with DNSPolicy. To have DNS options set along with hostNetwork, you have to specify DNS policy explicitly to 'ClusterFirstWithHostNet'.\n\nPossible enum values:\n - `\"ClusterFirst\"` indicates that the pod should use cluster DNS first unless hostNetwork is true, if it is available, then fall back on the default (as determined by kubelet) DNS settings.\n - `\"ClusterFirstWithHostNet\"` indicates that the pod should use cluster DNS first, if it is available, then fall back on the default (as determined by kubelet) DNS settings.\n - `\"Default\"` indicates that the pod should use the default (as determined by kubelet) DNS settings.\n - `\"None\"` indicates that the pod should use empty DNS settings. DNS parameters such as nameservers and search paths should be defined via DNSConfig.",
@@ -18940,6 +18947,51 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.",
 							Ref:         ref("k8s.io/api/core/v1.PodDNSConfig"),
+						},
+					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"topologyKey",
+									"whenUnsatisfiable",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "topologyKey",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-patch-merge-key": "name",
+								"x-kubernetes-patch-strategy":  "merge,retainKeys",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "List of volumes that can be mounted by containers belonging to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Volume"),
+									},
+								},
+							},
 						},
 					},
 					"initContainers": {
@@ -19022,26 +19074,21 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
 						},
 					},
-					"topologySpreadConstraints": {
+					"volumeMounts": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"topologyKey",
-									"whenUnsatisfiable",
-								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "topologyKey",
+								"x-kubernetes-patch-merge-key": "mountPath",
 								"x-kubernetes-patch-strategy":  "merge",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.",
+							Description: "Pod volumes to mount into the container's filesystem. Cannot be updated.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+										Ref:     ref("k8s.io/api/core/v1.VolumeMount"),
 									},
 								},
 							},
@@ -19051,7 +19098,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_PodSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/api/core/v1.Volume", "k8s.io/api/core/v1.VolumeMount"},
 	}
 }
 
