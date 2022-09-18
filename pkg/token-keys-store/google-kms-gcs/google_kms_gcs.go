@@ -21,7 +21,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"hash/crc32"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -113,7 +113,7 @@ func (ti *TokenKeyInfo) Get(key string) (string, error) {
 	}
 	defer rc.Close()
 
-	body, err := ioutil.ReadAll(rc)
+	body, err := io.ReadAll(rc)
 	if err != nil {
 		return "", err
 	}

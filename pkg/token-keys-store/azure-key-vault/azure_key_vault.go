@@ -100,10 +100,7 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 
 func (ti *TokenKeyInfo) Get(key string) (string, error) {
 	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
-	client, err := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
-	if err != nil {
-		return "", err
-	}
+	client := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
 
 	version, err := ti.getLatestVersion(key)
 	if err != nil {
@@ -115,15 +112,13 @@ func (ti *TokenKeyInfo) Get(key string) (string, error) {
 		return "", errors.New("version id not found")
 	}
 
-	resp, err := client.GetSecret(context.Background(), strings.Replace(key, ".", "-", -1), &azsecrets.GetSecretOptions{
-		Version: version[idx+1:],
-	})
+	resp, err := client.GetSecret(context.Background(), strings.Replace(key, ".", "-", -1), version[idx+1:], nil)
 	if err != nil {
 		return "", err
 	}
 
-	if *resp.Secret.Properties.ContentType != ContentTypePassword {
-		return "", errors.Errorf("content type not matched with %v", *resp.Secret.Properties.ContentType)
+	if *resp.SecretBundle.ContentType != ContentTypePassword {
+		return "", errors.Errorf("content type not matched with %v", *resp.SecretBundle.ContentType)
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(*resp.Value)
@@ -138,12 +133,9 @@ func (ti *TokenKeyInfo) Delete(key string) error {
 	key = strings.Replace(key, ".", "-", -1)
 
 	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
-	client, err := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
-	if err != nil {
-		return err
-	}
+	client := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
 
-	_, err = client.BeginDeleteSecret(context.TODO(), key, nil)
+	_, err := client.DeleteSecret(context.TODO(), key, nil)
 	if err != nil {
 		return err
 	}
@@ -163,14 +155,12 @@ func (ti *TokenKeyInfo) Set(key, value string) error {
 	key = strings.Replace(key, ".", "-", -1)
 
 	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
-	client, err := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
-	if err != nil {
-		return err
-	}
+	client := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
 
-	_, err = client.SetSecret(context.TODO(), key, base64.StdEncoding.EncodeToString([]byte(value)), &azsecrets.SetSecretOptions{
+	_, err := client.SetSecret(context.TODO(), key, azsecrets.SetSecretParameters{
+		Value:       pointer.StringP(base64.StdEncoding.EncodeToString([]byte(value))),
 		ContentType: pointer.StringP("password"),
-	})
+	}, nil)
 	if err != nil {
 		return errors.Wrap(err, "unable to set secrets in key vault")
 	}
@@ -181,21 +171,18 @@ func (ti *TokenKeyInfo) Set(key, value string) error {
 func (ti *TokenKeyInfo) getLatestVersion(key string) (string, error) {
 	key = strings.Replace(key, ".", "-", -1)
 	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
-	client, err := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
-	if err != nil {
-		return "", err
-	}
+	client := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
 
-	var version string
+	var version azsecrets.ID
 	var dur time.Duration
-	pager := client.ListPropertiesOfSecretVersions(key, nil)
+	pager := client.NewListSecretVersionsPager(key, nil)
 	for pager.More() {
 		resp, err := pager.NextPage(context.Background())
 		if err != nil {
 			return "", err
 		}
-		for _, ver := range resp.Secrets {
-			cur := time.Since(*ver.Properties.CreatedOn)
+		for _, ver := range resp.SecretListResult.Value {
+			cur := time.Since(*ver.Attributes.Created)
 			if version == "" {
 				version = *ver.ID
 				dur = cur
@@ -206,7 +193,7 @@ func (ti *TokenKeyInfo) getLatestVersion(key string) (string, error) {
 		}
 	}
 
-	return version, nil
+	return string(version), nil
 }
 
 func (ti *TokenKeyInfo) NewTokenName() string {
