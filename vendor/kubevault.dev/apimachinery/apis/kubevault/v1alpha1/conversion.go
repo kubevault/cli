@@ -78,12 +78,18 @@ func Convert_v1alpha1_MySQLSpec_To_v1alpha2_MySQLSpec(in *MySQLSpec, out *v1alph
 	out.Address = in.Address
 	out.Database = in.Database
 	out.Table = in.Table
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.UserCredentialSecret,
+	if len(in.UserCredentialSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.UserCredentialSecret,
+		}
 	}
-	out.TLSSecretRef = &core.LocalObjectReference{
-		Name: in.TLSCASecret,
+
+	if len(in.TLSCASecret) > 0 {
+		out.TLSSecretRef = &core.LocalObjectReference{
+			Name: in.TLSCASecret,
+		}
 	}
+
 	out.MaxParallel = in.MaxParallel
 	return nil
 }
@@ -98,15 +104,18 @@ func Convert_v1alpha2_MySQLSpec_To_v1alpha1_MySQLSpec(in *v1alpha2.MySQLSpec, ou
 	if in.TLSSecretRef != nil {
 		out.TLSCASecret = in.TLSSecretRef.Name
 	}
+	in.DatabaseRef = nil
 	out.MaxParallel = in.MaxParallel
 	return nil
 }
 
 func Convert_v1alpha1_PostgreSQLSpec_To_v1alpha2_PostgreSQLSpec(in *PostgreSQLSpec, out *v1alpha2.PostgreSQLSpec, s conversion.Scope) error {
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.ConnectionURLSecret,
+	if len(in.ConnectionURLSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.ConnectionURLSecret,
+		}
 	}
-	// WARNING: in.ConnectionURLSecret requires manual conversion: does not exist in peer-type
+
 	out.Table = in.Table
 	out.MaxParallel = in.MaxParallel
 	return nil
@@ -116,6 +125,9 @@ func Convert_v1alpha2_PostgreSQLSpec_To_v1alpha1_PostgreSQLSpec(in *v1alpha2.Pos
 	if in.CredentialSecretRef != nil {
 		out.ConnectionURLSecret = in.CredentialSecretRef.Name
 	}
+	in.MaxIdleConnection = 0
+	in.Address = ""
+	in.DatabaseRef = nil
 	out.Table = in.Table
 	out.MaxParallel = in.MaxParallel
 	return nil
@@ -125,8 +137,10 @@ func Convert_v1alpha1_AwsKmsSsmSpec_To_v1alpha2_AwsKmsSsmSpec(in *AwsKmsSsmSpec,
 	out.KmsKeyID = in.KmsKeyID
 	out.SsmKeyPrefix = in.SsmKeyPrefix
 	out.Region = in.Region
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.CredentialSecret,
+	if len(in.CredentialSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.CredentialSecret,
+		}
 	}
 	out.Endpoint = in.Endpoint
 	return nil
@@ -147,12 +161,18 @@ func Convert_v1alpha1_AzureKeyVault_To_v1alpha2_AzureKeyVault(in *AzureKeyVault,
 	out.VaultBaseURL = in.VaultBaseURL
 	out.Cloud = in.Cloud
 	out.TenantID = in.TenantID
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.AADClientSecret,
+	if len(in.AADClientSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.AADClientSecret,
+		}
 	}
-	out.TLSSecretRef = &core.LocalObjectReference{
-		Name: in.ClientCertSecret,
+
+	if len(in.ClientCertSecret) > 0 {
+		out.TLSSecretRef = &core.LocalObjectReference{
+			Name: in.ClientCertSecret,
+		}
 	}
+
 	out.UseManagedIdentity = in.UseManagedIdentity
 	return nil
 }
@@ -173,9 +193,12 @@ func Convert_v1alpha2_AzureKeyVault_To_v1alpha1_AzureKeyVault(in *v1alpha2.Azure
 
 func Convert_v1alpha1_AzureSpec_To_v1alpha2_AzureSpec(in *AzureSpec, out *v1alpha2.AzureSpec, s conversion.Scope) error {
 	out.AccountName = in.AccountName
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.AccountKeySecret,
+	if len(in.AccountKeySecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.AccountKeySecret,
+		}
 	}
+
 	out.Container = in.Container
 	out.MaxParallel = in.MaxParallel
 	return nil
@@ -197,9 +220,13 @@ func Convert_v1alpha1_GoogleKmsGcsSpec_To_v1alpha2_GoogleKmsGcsSpec(in *GoogleKm
 	out.KmsLocation = in.KmsLocation
 	out.KmsProject = in.KmsProject
 	out.Bucket = in.Bucket
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.CredentialSecret,
+
+	if len(in.CredentialSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.CredentialSecret,
+		}
 	}
+
 	return nil
 }
 
@@ -220,9 +247,13 @@ func Convert_v1alpha1_GcsSpec_To_v1alpha2_GcsSpec(in *GcsSpec, out *v1alpha2.Gcs
 	out.ChunkSize = in.ChunkSize
 	out.MaxParallel = in.MaxParallel
 	out.HAEnabled = in.HAEnabled
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.CredentialSecret,
+
+	if len(in.CredentialSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.CredentialSecret,
+		}
 	}
+
 	return nil
 }
 
@@ -244,11 +275,16 @@ func Convert_v1alpha1_EtcdSpec_To_v1alpha2_EtcdSpec(in *EtcdSpec, out *v1alpha2.
 	out.Path = in.Path
 	out.Sync = in.Sync
 	out.DiscoverySrv = in.DiscoverySrv
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.CredentialSecretName,
+	if len(in.CredentialSecretName) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.CredentialSecretName,
+		}
 	}
-	out.TLSSecretRef = &core.LocalObjectReference{
-		Name: in.TLSSecretName,
+
+	if len(in.TLSSecretName) > 0 {
+		out.TLSSecretRef = &core.LocalObjectReference{
+			Name: in.TLSSecretName,
+		}
 	}
 	return nil
 }
@@ -276,9 +312,12 @@ func Convert_v1alpha1_DynamoDBSpec_To_v1alpha2_DynamoDBSpec(in *DynamoDBSpec, ou
 	out.ReadCapacity = in.ReadCapacity
 	out.WriteCapacity = in.WriteCapacity
 	out.Table = in.Table
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.CredentialSecret,
+	if len(in.CredentialSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.CredentialSecret,
+		}
 	}
+
 	out.MaxParallel = in.MaxParallel
 	return nil
 }
@@ -292,7 +331,6 @@ func Convert_v1alpha2_DynamoDBSpec_To_v1alpha1_DynamoDBSpec(in *v1alpha2.DynamoD
 	out.Table = in.Table
 	if in.CredentialSecretRef != nil {
 		out.CredentialSecret = in.CredentialSecretRef.Name
-		out.SessionTokenSecret = in.CredentialSecretRef.Name
 	}
 	out.MaxParallel = in.MaxParallel
 	return nil
@@ -305,15 +343,19 @@ func Convert_v1alpha1_RaftSpec_To_v1alpha2_RaftSpec(in *RaftSpec, out *v1alpha2.
 	out.MaxEntrySize = (*int64)(unsafe.Pointer(in.MaxEntrySize))
 	out.AutopilotReconcileInterval = in.AutopilotReconcileInterval
 	out.Storage = in.Storage
+	in.Path = ""
 	return nil
 }
 
 func Convert_v1alpha1_SwiftSpec_To_v1alpha2_SwiftSpec(in *SwiftSpec, out *v1alpha2.SwiftSpec, s conversion.Scope) error {
 	out.AuthURL = in.AuthURL
 	out.Container = in.Container
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.CredentialSecret,
+	if len(in.CredentialSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.CredentialSecret,
+		}
 	}
+
 	out.Tenant = in.Tenant
 	out.Region = in.Region
 	out.TenantID = in.TenantID
@@ -347,8 +389,10 @@ func Convert_v1alpha1_S3Spec_To_v1alpha2_S3Spec(in *S3Spec, out *v1alpha2.S3Spec
 	out.Bucket = in.Bucket
 	out.Endpoint = in.Endpoint
 	out.Region = in.Region
-	out.CredentialSecretRef = &core.LocalObjectReference{
-		Name: in.CredentialSecret,
+	if len(in.CredentialSecret) > 0 {
+		out.CredentialSecretRef = &core.LocalObjectReference{
+			Name: in.CredentialSecret,
+		}
 	}
 	out.MaxParallel = in.MaxParallel
 	out.ForcePathStyle = in.ForcePathStyle
@@ -362,7 +406,6 @@ func Convert_v1alpha2_S3Spec_To_v1alpha1_S3Spec(in *v1alpha2.S3Spec, out *S3Spec
 	out.Region = in.Region
 	if in.CredentialSecretRef != nil {
 		out.CredentialSecret = in.CredentialSecretRef.Name
-		out.SessionTokenSecret = in.CredentialSecretRef.Name
 	}
 	out.MaxParallel = in.MaxParallel
 	out.ForcePathStyle = in.ForcePathStyle
@@ -384,8 +427,10 @@ func Convert_v1alpha1_ConsulSpec_To_v1alpha2_ConsulSpec(in *ConsulSpec, out *v1a
 	out.ACLTokenSecretName = in.ACLTokenSecretName
 	out.SessionTTL = in.SessionTTL
 	out.LockWaitTime = in.LockWaitTime
-	out.TLSSecretRef = &core.LocalObjectReference{
-		Name: in.TLSSecretName,
+	if len(in.TLSSecretName) > 0 {
+		out.TLSSecretRef = &core.LocalObjectReference{
+			Name: in.TLSSecretName,
+		}
 	}
 	out.TLSMinVersion = in.TLSMinVersion
 	out.TLSSkipVerify = in.TLSSkipVerify
