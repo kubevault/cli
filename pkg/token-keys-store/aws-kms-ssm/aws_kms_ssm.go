@@ -62,22 +62,31 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 		return nil, errors.New("kubeClient is nil")
 	}
 
-	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AwsKmsSsm.CredentialSecretRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	accessKey, ok := secret.Data["access_key"]
-	if ok {
-		if err = os.Setenv(AccessKey, string(accessKey)); err != nil {
+	if vs.Spec.Unsealer.Mode.AwsKmsSsm.CredentialSecretRef != nil {
+		secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AwsKmsSsm.CredentialSecretRef.Name, metav1.GetOptions{})
+		if err != nil {
 			return nil, err
 		}
-	}
 
-	secretKey, ok := secret.Data["secret_key"]
-	if ok {
-		if err = os.Setenv(SecretKey, string(secretKey)); err != nil {
-			return nil, err
+		accessKey, ok := secret.Data["access_key"]
+		if ok {
+			if err = os.Setenv(AccessKey, string(accessKey)); err != nil {
+				return nil, err
+			}
+		}
+
+		secretKey, ok := secret.Data["secret_key"]
+		if ok {
+			if err = os.Setenv(SecretKey, string(secretKey)); err != nil {
+				return nil, err
+			}
+		}
+	} else {
+		if _, ok := os.LookupEnv(AccessKey); !ok {
+			_, _ = fmt.Fprintf(os.Stderr, "WARNING!!! missing env variable %s", AccessKey)
+		}
+		if _, ok := os.LookupEnv(SecretKey); !ok {
+			_, _ = fmt.Fprintf(os.Stderr, "WARNING!!! missing env variable %s", SecretKey)
 		}
 	}
 
