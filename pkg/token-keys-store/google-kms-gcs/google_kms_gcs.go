@@ -69,27 +69,34 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 		return nil, errors.New("kubeClient is nil")
 	}
 
-	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.GoogleKmsGcs.CredentialSecretRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
+	var path string
+	if vs.Spec.Unsealer.Mode.GoogleKmsGcs.CredentialSecretRef != nil {
+		secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.GoogleKmsGcs.CredentialSecretRef.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
 
-	if _, ok := secret.Data[ServiceAccountJSON]; !ok {
-		return nil, errors.Errorf("%s not found in secret", ServiceAccountJSON)
-	}
+		if _, ok := secret.Data[ServiceAccountJSON]; !ok {
+			return nil, errors.Errorf("%s not found in secret", ServiceAccountJSON)
+		}
 
-	path := filepath.Join("/tmp", fmt.Sprintf("google-sa-cred-%s", randomString(6)))
-	if err = os.MkdirAll(path, os.ModePerm); err != nil {
-		return nil, err
-	}
+		path = filepath.Join("/tmp", fmt.Sprintf("google-sa-cred-%s", randomString(6)))
+		if err = os.MkdirAll(path, os.ModePerm); err != nil {
+			return nil, err
+		}
 
-	saFile := filepath.Join(path, ServiceAccountJSON)
-	if err = os.WriteFile(saFile, secret.Data[ServiceAccountJSON], os.ModePerm); err != nil {
-		return nil, err
-	}
+		saFile := filepath.Join(path, ServiceAccountJSON)
+		if err = os.WriteFile(saFile, secret.Data[ServiceAccountJSON], os.ModePerm); err != nil {
+			return nil, err
+		}
 
-	if err = os.Setenv(GoogleApplicationCred, saFile); err != nil {
-		return nil, err
+		if err = os.Setenv(GoogleApplicationCred, saFile); err != nil {
+			return nil, err
+		}
+	} else {
+		if _, ok := os.LookupEnv(GoogleApplicationCred); !ok {
+			_, _ = fmt.Fprintf(os.Stderr, "WARNING!!! missing env variable %s", GoogleApplicationCred)
+		}
 	}
 
 	client, err := storage.NewClient(context.TODO())
