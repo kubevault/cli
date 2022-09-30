@@ -63,26 +63,35 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 		return nil, errors.New("kubeClient is nil")
 	}
 
-	secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AzureKeyVault.CredentialSecretRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	clientID, ok := secret.Data["client-id"]
-	if ok {
-		if err = os.Setenv(ClientID, string(clientID)); err != nil {
+	if vs.Spec.Unsealer.Mode.AzureKeyVault.CredentialSecretRef != nil {
+		secret, err := kubeClient.CoreV1().Secrets(vs.Namespace).Get(context.TODO(), vs.Spec.Unsealer.Mode.AzureKeyVault.CredentialSecretRef.Name, metav1.GetOptions{})
+		if err != nil {
 			return nil, err
+		}
+
+		clientID, ok := secret.Data["client-id"]
+		if ok {
+			if err = os.Setenv(ClientID, string(clientID)); err != nil {
+				return nil, err
+			}
+		}
+
+		clientSecret, ok := secret.Data["client-secret"]
+		if ok {
+			if err = os.Setenv(ClientSecret, string(clientSecret)); err != nil {
+				return nil, err
+			}
+		}
+	} else {
+		if _, ok := os.LookupEnv(ClientID); !ok {
+			_, _ = fmt.Fprintf(os.Stderr, "WARNING!!! missing env variable %s", ClientID)
+		}
+		if _, ok := os.LookupEnv(ClientSecret); !ok {
+			_, _ = fmt.Fprintf(os.Stderr, "WARNING!!! missing env variable %s", ClientSecret)
 		}
 	}
 
-	clientSecret, ok := secret.Data["client-secret"]
-	if ok {
-		if err = os.Setenv(ClientSecret, string(clientSecret)); err != nil {
-			return nil, err
-		}
-	}
-
-	if err = os.Setenv(TenantID, vs.Spec.Unsealer.Mode.AzureKeyVault.TenantID); err != nil {
+	if err := os.Setenv(TenantID, vs.Spec.Unsealer.Mode.AzureKeyVault.TenantID); err != nil {
 		return nil, err
 	}
 
