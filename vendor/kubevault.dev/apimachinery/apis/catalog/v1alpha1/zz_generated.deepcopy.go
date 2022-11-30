@@ -30,7 +30,7 @@ func (in *VaultServerVersion) DeepCopyInto(out *VaultServerVersion) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
-	out.Spec = in.Spec
+	in.Spec.DeepCopyInto(&out.Spec)
 	return
 }
 
@@ -107,6 +107,7 @@ func (in *VaultServerVersionSpec) DeepCopyInto(out *VaultServerVersionSpec) {
 	out.Vault = in.Vault
 	out.Unsealer = in.Unsealer
 	out.Exporter = in.Exporter
+	in.Stash.DeepCopyInto(&out.Stash)
 	return
 }
 

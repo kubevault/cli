@@ -16,7 +16,11 @@ limitations under the License.
 
 package v1alpha1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+)
 
 const (
 	ResourceKindVaultServerConfiguration = "VaultServerConfiguration"
@@ -50,6 +54,14 @@ type VaultServerConfiguration struct {
 	// Specifies the AWS authentication information
 	// +optional
 	AWS *AWSAuthConfig `json:"aws,omitempty"`
+
+	// Specifies the Secret name that contains the token with permission for backup/restore
+	// +optional
+	BackupTokenSecretRef *core.LocalObjectReference `json:"backupTokenSecretRef,omitempty"`
+
+	// Stash defines backup and restore task definitions.
+	// +optional
+	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
 }
 
 // KubernetesAuthConfiguration contains necessary information for

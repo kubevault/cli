@@ -19817,11 +19817,10 @@ func schema_apimachinery_apis_kubevault_v1alpha2_ConsulSpec(ref common.Reference
 							Format:      "",
 						},
 					},
-					"aclTokenSecretName": {
+					"aclTokenSecretRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the secret name that contains ACL token with permission to read and write from the path in Consul's key-value store. secret data:\n - aclToken:<value>",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"sessionTTL": {

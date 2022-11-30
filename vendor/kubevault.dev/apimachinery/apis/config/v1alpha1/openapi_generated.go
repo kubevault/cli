@@ -19480,10 +19480,23 @@ func schema_apimachinery_apis_config_v1alpha1_VaultServerConfiguration(ref commo
 							Ref:         ref("kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig"),
 						},
 					},
+					"backupTokenSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Secret name that contains the token with permission for backup/restore",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"stash": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Stash defines backup and restore task definitions.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.AzureAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.KubernetesAuthConfig"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.AzureAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.KubernetesAuthConfig"},
 	}
 }

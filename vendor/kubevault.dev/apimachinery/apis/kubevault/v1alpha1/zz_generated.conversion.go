@@ -682,7 +682,7 @@ func autoConvert_v1alpha1_ConsulSpec_To_v1alpha2_ConsulSpec(in *ConsulSpec, out 
 	out.Service = in.Service
 	out.ServiceTags = in.ServiceTags
 	out.ServiceAddress = in.ServiceAddress
-	out.ACLTokenSecretName = in.ACLTokenSecretName
+	// WARNING: in.ACLTokenSecretName requires manual conversion: does not exist in peer-type
 	out.SessionTTL = in.SessionTTL
 	out.LockWaitTime = in.LockWaitTime
 	// WARNING: in.TLSSecretName requires manual conversion: does not exist in peer-type
@@ -702,7 +702,7 @@ func autoConvert_v1alpha2_ConsulSpec_To_v1alpha1_ConsulSpec(in *v1alpha2.ConsulS
 	out.Service = in.Service
 	out.ServiceTags = in.ServiceTags
 	out.ServiceAddress = in.ServiceAddress
-	out.ACLTokenSecretName = in.ACLTokenSecretName
+	// WARNING: in.ACLTokenSecretRef requires manual conversion: does not exist in peer-type
 	out.SessionTTL = in.SessionTTL
 	out.LockWaitTime = in.LockWaitTime
 	// WARNING: in.TLSSecretRef requires manual conversion: does not exist in peer-type
