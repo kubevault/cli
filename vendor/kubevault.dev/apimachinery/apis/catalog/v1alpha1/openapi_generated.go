@@ -19493,12 +19493,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_VaultServerVersionSpec(ref common
 							Format:      "",
 						},
 					},
+					"stash": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Stash defines backup and restore task definitions.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
+						},
+					},
 				},
 				Required: []string{"version", "vault", "unsealer", "exporter"},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/catalog/v1alpha1.VaultServerVersionExporter", "kubevault.dev/apimachinery/apis/catalog/v1alpha1.VaultServerVersionUnsealer", "kubevault.dev/apimachinery/apis/catalog/v1alpha1.VaultServerVersionVault"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubevault.dev/apimachinery/apis/catalog/v1alpha1.VaultServerVersionExporter", "kubevault.dev/apimachinery/apis/catalog/v1alpha1.VaultServerVersionUnsealer", "kubevault.dev/apimachinery/apis/catalog/v1alpha1.VaultServerVersionVault"},
 	}
 }
 

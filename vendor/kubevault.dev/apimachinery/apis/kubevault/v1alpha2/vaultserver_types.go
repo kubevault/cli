@@ -408,7 +408,7 @@ type ConsulSpec struct {
 	// secret data:
 	//  - aclToken:<value>
 	// +optional
-	ACLTokenSecretName string `json:"aclTokenSecretName,omitempty"`
+	ACLTokenSecretRef *core.LocalObjectReference `json:"aclTokenSecretRef,omitempty"`
 
 	// Specifies the minimum allowed session TTL.
 	// Consul server has a lower limit of 10s on the session TTL by default.

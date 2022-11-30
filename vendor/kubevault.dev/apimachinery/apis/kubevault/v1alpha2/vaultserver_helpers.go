@@ -285,3 +285,7 @@ func (vs *VaultServer) SetHealthCheckerDefaults() {
 		vs.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
 	}
 }
+
+func (vs *VaultServer) BackupSecretName() string {
+	return meta_util.NameWithSuffix(vs.Name, "backup-token")
+}

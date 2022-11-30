@@ -424,7 +424,11 @@ func Convert_v1alpha1_ConsulSpec_To_v1alpha2_ConsulSpec(in *ConsulSpec, out *v1a
 	out.Service = in.Service
 	out.ServiceTags = in.ServiceTags
 	out.ServiceAddress = in.ServiceAddress
-	out.ACLTokenSecretName = in.ACLTokenSecretName
+	if len(in.ACLTokenSecretName) > 0 {
+		out.ACLTokenSecretRef = &core.LocalObjectReference{
+			Name: in.ACLTokenSecretName,
+		}
+	}
 	out.SessionTTL = in.SessionTTL
 	out.LockWaitTime = in.LockWaitTime
 	if len(in.TLSSecretName) > 0 {
@@ -448,7 +452,9 @@ func Convert_v1alpha2_ConsulSpec_To_v1alpha1_ConsulSpec(in *v1alpha2.ConsulSpec,
 	out.Service = in.Service
 	out.ServiceTags = in.ServiceTags
 	out.ServiceAddress = in.ServiceAddress
-	out.ACLTokenSecretName = in.ACLTokenSecretName
+	if in.ACLTokenSecretRef != nil {
+		out.ACLTokenSecretName = in.ACLTokenSecretRef.Name
+	}
 	out.SessionTTL = in.SessionTTL
 	out.LockWaitTime = in.LockWaitTime
 	if in.TLSSecretRef != nil {

@@ -22,6 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -92,6 +93,12 @@ func (in *VaultServerConfiguration) DeepCopyInto(out *VaultServerConfiguration) 
 		*out = new(AWSAuthConfig)
 		**out = **in
 	}
+	if in.BackupTokenSecretRef != nil {
+		in, out := &in.BackupTokenSecretRef, &out.BackupTokenSecretRef
+		*out = new(v1.LocalObjectReference)
+		**out = **in
+	}
+	in.Stash.DeepCopyInto(&out.Stash)
 	return
 }
 
