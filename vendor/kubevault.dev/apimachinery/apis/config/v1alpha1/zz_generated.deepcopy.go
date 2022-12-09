@@ -22,6 +22,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1alpha2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+
 	v1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
@@ -99,6 +101,11 @@ func (in *VaultServerConfiguration) DeepCopyInto(out *VaultServerConfiguration) 
 		**out = **in
 	}
 	in.Stash.DeepCopyInto(&out.Stash)
+	if in.Unsealer != nil {
+		in, out := &in.Unsealer, &out.Unsealer
+		*out = new(v1alpha2.UnsealerSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
