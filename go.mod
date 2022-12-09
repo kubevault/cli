@@ -30,7 +30,7 @@ require (
 	k8s.io/kubectl v0.25.1
 	kmodules.xyz/client-go v0.25.6
 	kmodules.xyz/custom-resources v0.25.0
-	kubevault.dev/apimachinery v0.11.0
+	kubevault.dev/apimachinery v0.12.0
 	sigs.k8s.io/secrets-store-csi-driver v1.2.4
 	sigs.k8s.io/yaml v1.3.0
 )

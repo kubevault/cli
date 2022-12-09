@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	kubevaultv1alpha2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -62,6 +64,14 @@ type VaultServerConfiguration struct {
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
+
+	// backend storage information for vault
+	// +optional
+	Backend kubevaultv1alpha2.VaultServerBackend `json:"backend,omitempty"`
+
+	// Unsealer configuration for vault
+	// +optional
+	Unsealer *kubevaultv1alpha2.UnsealerSpec `json:"unsealer,omitempty"`
 }
 
 // KubernetesAuthConfiguration contains necessary information for

@@ -19493,10 +19493,23 @@ func schema_apimachinery_apis_config_v1alpha1_VaultServerConfiguration(ref commo
 							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
 						},
 					},
+					"backend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "backend storage information for vault",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"unsealer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Unsealer configuration for vault",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.UnsealerSpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.AzureAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.KubernetesAuthConfig"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubevault.dev/apimachinery/apis/config/v1alpha1.AWSAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.AzureAuthConfig", "kubevault.dev/apimachinery/apis/config/v1alpha1.KubernetesAuthConfig", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.UnsealerSpec"},
 	}
 }
