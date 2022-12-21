@@ -114,7 +114,7 @@ Examples:
 
  # Generate secretproviderclass for the MongoDB username and password
 
- $ kubectl vault generate secretproviderclass mongo-secret-provider -n test 
+ $ kubectl vault generate secretproviderclass mongo-secret-provider -n test \
  --secretrolebinding=dev/secret-r-binding \
  --vaultrole=MongoDBRole/mongo-role \
  --keys username=mongo-user --keys password=mongo-pass -o yaml
