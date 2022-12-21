@@ -34,6 +34,8 @@ type MySQLRoleExpansion interface{}
 
 type PostgresRoleExpansion interface{}
 
+type RedisRoleExpansion interface{}
+
 type SecretAccessRequestExpansion interface{}
 
 type SecretEngineExpansion interface{}

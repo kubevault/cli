@@ -76,6 +76,8 @@ func (se SecretEngine) GetSecretEngineType() api.SecretEngineType {
 		return api.SecretEngineTypeElasticsearch
 	case seSpec.MongoDB != nil:
 		return api.SecretEngineTypeMongoDB
+	case seSpec.Redis != nil:
+		return api.SecretEngineTypeRedis
 	case seSpec.MySQL != nil:
 		return api.SecretEngineTypeMySQL
 	case seSpec.Postgres != nil:

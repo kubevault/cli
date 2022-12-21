@@ -209,7 +209,7 @@ type AllowedSecretEngines struct {
 	SecretEngines []SecretEngineType `json:"secretEngines,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=kv;pki;aws;azure;gcp;postgres;mongodb;mysql;mariadb;elasticsearch
+// +kubebuilder:validation:Enum=kv;pki;aws;azure;gcp;postgres;mongodb;mysql;mariadb;elasticsearch;redis
 type SecretEngineType string
 
 const (
@@ -223,6 +223,7 @@ const (
 	SecretEngineTypeMySQL         SecretEngineType = "mysql"
 	SecretEngineTypeMariaDB       SecretEngineType = "mariadb"
 	SecretEngineTypeElasticsearch SecretEngineType = "elasticsearch"
+	SecretEngineTypeRedis         SecretEngineType = "redis"
 )
 
 // FromNamespaces specifies namespace from which Secret Engines may be attached to a
