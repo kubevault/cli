@@ -29,6 +29,7 @@ import (
 	mongo "kubevault.dev/cli/pkg/generate/database/mongodb"
 	sql "kubevault.dev/cli/pkg/generate/database/mysql"
 	pg "kubevault.dev/cli/pkg/generate/database/postgres"
+	rd "kubevault.dev/cli/pkg/generate/database/redis"
 	"kubevault.dev/cli/pkg/generate/gcp"
 
 	"github.com/go-errors/errors"
@@ -51,9 +52,11 @@ func NewGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[stri
 		return sql.NewMySQLGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	case engineapi.ResourceKindMariaDBRole:
 		return maria.NewMariaDBGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+	case engineapi.ResourceKindRedisRole:
+		return rd.NewRedisGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	case engineapi.ResourceKindPostgresRole:
 		return pg.NewPostgresGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
 	default:
-		return nil, errors.New("unknown/unsupported resource")
+		return nil, errors.New("unknown role")
 	}
 }

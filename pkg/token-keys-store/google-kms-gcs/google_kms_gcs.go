@@ -32,11 +32,11 @@ import (
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 
 	kms "cloud.google.com/go/kms/apiv1"
+	"cloud.google.com/go/kms/apiv1/kmspb"
 	"cloud.google.com/go/storage"
 	"github.com/pkg/errors"
 	"google.golang.org/api/cloudkms/v1"
 	"google.golang.org/api/option"
-	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
