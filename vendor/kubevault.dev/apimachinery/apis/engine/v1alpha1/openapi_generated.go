@@ -425,6 +425,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresRole":                     schema_apimachinery_apis_engine_v1alpha1_PostgresRole(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresRoleList":                 schema_apimachinery_apis_engine_v1alpha1_PostgresRoleList(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresRoleSpec":                 schema_apimachinery_apis_engine_v1alpha1_PostgresRoleSpec(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration":               schema_apimachinery_apis_engine_v1alpha1_RedisConfiguration(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisRole":                        schema_apimachinery_apis_engine_v1alpha1_RedisRole(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisRoleList":                    schema_apimachinery_apis_engine_v1alpha1_RedisRoleList(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisRoleSpec":                    schema_apimachinery_apis_engine_v1alpha1_RedisRoleSpec(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.RoleStatus":                       schema_apimachinery_apis_engine_v1alpha1_RoleStatus(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.SecretAccessRequest":              schema_apimachinery_apis_engine_v1alpha1_SecretAccessRequest(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.SecretAccessRequestConfiguration": schema_apimachinery_apis_engine_v1alpha1_SecretAccessRequestConfiguration(ref),
@@ -21344,6 +21348,212 @@ func schema_apimachinery_apis_engine_v1alpha1_PostgresRoleSpec(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_engine_v1alpha1_RedisConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisConfiguration defines a Redis app configuration. https://www.vaultproject.io/api/secret/databases/index.html https://developer.hashicorp.com/vault/api-docs/secret/databases/redis#configure-connection",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the database appbinding reference",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+					"pluginName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the plugin to use for this connection. Default plugin:\n - for redis: redis-database-plugin",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"allowedRoles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of the roles allowed to use this connection. Defaults to empty (no roles), if contains a \"*\" any role can use this connection.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"databaseRef"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_RedisRole(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisRoleSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.RoleStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisRoleSpec", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RoleStatus"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_RedisRoleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of RedisRole objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisRole"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisRole"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_RedisRoleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedisRoleSpec contains connection information, Redis role info etc",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretEngineRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretEngineRef is the name of a Secret Engine",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"defaultTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to system/engine default TTL time",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum TTL for the leases associated with this role. Accepts time suffixed strings (\"1h\") or an integer number of seconds. Defaults to system/engine default TTL time.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"creationStatements": {
+						SchemaProps: spec.SchemaProps{
+							Description: "https://developer.hashicorp.com/vault/api-docs/secret/databases/redis#creation_statements Specifies the database statements executed to create and configure a user.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"revocationStatements": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the database statements to be executed to revoke a user.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"secretEngineRef", "creationStatements"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_engine_v1alpha1_RoleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21693,6 +21903,11 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineConfiguration(ref comm
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration"),
 						},
 					},
+					"redis": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"),
+						},
+					},
 					"mysql": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration"),
@@ -21717,7 +21932,7 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineConfiguration(ref comm
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration"},
+			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"},
 	}
 }
 
@@ -21805,6 +22020,11 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineSpec(ref common.Refere
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration"),
 						},
 					},
+					"redis": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"),
+						},
+					},
 					"mysql": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration"),
@@ -21830,7 +22050,7 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"},
 	}
 }
 

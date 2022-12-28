@@ -1186,8 +1186,8 @@ kmodules.xyz/monitoring-agent-api v0.25.0 h1:RU9RBeCqQdoS381xXy8cM1aqT+7qmtuPI3K
 kmodules.xyz/monitoring-agent-api v0.25.0/go.mod h1:RH5f/W9eCiW+KTblBIh8MZkjCWdtMQ8MuzCBMfgkynM=
 kmodules.xyz/offshoot-api v0.25.0 h1:Svq9da/+sg5afOjpgo9vx2J/Lu90Mo0aFxkdQmgKnGI=
 kmodules.xyz/offshoot-api v0.25.0/go.mod h1:ysEBn7LJuT3+s8ynAQA/OG0BSsJugXa6KGtDLMRjlKo=
-kubevault.dev/apimachinery v0.12.0 h1:A2A7P06p+GSrKtb1Ticqg+/lcwX/sdXGQNDwOFUjtJM=
-kubevault.dev/apimachinery v0.12.0/go.mod h1:fUzeVdoB8pVr0qlDJMvGEDZfuio65ktuXpByafdPCqs=
+kubevault.dev/apimachinery v0.13.0 h1:DQEB46oeZHRyvrrP52jlucShtbSUl0KiJ6w5D6DGJQ0=
+kubevault.dev/apimachinery v0.13.0/go.mod h1:fUzeVdoB8pVr0qlDJMvGEDZfuio65ktuXpByafdPCqs=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=

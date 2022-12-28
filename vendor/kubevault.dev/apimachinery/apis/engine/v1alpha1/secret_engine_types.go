@@ -71,6 +71,7 @@ type SecretEngineConfiguration struct {
 	GCP           *GCPConfiguration           `json:"gcp,omitempty"`
 	Postgres      *PostgresConfiguration      `json:"postgres,omitempty"`
 	MongoDB       *MongoDBConfiguration       `json:"mongodb,omitempty"`
+	Redis         *RedisConfiguration         `json:"redis,omitempty"`
 	MySQL         *MySQLConfiguration         `json:"mysql,omitempty"`
 	MariaDB       *MariaDBConfiguration       `json:"mariadb,omitempty"`
 	KV            *KVConfiguration            `json:"kv,omitempty"`
@@ -200,6 +201,23 @@ type MongoDBConfiguration struct {
 	// Specifies the MongoDB write concern. This is set for the entirety
 	// of the session, maintained for the lifecycle of the plugin process.
 	WriteConcern string `json:"writeConcern,omitempty"`
+}
+
+// RedisConfiguration defines a Redis app configuration.
+// https://www.vaultproject.io/api/secret/databases/index.html
+// https://developer.hashicorp.com/vault/api-docs/secret/databases/redis#configure-connection
+type RedisConfiguration struct {
+	// Specifies the database appbinding reference
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for redis: redis-database-plugin
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
 }
 
 // MySQLConfiguration defines a MySQL app configuration.

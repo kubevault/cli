@@ -1092,7 +1092,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.12.0
+# kubevault.dev/apimachinery v0.13.0
 ## explicit; go 1.18
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
