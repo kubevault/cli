@@ -57,6 +57,7 @@ type VaultServerVersionSpec struct {
 	// Unsealer Image
 	Unsealer VaultServerVersionUnsealer `json:"unsealer"`
 	// Exporter Image
+	// +optional
 	Exporter VaultServerVersionExporter `json:"exporter"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
@@ -70,7 +71,7 @@ type VaultServerVersionSpec struct {
 type VaultServerVersionVault struct {
 	// Image is the Docker image name
 	Image string `json:"image"`
-	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent overwise.
+	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent otherwise.
 	// +optional
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 }
@@ -79,7 +80,7 @@ type VaultServerVersionVault struct {
 type VaultServerVersionUnsealer struct {
 	// Image is the Docker image name
 	Image string `json:"image"`
-	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent overwise.
+	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent otherwise.
 	// +optional
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 }
@@ -88,7 +89,7 @@ type VaultServerVersionUnsealer struct {
 type VaultServerVersionExporter struct {
 	// Image is the Docker image name
 	Image string `json:"image"`
-	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent overwise.
+	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent otherwise.
 	// +optional
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 }

@@ -26,6 +26,8 @@ import (
 	"kubevault.dev/apimachinery/apis/kubevault"
 	"kubevault.dev/apimachinery/crds"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	appslister "k8s.io/client-go/listers/apps/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -141,28 +143,50 @@ type vaultServerStatsService struct {
 	*VaultServer
 }
 
-func (e vaultServerStatsService) ServiceMonitorAdditionalLabels() map[string]string {
-	return e.VaultServer.OffshootLabels()
+func (v vaultServerStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return v.VaultServer.OffshootLabels()
 }
 
-func (e vaultServerStatsService) GetNamespace() string {
-	return e.VaultServer.GetNamespace()
+func (v vaultServerStatsService) GetNamespace() string {
+	return v.VaultServer.GetNamespace()
 }
 
-func (e vaultServerStatsService) ServiceName() string {
-	return e.StatsServiceName()
+func (v vaultServerStatsService) ServiceName() string {
+	return v.StatsServiceName()
 }
 
-func (e vaultServerStatsService) ServiceMonitorName() string {
-	return e.ServiceName()
+func (v vaultServerStatsService) ServiceMonitorName() string {
+	return v.ServiceName()
 }
 
-func (e vaultServerStatsService) Path() string {
-	return "/metrics"
+func (v vaultServerStatsService) Path() string {
+	return "/v1/sys/metrics"
 }
 
-func (e vaultServerStatsService) Scheme() string {
+func (v vaultServerStatsService) Scheme() string {
+	if v.Spec.TLS != nil {
+		return "https"
+	}
 	return ""
+}
+
+func (v vaultServerStatsService) TLSConfig() *promapi.TLSConfig {
+	if v.Spec.TLS != nil {
+		return &promapi.TLSConfig{
+			SafeTLSConfig: promapi.SafeTLSConfig{
+				CA: promapi.SecretOrConfigMap{
+					Secret: &core.SecretKeySelector{
+						LocalObjectReference: core.LocalObjectReference{
+							Name: v.VaultServer.GetCertSecretName(string(VaultServerCert)),
+						},
+						Key: core.TLSCertKey,
+					},
+				},
+				ServerName: fmt.Sprintf("%s.%s.svc", v.VaultServer.ServiceName(VaultServerServiceVault), v.VaultServer.Namespace),
+			},
+		}
+	}
+	return nil
 }
 
 func (vs *VaultServer) GetCertificateCN(alias VaultCertificateAlias) string {
