@@ -4,7 +4,7 @@ cloud.google.com/go/internal
 cloud.google.com/go/internal/optional
 cloud.google.com/go/internal/trace
 cloud.google.com/go/internal/version
-# cloud.google.com/go/compute v1.12.1
+# cloud.google.com/go/compute v1.13.0
 ## explicit; go 1.19
 cloud.google.com/go/compute/internal
 # cloud.google.com/go/compute/metadata v0.2.1
@@ -444,6 +444,10 @@ github.com/pkg/browser
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
+# github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.59.1
+## explicit; go 1.17
+github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring
+github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1
 # github.com/russross/blackfriday v1.5.2
 ## explicit
 github.com/russross/blackfriday
@@ -515,7 +519,6 @@ golang.org/x/crypto/pkcs12/internal/rc2
 # golang.org/x/net v0.7.0
 ## explicit; go 1.17
 golang.org/x/net/context
-golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
@@ -524,7 +527,7 @@ golang.org/x/net/internal/socks
 golang.org/x/net/internal/timeseries
 golang.org/x/net/proxy
 golang.org/x/net/trace
-# golang.org/x/oauth2 v0.1.0
+# golang.org/x/oauth2 v0.5.0
 ## explicit; go 1.17
 golang.org/x/oauth2
 golang.org/x/oauth2/authhandler
@@ -561,7 +564,7 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9
+# golang.org/x/time v0.1.0
 ## explicit
 golang.org/x/time/rate
 # golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
@@ -635,7 +638,7 @@ google.golang.org/appengine/internal/socket
 google.golang.org/appengine/internal/urlfetch
 google.golang.org/appengine/socket
 google.golang.org/appengine/urlfetch
-# google.golang.org/genproto v0.0.0-20221201164419-0e50fba7f41c
+# google.golang.org/genproto v0.0.0-20221202195650-67e5cbc046fd
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/api
 google.golang.org/genproto/googleapis/api/annotations
@@ -648,7 +651,7 @@ google.golang.org/genproto/googleapis/rpc/status
 google.golang.org/genproto/googleapis/type/date
 google.golang.org/genproto/googleapis/type/expr
 google.golang.org/genproto/protobuf/field_mask
-# google.golang.org/grpc v1.50.1
+# google.golang.org/grpc v1.51.0
 ## explicit; go 1.17
 google.golang.org/grpc
 google.golang.org/grpc/attributes
@@ -1074,7 +1077,7 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.25.14
+# kmodules.xyz/client-go v0.25.18
 ## explicit; go 1.18
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1094,13 +1097,13 @@ kmodules.xyz/custom-resources/apis/metrics
 kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.25.0
+# kmodules.xyz/monitoring-agent-api v0.25.1
 ## explicit; go 1.18
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.25.0
 ## explicit; go 1.18
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.13.0
+# kubevault.dev/apimachinery v0.14.0
 ## explicit; go 1.18
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog
