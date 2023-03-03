@@ -22,11 +22,9 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
@@ -35,6 +33,7 @@ import (
 	"cloud.google.com/go/kms/apiv1/kmspb"
 	"cloud.google.com/go/storage"
 	"github.com/pkg/errors"
+	passgen "gomodules.xyz/password-generator"
 	"google.golang.org/api/cloudkms/v1"
 	"google.golang.org/api/option"
 	"google.golang.org/protobuf/types/known/wrapperspb"
@@ -80,7 +79,7 @@ func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyIn
 			return nil, errors.Errorf("%s not found in secret", ServiceAccountJSON)
 		}
 
-		path = filepath.Join("/tmp", fmt.Sprintf("google-sa-cred-%s", randomString(6)))
+		path = filepath.Join("/tmp", fmt.Sprintf("google-sa-cred-%s", passgen.Generate(6)))
 		if err = os.MkdirAll(path, os.ModePerm); err != nil {
 			return nil, err
 		}
@@ -269,16 +268,6 @@ func (ti *TokenKeyInfo) OldUnsealKeyName(id int) (string, error) {
 	}
 
 	return fmt.Sprintf("vault-unseal-key-%d", id), nil
-}
-
-func randomString(n int) string {
-	rand.Seed(time.Now().Unix())
-	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	s := make([]rune, n)
-	for i := range s {
-		s[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(s)
 }
 
 func (ti *TokenKeyInfo) Clean() {
