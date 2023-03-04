@@ -164,7 +164,7 @@ require (
 	k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73 // indirect
 	kmodules.xyz/monitoring-agent-api v0.25.1 // indirect
 	kmodules.xyz/offshoot-api v0.25.0 // indirect
-	sigs.k8s.io/controller-runtime v0.13.0 // indirect
+	sigs.k8s.io/controller-runtime v0.13.1 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/kustomize/api v0.12.1 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.13.9 // indirect
