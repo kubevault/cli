@@ -30,7 +30,7 @@ require (
 	k8s.io/kubectl v0.25.1
 	kmodules.xyz/client-go v0.25.18
 	kmodules.xyz/custom-resources v0.25.0
-	kubevault.dev/apimachinery v0.14.0
+	kubevault.dev/apimachinery v0.15.0
 	sigs.k8s.io/secrets-store-csi-driver v1.2.4
 	sigs.k8s.io/yaml v1.3.0
 )
@@ -163,7 +163,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20220803164354-a70c9af30aea // indirect
 	k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73 // indirect
 	kmodules.xyz/monitoring-agent-api v0.25.1 // indirect
-	kmodules.xyz/offshoot-api v0.25.0 // indirect
+	kmodules.xyz/offshoot-api v0.25.4 // indirect
 	sigs.k8s.io/controller-runtime v0.13.1 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/kustomize/api v0.12.1 // indirect
