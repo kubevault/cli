@@ -31,7 +31,7 @@ require (
 	kmodules.xyz/client-go v0.25.23
 	kmodules.xyz/custom-resources v0.25.2
 	kubevault.dev/apimachinery v0.15.0
-	sigs.k8s.io/secrets-store-csi-driver v1.2.4
+	sigs.k8s.io/secrets-store-csi-driver v1.3.3
 	sigs.k8s.io/yaml v1.3.0
 )
 
@@ -139,7 +139,7 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.starlark.net v0.0.0-20200306205701-8dd3e2ee1dd5 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
+	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.5.0 // indirect
@@ -163,7 +163,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.25.1 // indirect
 	k8s.io/component-base v0.25.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20220803164354-a70c9af30aea // indirect
-	k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73 // indirect
+	k8s.io/utils v0.0.0-20221128185143-99ec85e7a448 // indirect
 	kmodules.xyz/monitoring-agent-api v0.25.1 // indirect
 	kmodules.xyz/offshoot-api v0.25.4 // indirect
 	sigs.k8s.io/controller-runtime v0.13.1 // indirect
