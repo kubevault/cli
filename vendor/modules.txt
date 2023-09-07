@@ -160,8 +160,6 @@ github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/cenkalti/backoff/v3 v3.0.0
 ## explicit; go 1.12
 github.com/cenkalti/backoff/v3
-# github.com/cespare/xxhash/v2 v2.2.0
-## explicit; go 1.11
 # github.com/chai2010/gettext-go v1.0.2
 ## explicit; go 1.14
 github.com/chai2010/gettext-go
@@ -1129,7 +1127,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.25.4
 ## explicit; go 1.18
 kmodules.xyz/offshoot-api/api/v1
-# kubevault.dev/apimachinery v0.15.0
+# kubevault.dev/apimachinery v0.16.0
 ## explicit; go 1.18
 kubevault.dev/apimachinery/apis
 kubevault.dev/apimachinery/apis/catalog

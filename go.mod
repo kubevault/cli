@@ -22,7 +22,6 @@ require (
 	gomodules.xyz/x v0.0.15
 	google.golang.org/api v0.103.0
 	google.golang.org/protobuf v1.28.1
-	k8s.io/api v0.25.3
 	k8s.io/apimachinery v0.25.3
 	k8s.io/cli-runtime v0.25.1
 	k8s.io/client-go v0.25.3
@@ -30,15 +29,12 @@ require (
 	k8s.io/kubectl v0.25.1
 	kmodules.xyz/client-go v0.25.32
 	kmodules.xyz/custom-resources v0.25.2
-	kubevault.dev/apimachinery v0.15.0
+	kubevault.dev/apimachinery v0.16.0
 	sigs.k8s.io/secrets-store-csi-driver v1.3.3
 	sigs.k8s.io/yaml v1.3.0
 )
 
-require (
-	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/onsi/gomega v1.24.2 // indirect
-)
+require github.com/onsi/gomega v1.24.2 // indirect
 
 require (
 	cloud.google.com/go v0.105.0 // indirect
@@ -163,6 +159,7 @@ require (
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k8s.io/api v0.25.3 // indirect
 	k8s.io/apiextensions-apiserver v0.25.3 // indirect
 	k8s.io/component-base v0.25.3 // indirect
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280 // indirect
