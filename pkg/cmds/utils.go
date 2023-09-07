@@ -34,6 +34,7 @@ import (
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	condutil "kmodules.xyz/client-go/conditions"
 )
 
 const (
@@ -114,7 +115,7 @@ func UpdateSecretAccessRequestCondition(c enginecs.EngineV1alpha1Interface, req 
 		c,
 		req,
 		func(in *engineapi.SecretAccessRequestStatus) *engineapi.SecretAccessRequestStatus {
-			in.Conditions = kmapi.SetCondition(in.Conditions, cond)
+			in.Conditions = condutil.SetCondition(in.Conditions, cond)
 			in.ObservedGeneration = req.Generation
 			return in
 		}, metav1.UpdateOptions{})
@@ -122,7 +123,7 @@ func UpdateSecretAccessRequestCondition(c enginecs.EngineV1alpha1Interface, req 
 }
 
 func isApplicable(engineClient *enginecs.EngineV1alpha1Client, req *engineapi.SecretAccessRequest, cond kmapi.Condition, conditions []kmapi.Condition) error {
-	if cond == secretAccessRevokeCond && !kmapi.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) && req.Spec.RoleRef.Kind == engineapi.ResourceKindGCPRole {
+	if cond == secretAccessRevokeCond && !condutil.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) && req.Spec.RoleRef.Kind == engineapi.ResourceKindGCPRole {
 		role, err := engineClient.GCPRoles(req.Namespace).Get(context.TODO(), req.Spec.RoleRef.Name, metav1.GetOptions{})
 		if err != nil {
 			return err
@@ -132,27 +133,27 @@ func isApplicable(engineClient *enginecs.EngineV1alpha1Client, req *engineapi.Se
 		}
 	}
 
-	if cond == secretAccessApprovedCond && kmapi.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) {
+	if cond == secretAccessApprovedCond && condutil.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) {
 		return errors.New("failed to approve, request already expired")
 	}
 
-	if cond == secretAccessDeniedCond && kmapi.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) {
+	if cond == secretAccessDeniedCond && condutil.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) {
 		return errors.New("failed to deny, request already expired")
 	}
 
-	if cond == secretAccessDeniedCond && kmapi.IsConditionTrue(conditions, kmapi.ConditionRequestApproved) {
+	if cond == secretAccessDeniedCond && condutil.IsConditionTrue(conditions, condutil.ConditionRequestApproved) {
 		return errors.New("failed to deny, request already approved")
 	}
 
-	if cond == secretAccessRevokeCond && kmapi.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) {
+	if cond == secretAccessRevokeCond && condutil.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) {
 		return errors.New("request already revoked")
 	}
 
-	if cond == secretAccessDeniedCond && kmapi.IsConditionTrue(conditions, kmapi.ConditionRequestDenied) {
+	if cond == secretAccessDeniedCond && condutil.IsConditionTrue(conditions, condutil.ConditionRequestDenied) {
 		return errors.New("request already denied")
 	}
 
-	if cond == secretAccessApprovedCond && kmapi.IsConditionTrue(conditions, kmapi.ConditionRequestApproved) {
+	if cond == secretAccessApprovedCond && condutil.IsConditionTrue(conditions, condutil.ConditionRequestApproved) {
 		return errors.New("request already approved")
 	}
 
