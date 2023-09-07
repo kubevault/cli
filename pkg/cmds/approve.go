@@ -22,11 +22,12 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	condutil "kmodules.xyz/client-go/conditions"
 )
 
 var (
@@ -36,8 +37,8 @@ var (
 )
 
 var secretAccessApprovedCond = kmapi.Condition{
-	Type:    kmapi.ConditionRequestApproved,
-	Status:  core.ConditionTrue,
+	Type:    condutil.ConditionRequestApproved,
+	Status:  metav1.ConditionTrue,
 	Reason:  "KubectlApprove",
 	Message: "This was approved by: kubectl vault approve secretaccessrequest",
 }

@@ -18,13 +18,13 @@ package cmds
 
 import (
 	"fmt"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"strings"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
 
 	"github.com/spf13/cobra"
-	core "k8s.io/api/core/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -32,7 +32,7 @@ import (
 
 var secretAccessRevokeCond = kmapi.Condition{
 	Type:    engineapi.ConditionRequestExpired,
-	Status:  core.ConditionTrue,
+	Status:  metav1.ConditionTrue,
 	Reason:  "KubectlRevoke",
 	Message: "This was revoked by: kubectl vault revoke secretaccessrequest",
 }

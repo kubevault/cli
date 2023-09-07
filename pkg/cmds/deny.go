@@ -22,16 +22,17 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	condutil "kmodules.xyz/client-go/conditions"
 )
 
 var secretAccessDeniedCond = kmapi.Condition{
-	Type:    kmapi.ConditionRequestDenied,
-	Status:  core.ConditionTrue,
+	Type:    condutil.ConditionRequestDenied,
+	Status:  metav1.ConditionTrue,
 	Reason:  "KubectlDeny",
 	Message: "This was denied by: kubectl vault deny secretaccessrequest",
 }
