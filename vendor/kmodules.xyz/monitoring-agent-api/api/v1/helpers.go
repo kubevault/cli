@@ -16,6 +16,15 @@ limitations under the License.
 
 package v1
 
+import (
+	"fmt"
+
+	"kmodules.xyz/client-go/policy/secomp"
+
+	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
+)
+
 func (agent *AgentSpec) SetDefaults() {
 	if agent == nil {
 		return
@@ -28,7 +37,30 @@ func (agent *AgentSpec) SetDefaults() {
 		if agent.Prometheus.Exporter.Port == 0 {
 			agent.Prometheus.Exporter.Port = PrometheusExporterPortNumber
 		}
+		agent.SetSecurityContextDefaults()
 	}
+}
+
+func (agent *AgentSpec) SetSecurityContextDefaults() {
+	sc := agent.Prometheus.Exporter.SecurityContext
+	if sc == nil {
+		sc = &core.SecurityContext{}
+	}
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+	agent.Prometheus.Exporter.SecurityContext = sc
 }
 
 func IsKnownAgentType(at AgentType) bool {
@@ -39,4 +71,18 @@ func IsKnownAgentType(at AgentType) bool {
 		return true
 	}
 	return false
+}
+
+func TricksterBackend(isDefault bool, ownerID int64, clusterUID, projectId string) string {
+	if isDefault || projectId == "" {
+		return fmt.Sprintf("%d.%s", ownerID, clusterUID)
+	}
+	return fmt.Sprintf("%d.%s.%s", ownerID, clusterUID, projectId)
+}
+
+func GrafanaDatasource(isDefault bool, clusterName, projectId string) string {
+	if isDefault || projectId == "" {
+		return clusterName
+	}
+	return fmt.Sprintf("%s-%s", clusterName, projectId)
 }
