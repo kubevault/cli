@@ -27,9 +27,9 @@ require (
 	k8s.io/client-go v0.29.0
 	k8s.io/klog/v2 v2.110.1
 	k8s.io/kubectl v0.29.0
-	kmodules.xyz/client-go v0.29.4
+	kmodules.xyz/client-go v0.29.5
 	kmodules.xyz/custom-resources v0.29.0
-	kubevault.dev/apimachinery v0.16.1-0.20231231045328-9853d93f7dcb
+	kubevault.dev/apimachinery v0.17.0-rc.0
 	sigs.k8s.io/secrets-store-csi-driver v1.3.3
 	sigs.k8s.io/yaml v1.4.0
 )
@@ -70,7 +70,7 @@ require (
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
-	github.com/go-logr/logr v1.3.0 // indirect
+	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-openapi/jsonpointer v0.20.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
