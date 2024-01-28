@@ -27,20 +27,30 @@ require (
 	k8s.io/client-go v0.29.0
 	k8s.io/klog/v2 v2.110.1
 	k8s.io/kubectl v0.29.0
-	kmodules.xyz/client-go v0.29.5
-	kmodules.xyz/custom-resources v0.29.0
-	kubevault.dev/apimachinery v0.17.0-rc.0
+	kmodules.xyz/client-go v0.29.6
+	kmodules.xyz/custom-resources v0.29.1
+	kubevault.dev/apimachinery v0.17.0-rc.0.0.20240128111257-c1e6d8989864
 	sigs.k8s.io/secrets-store-csi-driver v1.3.3
 	sigs.k8s.io/yaml v1.4.0
 )
 
 require (
+	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
 	github.com/onsi/gomega v1.30.0 // indirect
-	golang.org/x/sync v0.4.0 // indirect
+	github.com/prometheus/client_golang v1.18.0 // indirect
+	github.com/prometheus/client_model v0.5.0 // indirect
+	github.com/prometheus/common v0.45.0 // indirect
+	github.com/prometheus/procfs v0.12.0 // indirect
+	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
+	golang.org/x/sync v0.5.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230726155614-23370e0ffb3e // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
@@ -63,10 +73,10 @@ require (
 	github.com/cenkalti/backoff/v3 v3.0.0 // indirect
 	github.com/chai2010/gettext-go v1.0.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
-	github.com/evanphx/json-patch/v5 v5.7.0 // indirect
+	github.com/evanphx/json-patch/v5 v5.8.0 // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
@@ -99,7 +109,7 @@ require (
 	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.6 // indirect
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.2 // indirect
-	github.com/hashicorp/go-uuid v1.0.2 // indirect
+	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.2.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -143,7 +153,7 @@ require (
 	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
@@ -167,7 +177,7 @@ require (
 	k8s.io/utils v0.0.0-20231127182322-b307cd553661 // indirect
 	kmodules.xyz/monitoring-agent-api v0.29.0 // indirect
 	kmodules.xyz/offshoot-api v0.29.0 // indirect
-	sigs.k8s.io/controller-runtime v0.16.3 // indirect
+	sigs.k8s.io/controller-runtime v0.17.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/kustomize/api v0.13.5-0.20230601165947-6ce0bf390ce3 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.14.3-0.20230601165947-6ce0bf390ce3 // indirect
@@ -176,10 +186,10 @@ require (
 
 replace github.com/Masterminds/sprig/v3 => github.com/gomodules/sprig/v3 v3.2.3-0.20220405051441-0a8a99bac1b8
 
-replace sigs.k8s.io/controller-runtime => github.com/kmodules/controller-runtime v0.16.1-0.20231224083233-bead154270db
+replace sigs.k8s.io/controller-runtime => github.com/kmodules/controller-runtime v0.16.1-0.20240128092212-43c4e15c56b1
 
 replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.6
 
-replace k8s.io/apiserver => github.com/kmodules/apiserver v0.29.1-0.20231224075222-50d5bb4aeb26
+replace k8s.io/apiserver => github.com/kmodules/apiserver v0.29.1-0.20240104121741-1fb217d4a573
 
 replace k8s.io/kubernetes => github.com/kmodules/kubernetes v1.30.0-alpha.0.0.20231224075822-3bd9a13c86db
