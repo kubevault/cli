@@ -31,6 +31,7 @@ const (
 	EngineTypeAzure          = "azure"
 	EngineTypeDatabase       = "database"
 	EngineTypeKV             = "kv"
+	EngineTypePKI            = "pki"
 )
 
 // +genclient
@@ -76,6 +77,32 @@ type SecretEngineConfiguration struct {
 	MariaDB       *MariaDBConfiguration       `json:"mariadb,omitempty"`
 	KV            *KVConfiguration            `json:"kv,omitempty"`
 	Elasticsearch *ElasticsearchConfiguration `json:"elasticsearch,omitempty"`
+	PKI           *PKIConfiguration           `json:"pki,omitempty"`
+}
+
+// https://developer.hashicorp.com/vault/api-docs/secret/pki#generate-root
+// PKIConfiguration contains information about PKI Secret Engine
+type PKIConfiguration struct {
+	IsRootCA          bool                   `json:"isRootCA"`
+	ParentCARef       *kmapi.ObjectReference `json:"parentCARef,omitempty"`
+	URLs              *ConfigURL             `json:"urls,omitempty"`
+	CommonName        string                 `json:"commonName,omitempty"`
+	AltNames          string                 `json:"altNames,omitempty"`
+	IssuerName        string                 `json:"issuerName,omitempty"`
+	CAType            string                 `json:"type,omitempty"`
+	TTL               string                 `json:"ttl,omitempty"`
+	MaxPathLength     *int                   `json:"maxPathLength,omitempty"`
+	OU                string                 `json:"ou,omitempty"`
+	Organization      string                 `json:"organization,omitempty"`
+	Country           string                 `json:"country,omitempty"`
+	AdditionalPayload map[string]string      `json:"additionalPayload,omitempty"`
+}
+
+type ConfigURL struct {
+	IssuingCertificates   []string `json:"issuingCertificates,omitempty"`
+	CRLDistributionPoints []string `json:"crlDistributionPoints,omitempty"`
+	OCSPServers           []string `json:"ocspServers,omitempty"`
+	EnableTemplating      bool     `json:"enableTemplating,omitempty"`
 }
 
 // https://www.vaultproject.io/api/secret/aws/index.html#configure-root-iam-credentials

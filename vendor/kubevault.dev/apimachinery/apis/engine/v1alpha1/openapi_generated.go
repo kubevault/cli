@@ -432,6 +432,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureRole":                        schema_apimachinery_apis_engine_v1alpha1_AzureRole(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureRoleList":                    schema_apimachinery_apis_engine_v1alpha1_AzureRoleList(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureRoleSpec":                    schema_apimachinery_apis_engine_v1alpha1_AzureRoleSpec(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.ConfigURL":                        schema_apimachinery_apis_engine_v1alpha1_ConfigURL(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration":       schema_apimachinery_apis_engine_v1alpha1_ElasticsearchConfiguration(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchRole":                schema_apimachinery_apis_engine_v1alpha1_ElasticsearchRole(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchRoleList":            schema_apimachinery_apis_engine_v1alpha1_ElasticsearchRoleList(ref),
@@ -456,6 +457,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLRole":                        schema_apimachinery_apis_engine_v1alpha1_MySQLRole(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLRoleList":                    schema_apimachinery_apis_engine_v1alpha1_MySQLRoleList(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLRoleSpec":                    schema_apimachinery_apis_engine_v1alpha1_MySQLRoleSpec(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIAccessRequestConfiguration":    schema_apimachinery_apis_engine_v1alpha1_PKIAccessRequestConfiguration(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIConfiguration":                 schema_apimachinery_apis_engine_v1alpha1_PKIConfiguration(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIRole":                          schema_apimachinery_apis_engine_v1alpha1_PKIRole(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIRoleList":                      schema_apimachinery_apis_engine_v1alpha1_PKIRoleList(ref),
+		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIRoleSpec":                      schema_apimachinery_apis_engine_v1alpha1_PKIRoleSpec(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration":            schema_apimachinery_apis_engine_v1alpha1_PostgresConfiguration(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresRole":                     schema_apimachinery_apis_engine_v1alpha1_PostgresRole(ref),
 		"kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresRoleList":                 schema_apimachinery_apis_engine_v1alpha1_PostgresRoleList(ref),
@@ -8818,7 +8824,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeStatus(ref common.ReferenceCallbac
 					},
 					"lastPhaseTransitionTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastPhaseTransitionTime is the time the phase transitioned from one to another and automatically resets to current time everytime a volume phase transitions. This is an alpha field and requires enabling PersistentVolumeLastPhaseTransitionTime feature.",
+							Description: "lastPhaseTransitionTime is the time the phase transitioned from one to another and automatically resets to current time everytime a volume phase transitions. This is a beta field and requires the PersistentVolumeLastPhaseTransitionTime feature to be enabled (enabled by default).",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
@@ -21677,6 +21683,66 @@ func schema_apimachinery_apis_engine_v1alpha1_AzureRoleSpec(ref common.Reference
 	}
 }
 
+func schema_apimachinery_apis_engine_v1alpha1_ConfigURL(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuingCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"crlDistributionPoints": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"ocspServers": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"enableTemplating": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_engine_v1alpha1_ElasticsearchConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22945,6 +23011,348 @@ func schema_apimachinery_apis_engine_v1alpha1_MySQLRoleSpec(ref common.Reference
 	}
 }
 
+func schema_apimachinery_apis_engine_v1alpha1_PKIAccessRequestConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "https://developer.hashicorp.com/vault/api-docs/secret/pki#generate-certificate-and-key",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"commonName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"altNames": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"ttl": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"additionalPayload": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_PKIConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "https://developer.hashicorp.com/vault/api-docs/secret/pki#generate-root PKIConfiguration contains information about PKI Secret Engine",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"isRootCA": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"parentCARef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"urls": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.ConfigURL"),
+						},
+					},
+					"commonName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"altNames": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"issuerName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"ttl": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"maxPathLength": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"ou": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"organization": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"country": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"additionalPayload": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"isRootCA"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ConfigURL"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_PKIRole(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIRoleSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.RoleStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIRoleSpec", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RoleStatus"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_PKIRoleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of PKIRole objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIRole"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIRole"},
+	}
+}
+
+func schema_apimachinery_apis_engine_v1alpha1_PKIRoleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKIRoleSpec contains connection information, PKI role info, etc More info: https://developer.hashicorp.com/vault/api-docs/secret/pki#create-update-role",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretEngineRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretEngineRef is the name of a Secret Engine",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"ttl": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"maxTTL": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"allowedDomains": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"allowSubdomains": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"ou": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"organization": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"country": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"additionalPayload": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"secretEngineRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_engine_v1alpha1_PostgresConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23517,11 +23925,16 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretAccessRequestConfiguration(r
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPAccessRequestConfiguration"),
 						},
 					},
+					"pki": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIAccessRequestConfiguration"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSAccessRequestConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPAccessRequestConfiguration"},
+			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSAccessRequestConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPAccessRequestConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIAccessRequestConfiguration"},
 	}
 }
 
@@ -23617,12 +24030,17 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretAccessRequestSpec(ref common
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPAccessRequestConfiguration"),
 						},
 					},
+					"pki": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIAccessRequestConfiguration"),
+						},
+					},
 				},
 				Required: []string{"roleRef", "subjects"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.Subject", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSAccessRequestConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPAccessRequestConfiguration"},
+			"k8s.io/api/rbac/v1.Subject", "kmodules.xyz/client-go/api/v1.TypedObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSAccessRequestConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPAccessRequestConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIAccessRequestConfiguration"},
 	}
 }
 
@@ -23782,11 +24200,16 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineConfiguration(ref comm
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration"),
 						},
 					},
+					"pki": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIConfiguration"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"},
+			"kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"},
 	}
 }
 
@@ -23899,12 +24322,17 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineSpec(ref common.Refere
 							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration"),
 						},
 					},
+					"pki": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIConfiguration"),
+						},
+					},
 				},
 				Required: []string{"vaultRef"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AWSConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.AzureConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.ElasticsearchConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.GCPConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.KVConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MariaDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MongoDBConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.MySQLConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PKIConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.PostgresConfiguration", "kubevault.dev/apimachinery/apis/engine/v1alpha1.RedisConfiguration"},
 	}
 }
 

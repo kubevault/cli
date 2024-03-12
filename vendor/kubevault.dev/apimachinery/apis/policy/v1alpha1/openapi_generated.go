@@ -8778,7 +8778,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeStatus(ref common.ReferenceCallbac
 					},
 					"lastPhaseTransitionTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastPhaseTransitionTime is the time the phase transitioned from one to another and automatically resets to current time everytime a volume phase transitions. This is an alpha field and requires enabling PersistentVolumeLastPhaseTransitionTime feature.",
+							Description: "lastPhaseTransitionTime is the time the phase transitioned from one to another and automatically resets to current time everytime a volume phase transitions. This is a beta field and requires the PersistentVolumeLastPhaseTransitionTime feature to be enabled (enabled by default).",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
@@ -21635,6 +21635,13 @@ func schema_apimachinery_apis_policy_v1alpha1_KubernetesSubjectRef(ref common.Re
 					"period": {
 						SchemaProps: spec.SchemaProps{
 							Description: "If set, indicates that the token generated using this role should never expire. The token should be renewed within the duration specified by this value. At each renewal, the token's TTL will be set to the value of this parameter.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"audience": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Optional Audience claim to verify in the JWT.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

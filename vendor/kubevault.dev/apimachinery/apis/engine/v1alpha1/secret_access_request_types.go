@@ -65,6 +65,17 @@ type SecretAccessRequestConfiguration struct {
 	// +optional
 	AWS *AWSAccessRequestConfiguration `json:"aws,omitempty"`
 	GCP *GCPAccessRequestConfiguration `json:"gcp,omitempty"`
+	// +optional
+	PKI *PKIAccessRequestConfiguration `json:"pki,omitempty"`
+}
+
+// https://developer.hashicorp.com/vault/api-docs/secret/pki#generate-certificate-and-key
+type PKIAccessRequestConfiguration struct {
+	IssuerRef         string            `json:"issuerRef,omitempty"`
+	CommonName        string            `json:"commonName,omitempty"`
+	AltNames          string            `json:"altNames,omitempty"`
+	TTL               string            `json:"ttl,omitempty"`
+	AdditionalPayload map[string]string `json:"additionalPayload,omitempty"`
 }
 
 // https://www.vaultproject.io/api/secret/aws/index.html#parameters-6

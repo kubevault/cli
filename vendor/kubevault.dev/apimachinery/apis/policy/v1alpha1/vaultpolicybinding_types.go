@@ -118,6 +118,9 @@ type KubernetesSubjectRef struct {
 	// At each renewal, the token's TTL will be set to the value of this parameter.
 	// +optional
 	Period string `json:"period,omitempty"`
+
+	// Optional Audience claim to verify in the JWT.
+	Audience string `json:"audience,omitempty"`
 }
 
 // More info: https://www.vaultproject.io/api-docs/auth/approle#create-update-approle
