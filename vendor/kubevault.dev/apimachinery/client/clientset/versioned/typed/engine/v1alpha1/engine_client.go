@@ -36,6 +36,7 @@ type EngineV1alpha1Interface interface {
 	MariaDBRolesGetter
 	MongoDBRolesGetter
 	MySQLRolesGetter
+	PKIRolesGetter
 	PostgresRolesGetter
 	RedisRolesGetter
 	SecretAccessRequestsGetter
@@ -74,6 +75,10 @@ func (c *EngineV1alpha1Client) MongoDBRoles(namespace string) MongoDBRoleInterfa
 
 func (c *EngineV1alpha1Client) MySQLRoles(namespace string) MySQLRoleInterface {
 	return newMySQLRoles(c, namespace)
+}
+
+func (c *EngineV1alpha1Client) PKIRoles(namespace string) PKIRoleInterface {
+	return newPKIRoles(c, namespace)
 }
 
 func (c *EngineV1alpha1Client) PostgresRoles(namespace string) PostgresRoleInterface {

@@ -32,6 +32,8 @@ type MongoDBRoleExpansion interface{}
 
 type MySQLRoleExpansion interface{}
 
+type PKIRoleExpansion interface{}
+
 type PostgresRoleExpansion interface{}
 
 type RedisRoleExpansion interface{}

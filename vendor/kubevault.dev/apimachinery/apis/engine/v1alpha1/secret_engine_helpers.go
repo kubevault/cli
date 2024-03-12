@@ -86,6 +86,8 @@ func (se SecretEngine) GetSecretEngineType() api.SecretEngineType {
 		return api.SecretEngineTypeMariaDB
 	case seSpec.KV != nil:
 		return api.SecretEngineTypeKV
+	case seSpec.PKI != nil:
+		return api.SecretEngineTypePKI
 	default:
 		return ""
 	}

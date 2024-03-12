@@ -78,6 +78,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ElasticsearchRoleList{},
 		&RedisRole{},
 		&RedisRoleList{},
+		&PKIRole{},
+		&PKIRoleList{},
 	)
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&metav1.Status{},
