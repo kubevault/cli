@@ -54,6 +54,9 @@ type SecretEngineSpec struct {
 	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
 	SecretEngineConfiguration `json:",inline"`
+
+	DefaultLeaseTTL string `json:"defaultLeaseTTL,omitempty"`
+	MaxLeaseTTL     string `json:"maxLeaseTTL,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

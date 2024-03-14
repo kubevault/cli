@@ -337,8 +337,8 @@ github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/cpuid/v2 v2.0.9 h1:lgaqFMSdTdQYdZ04uHyN2d/eKdOMyi2YLSvlQIBFYa4=
 github.com/klauspost/cpuid/v2 v2.0.9/go.mod h1:FInQzS24/EEf25PyTYn52gqo7WaD8xa0213Md/qVLRg=
-github.com/kmodules/controller-runtime v0.16.1-0.20240128092212-43c4e15c56b1 h1:Pq/2P0Wp7HANIM6vd6YqQxZTEqlqifAzfw1Bz/CR0zo=
-github.com/kmodules/controller-runtime v0.16.1-0.20240128092212-43c4e15c56b1/go.mod h1:+MngTvIQQQhfXtwfdGw/UOQ/aIaqsYywfCINOtwMO/s=
+github.com/kmodules/controller-runtime v0.17.3-0.20240301215359-aa29dfea56fd h1:VjD73vX8f7nia3vGBbtYb3Evk1sIsrzkQBnb6fp6VRA=
+github.com/kmodules/controller-runtime v0.17.3-0.20240301215359-aa29dfea56fd/go.mod h1:+MngTvIQQQhfXtwfdGw/UOQ/aIaqsYywfCINOtwMO/s=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515/go.mod h1:+0opPa2QZZtGFBFZlji/RkVcI2GknAs/DXo4wKdlNEc=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
@@ -858,8 +858,8 @@ kmodules.xyz/monitoring-agent-api v0.29.0 h1:gpFl6OZrlMLb/ySMHdREI9EwGtnJ91oZBn9
 kmodules.xyz/monitoring-agent-api v0.29.0/go.mod h1:iNbvaMTgVFOI5q2LJtGK91j4Dmjv4ZRiRdasGmWLKQI=
 kmodules.xyz/offshoot-api v0.29.0 h1:GHLhxxT9jU1N8+FvOCCeJNyU5g0duYS46UGrs6AHNLY=
 kmodules.xyz/offshoot-api v0.29.0/go.mod h1:5NxhBblXoDHWStx9HCDJR2KFTwYjEZ7i1Id3jelIunw=
-kubevault.dev/apimachinery v0.18.0 h1:Iq/l2TNHwVwzcjUhTo9XITvC//4eH+CZWkKtz0ge3Wc=
-kubevault.dev/apimachinery v0.18.0/go.mod h1:hNPZyN9oekwmVtJrmCsoWlX4sU32z1sMMbL4M8eQjuw=
+kubevault.dev/apimachinery v0.18.1 h1:kgdXlgqVQXVTEwfp+InRNzMPym0ndmuPewNd5qu6K5Q=
+kubevault.dev/apimachinery v0.18.1/go.mod h1:hNPZyN9oekwmVtJrmCsoWlX4sU32z1sMMbL4M8eQjuw=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd h1:EDPBXCAspyGV4jQlpZSudPeMmr1bNJefnuqLsRAsHZo=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd/go.mod h1:B8JuhiUyNFVKdsE8h686QcCxMaH6HrOAZj4vswFpcB0=
