@@ -23,7 +23,7 @@ require (
 	gomodules.xyz/runtime v0.3.0
 	gomodules.xyz/x v0.0.17
 	google.golang.org/api v0.126.0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.33.0
 	k8s.io/apimachinery v0.29.2
 	k8s.io/cli-runtime v0.29.2
 	k8s.io/client-go v0.29.2
