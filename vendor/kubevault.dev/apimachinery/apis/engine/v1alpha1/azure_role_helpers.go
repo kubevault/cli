@@ -22,7 +22,7 @@ import (
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
-	"kmodules.xyz/client-go/tools/clusterid"
+	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
 func (_ AzureRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -31,8 +31,8 @@ func (_ AzureRole) CustomResourceDefinition() *apiextensions.CustomResourceDefin
 
 func (r AzureRole) RoleName() string {
 	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
+	if clustermeta.ClusterName() != "" {
+		cluster = clustermeta.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, r.Namespace, r.Name)
 }

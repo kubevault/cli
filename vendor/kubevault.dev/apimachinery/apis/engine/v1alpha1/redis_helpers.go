@@ -22,7 +22,7 @@ import (
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
-	"kmodules.xyz/client-go/tools/clusterid"
+	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
 func (_ RedisRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -33,8 +33,8 @@ const DefaultRedisDatabasePlugin = "redis-database-plugin"
 
 func (r RedisRole) RoleName() string {
 	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
+	if clustermeta.ClusterName() != "" {
+		cluster = clustermeta.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, r.Namespace, r.Name)
 }
@@ -50,7 +50,7 @@ func (r *RedisConfiguration) SetDefaults() {
 
 	// If user doesn't specify the list of AllowedRoles
 	// It is set to "*" (allow all)
-	if r.AllowedRoles == nil || len(r.AllowedRoles) == 0 {
+	if r.AllowedRoles == nil {
 		r.AllowedRoles = []string{"*"}
 	}
 
