@@ -23,7 +23,7 @@ import (
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
-	"kmodules.xyz/client-go/tools/clusterid"
+	clustermeta "kmodules.xyz/client-go/cluster"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
 
@@ -39,8 +39,8 @@ func (e SecretEngine) IsValid() error {
 // required permission for this secret engine
 func (e SecretEngine) GetPolicyName() string {
 	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
+	if clustermeta.ClusterName() != "" {
+		cluster = clustermeta.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, e.Namespace, e.Name)
 }
@@ -48,8 +48,8 @@ func (e SecretEngine) GetPolicyName() string {
 // Generates unique database name from database appbinding reference
 func GetDBNameFromAppBindingRef(dbAppRef *appcat.AppReference) string {
 	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
+	if clustermeta.ClusterName() != "" {
+		cluster = clustermeta.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, dbAppRef.Namespace, dbAppRef.Name)
 }
@@ -58,8 +58,8 @@ func (se SecretEngine) GetSecretEnginePath() string {
 	// Todo: update SecretEngine path
 	//  - k8s.{cluster-name or -}.{se-type}.se-ns.se-name
 	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
+	if clustermeta.ClusterName() != "" {
+		cluster = clustermeta.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s.%s", cluster, se.GetSecretEngineType(), se.Namespace, se.Name)
 }

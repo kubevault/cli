@@ -22,7 +22,7 @@ import (
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
-	"kmodules.xyz/client-go/tools/clusterid"
+	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
 func (_ MySQLRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -33,8 +33,8 @@ const DefaultMySQLDatabasePlugin = "mysql-database-plugin"
 
 func (r MySQLRole) RoleName() string {
 	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
+	if clustermeta.ClusterName() != "" {
+		cluster = clustermeta.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, r.Namespace, r.Name)
 }
@@ -50,7 +50,7 @@ func (m *MySQLConfiguration) SetDefaults() {
 
 	// If user doesn't specify the list of AllowedRoles
 	// It is set to "*" (allow all)
-	if m.AllowedRoles == nil || len(m.AllowedRoles) == 0 {
+	if m.AllowedRoles == nil {
 		m.AllowedRoles = []string{"*"}
 	}
 

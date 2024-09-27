@@ -23,8 +23,8 @@ import (
 	"kubevault.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
+	clustermeta "kmodules.xyz/client-go/cluster"
 	meta_util "kmodules.xyz/client-go/meta"
-	"kmodules.xyz/client-go/tools/clusterid"
 )
 
 func (_ VaultPolicyBinding) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -41,8 +41,8 @@ func (v VaultPolicyBinding) PolicyBindingName() string {
 	}
 
 	cluster := "-"
-	if clusterid.ClusterName() != "" {
-		cluster = clusterid.ClusterName()
+	if clustermeta.ClusterName() != "" {
+		cluster = clustermeta.ClusterName()
 	}
 	return fmt.Sprintf("k8s.%s.%s.%s", cluster, v.Namespace, v.Name)
 }
