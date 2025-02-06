@@ -56,6 +56,8 @@ type VaultServerVersionSpec struct {
 	Vault VaultServerVersionVault `json:"vault"`
 	// Unsealer Image
 	Unsealer VaultServerVersionUnsealer `json:"unsealer"`
+	// init container image
+	InitContainer VaultServerVersionInitContainer `json:"initContainer,omitempty"`
 	// Exporter Image
 	// +optional
 	Exporter VaultServerVersionExporter `json:"exporter"`
@@ -87,6 +89,15 @@ type VaultServerVersionUnsealer struct {
 
 // VaultServerVersionExporter is the image for the vault exporter
 type VaultServerVersionExporter struct {
+	// Image is the Docker image name
+	Image string `json:"image"`
+	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent otherwise.
+	// +optional
+	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
+}
+
+// VaultServerVersionInitContainer is the vault server init container image
+type VaultServerVersionInitContainer struct {
 	// Image is the Docker image name
 	Image string `json:"image"`
 	// ImagePullPolicy one of Always, Never, IfNotPresent. It defaults to Always if :latest is used, or IfNotPresent otherwise.

@@ -108,7 +108,7 @@ func TryUpdatePKIRole(
 	opts metav1.UpdateOptions,
 ) (result *api.PKIRole, err error) {
 	attempt := 0
-	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+	err = wait.PollUntilContextTimeout(context.Background(), kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		cur, e2 := c.PKIRoles(meta.Namespace).Get(ctx, meta.Name, metav1.GetOptions{})
 		if kerr.IsNotFound(e2) {
@@ -120,7 +120,6 @@ func TryUpdatePKIRole(
 		klog.Errorf("Attempt %d failed to update PKIRole %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
-
 	if err != nil {
 		err = errors.Errorf("failed to update PKIRole %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
@@ -148,7 +147,7 @@ func UpdatePKIRoleStatus(
 	if err != nil {
 		return nil, err
 	}
-	err = wait.PollImmediate(kutil.RetryInterval, kutil.RetryTimeout, func() (bool, error) {
+	err = wait.PollUntilContextTimeout(context.Background(), kutil.RetryInterval, kutil.RetryTimeout, true, func(ctx context.Context) (bool, error) {
 		attempt++
 		var e2 error
 		result, e2 = c.PKIRoles(meta.Namespace).UpdateStatus(ctx, apply(cur), opts)
@@ -168,7 +167,6 @@ func UpdatePKIRoleStatus(
 		}
 		return e2 == nil, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update status of PKIRole %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
