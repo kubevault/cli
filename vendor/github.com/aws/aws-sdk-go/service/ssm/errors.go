@@ -122,10 +122,15 @@ const (
 	// ErrCodeDocumentPermissionLimit for service response error code
 	// "DocumentPermissionLimit".
 	//
-	// The document can't be shared with more Amazon Web Services user accounts.
-	// You can share a document with a maximum of 20 accounts. You can publicly
-	// share up to five documents. If you need to increase this limit, contact Amazon
-	// Web Services Support.
+	// The document can't be shared with more Amazon Web Services accounts. You
+	// can specify a maximum of 20 accounts per API operation to share a private
+	// document.
+	//
+	// By default, you can share a private document with a maximum of 1,000 accounts
+	// and publicly share up to five documents.
+	//
+	// If you need to increase the quota for privately or publicly shared Systems
+	// Manager documents, contact Amazon Web Services Support.
 	ErrCodeDocumentPermissionLimit = "DocumentPermissionLimit"
 
 	// ErrCodeDocumentVersionLimitExceeded for service response error code
@@ -514,7 +519,7 @@ const (
 	// ErrCodeInvalidTag for service response error code
 	// "InvalidTag".
 	//
-	// The specified tag key or value is not valid.
+	// The specified tag key or value isn't valid.
 	ErrCodeInvalidTag = "InvalidTag"
 
 	// ErrCodeInvalidTarget for service response error code
@@ -561,17 +566,38 @@ const (
 	// The inventory item size has exceeded the size limit.
 	ErrCodeItemSizeLimitExceededException = "ItemSizeLimitExceededException"
 
+	// ErrCodeMalformedResourcePolicyDocumentException for service response error code
+	// "MalformedResourcePolicyDocumentException".
+	//
+	// The specified policy document is malformed or invalid, or excessive PutResourcePolicy
+	// or DeleteResourcePolicy calls have been made.
+	ErrCodeMalformedResourcePolicyDocumentException = "MalformedResourcePolicyDocumentException"
+
 	// ErrCodeMaxDocumentSizeExceeded for service response error code
 	// "MaxDocumentSizeExceeded".
 	//
 	// The size limit of a document is 64 KB.
 	ErrCodeMaxDocumentSizeExceeded = "MaxDocumentSizeExceeded"
 
+	// ErrCodeOpsItemAccessDeniedException for service response error code
+	// "OpsItemAccessDeniedException".
+	//
+	// You don't have permission to view OpsItems in the specified account. Verify
+	// that your account is configured either as a Systems Manager delegated administrator
+	// or that you are logged into the Organizations management account.
+	ErrCodeOpsItemAccessDeniedException = "OpsItemAccessDeniedException"
+
 	// ErrCodeOpsItemAlreadyExistsException for service response error code
 	// "OpsItemAlreadyExistsException".
 	//
 	// The OpsItem already exists.
 	ErrCodeOpsItemAlreadyExistsException = "OpsItemAlreadyExistsException"
+
+	// ErrCodeOpsItemConflictException for service response error code
+	// "OpsItemConflictException".
+	//
+	// The specified OpsItem is in the process of being deleted.
+	ErrCodeOpsItemConflictException = "OpsItemConflictException"
 
 	// ErrCodeOpsItemInvalidParameterException for service response error code
 	// "OpsItemInvalidParameterException".
@@ -583,8 +609,7 @@ const (
 	// ErrCodeOpsItemLimitExceededException for service response error code
 	// "OpsItemLimitExceededException".
 	//
-	// The request caused OpsItems to exceed one or more quotas. For information
-	// about OpsItem quotas, see What are the resource limits for OpsCenter? (https://docs.aws.amazon.com/systems-manager/latest/userguide/OpsCenter-learn-more.html#OpsCenter-learn-more-limits).
+	// The request caused OpsItems to exceed one or more quotas.
 	ErrCodeOpsItemLimitExceededException = "OpsItemLimitExceededException"
 
 	// ErrCodeOpsItemNotFoundException for service response error code
@@ -763,6 +788,41 @@ const (
 	// service quotas (https://docs.aws.amazon.com/general/latest/gr/ssm.html#limits_ssm)
 	// in the Amazon Web Services General Reference.
 	ErrCodeResourceLimitExceededException = "ResourceLimitExceededException"
+
+	// ErrCodeResourceNotFoundException for service response error code
+	// "ResourceNotFoundException".
+	//
+	// The specified parameter to be shared could not be found.
+	ErrCodeResourceNotFoundException = "ResourceNotFoundException"
+
+	// ErrCodeResourcePolicyConflictException for service response error code
+	// "ResourcePolicyConflictException".
+	//
+	// The hash provided in the call doesn't match the stored hash. This exception
+	// is thrown when trying to update an obsolete policy version or when multiple
+	// requests to update a policy are sent.
+	ErrCodeResourcePolicyConflictException = "ResourcePolicyConflictException"
+
+	// ErrCodeResourcePolicyInvalidParameterException for service response error code
+	// "ResourcePolicyInvalidParameterException".
+	//
+	// One or more parameters specified for the call aren't valid. Verify the parameters
+	// and their values and try again.
+	ErrCodeResourcePolicyInvalidParameterException = "ResourcePolicyInvalidParameterException"
+
+	// ErrCodeResourcePolicyLimitExceededException for service response error code
+	// "ResourcePolicyLimitExceededException".
+	//
+	// The PutResourcePolicy API action enforces two limits. A policy can't be greater
+	// than 1024 bytes in size. And only one policy can be attached to OpsItemGroup.
+	// Verify these limits and try again.
+	ErrCodeResourcePolicyLimitExceededException = "ResourcePolicyLimitExceededException"
+
+	// ErrCodeResourcePolicyNotFoundException for service response error code
+	// "ResourcePolicyNotFoundException".
+	//
+	// No policies with the specified policy ID and hash could be found.
+	ErrCodeResourcePolicyNotFoundException = "ResourcePolicyNotFoundException"
 
 	// ErrCodeServiceSettingNotFound for service response error code
 	// "ServiceSettingNotFound".
@@ -957,8 +1017,11 @@ var exceptionFromCode = map[string]func(protocol.ResponseMetadata) error{
 	"InvocationDoesNotExist":                         newErrorInvocationDoesNotExist,
 	"ItemContentMismatchException":                   newErrorItemContentMismatchException,
 	"ItemSizeLimitExceededException":                 newErrorItemSizeLimitExceededException,
+	"MalformedResourcePolicyDocumentException":       newErrorMalformedResourcePolicyDocumentException,
 	"MaxDocumentSizeExceeded":                        newErrorMaxDocumentSizeExceeded,
+	"OpsItemAccessDeniedException":                   newErrorOpsItemAccessDeniedException,
 	"OpsItemAlreadyExistsException":                  newErrorOpsItemAlreadyExistsException,
+	"OpsItemConflictException":                       newErrorOpsItemConflictException,
 	"OpsItemInvalidParameterException":               newErrorOpsItemInvalidParameterException,
 	"OpsItemLimitExceededException":                  newErrorOpsItemLimitExceededException,
 	"OpsItemNotFoundException":                       newErrorOpsItemNotFoundException,
@@ -985,6 +1048,11 @@ var exceptionFromCode = map[string]func(protocol.ResponseMetadata) error{
 	"ResourceDataSyncNotFoundException":              newErrorResourceDataSyncNotFoundException,
 	"ResourceInUseException":                         newErrorResourceInUseException,
 	"ResourceLimitExceededException":                 newErrorResourceLimitExceededException,
+	"ResourceNotFoundException":                      newErrorResourceNotFoundException,
+	"ResourcePolicyConflictException":                newErrorResourcePolicyConflictException,
+	"ResourcePolicyInvalidParameterException":        newErrorResourcePolicyInvalidParameterException,
+	"ResourcePolicyLimitExceededException":           newErrorResourcePolicyLimitExceededException,
+	"ResourcePolicyNotFoundException":                newErrorResourcePolicyNotFoundException,
 	"ServiceSettingNotFound":                         newErrorServiceSettingNotFound,
 	"StatusUnchanged":                                newErrorStatusUnchanged,
 	"SubTypeCountLimitExceededException":             newErrorSubTypeCountLimitExceededException,
