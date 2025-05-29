@@ -758,8 +758,8 @@ kmodules.xyz/monitoring-agent-api v0.32.0 h1:cMQbWvbTc4JWeLI/zYE0HLefsdFYBzqvATL
 kmodules.xyz/monitoring-agent-api v0.32.0/go.mod h1:zgRKiJcuK7FOHy0Y1TsONRbJfgnPCs8t4Zh/6Afr+yU=
 kmodules.xyz/offshoot-api v0.30.1 h1:TrulAYO+oBsXe9sZZGTmNWIuI8qD2izMpgcTSPvgAmI=
 kmodules.xyz/offshoot-api v0.30.1/go.mod h1:T3mpjR6fui0QzOcmQvIuANytW48fe9ytmy/1cgx6D4g=
-kubevault.dev/apimachinery v0.21.0 h1:H+Cn6aRw+W1PSjKdG3qX0F/YqA55/HsnSYHzIyS7k8I=
-kubevault.dev/apimachinery v0.21.0/go.mod h1:QArlKB79Ho4PauRS2ioX4FEVjF79EbwAaomXhkLC/Hk=
+kubevault.dev/apimachinery v0.22.0 h1:6ysCHgKe0Sw2z35UkpiA8xfWwsGMmzpLEw6RDp5HF/k=
+kubevault.dev/apimachinery v0.22.0/go.mod h1:QArlKB79Ho4PauRS2ioX4FEVjF79EbwAaomXhkLC/Hk=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8 h1:gBQPwqORJ8d8/YNZWEjoZs7npUVDpVXUUOFfW6CgAqE=
 sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8/go.mod h1:mdzfpAEoE6DHQEN0uh9ZbOCuHbLK5wOm7dK4ctXE9Tg=

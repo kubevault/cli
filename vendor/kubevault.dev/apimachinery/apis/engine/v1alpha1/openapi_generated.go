@@ -23407,27 +23407,6 @@ func schema_apimachinery_apis_engine_v1alpha1_ElasticsearchConfiguration(ref com
 							Format:      "",
 						},
 					},
-					"url": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The URL for Elasticsearch's API (\"http://localhost:9200\").",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"username": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The username to be used in the connection URL (\"vault\").",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"password": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The password to be used in the connection URL (\"pa55w0rd\").",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"caCert": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The path to a PEM-encoded CA cert file to use to verify the Elasticsearch server's identity.",

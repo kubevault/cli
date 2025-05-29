@@ -345,18 +345,6 @@ type ElasticsearchConfiguration struct {
 	//  - for elasticsearch: elasticsearch-database-plugin
 	PluginName string `json:"pluginName,omitempty"`
 
-	// The URL for Elasticsearch's API ("http://localhost:9200").
-	// +kubebuilder:validation:Required
-	Url string `json:"url,omitempty"`
-
-	// The username to be used in the connection URL ("vault").
-	// +kubebuilder:validation:Required
-	Username string `json:"username,omitempty"`
-
-	// The password to be used in the connection URL ("pa55w0rd").
-	// +kubebuilder:validation:Required
-	Password string `json:"password,omitempty"`
-
 	// The path to a PEM-encoded CA cert file to use to verify the Elasticsearch server's identity.
 	CACert string `json:"caCert,omitempty"`
 
