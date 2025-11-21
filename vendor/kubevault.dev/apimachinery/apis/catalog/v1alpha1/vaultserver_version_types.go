@@ -52,6 +52,8 @@ type VaultServerVersion struct {
 type VaultServerVersionSpec struct {
 	// Version
 	Version string `json:"version"`
+	// Distribution
+	Distribution Distro `json:"distribution,omitempty"`
 	// Vault Image
 	Vault VaultServerVersionVault `json:"vault"`
 	// Unsealer Image
@@ -68,6 +70,14 @@ type VaultServerVersionSpec struct {
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=Vault;OpenBao
+type Distro string
+
+const (
+	DistroOfficial Distro = "Vault"
+	DistroOpenBao  Distro = "OpenBao"
+)
 
 // VaultServerVersionVault is the vault image
 type VaultServerVersionVault struct {

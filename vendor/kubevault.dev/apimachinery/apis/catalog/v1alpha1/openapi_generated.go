@@ -22979,6 +22979,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_VaultServerVersionSpec(ref common
 							Format:      "",
 						},
 					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"vault": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Vault Image",
