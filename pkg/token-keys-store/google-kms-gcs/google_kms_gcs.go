@@ -117,7 +117,7 @@ func (ti *TokenKeyInfo) Get(key string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer rc.Close()
+	defer rc.Close() //nolint:errcheck
 
 	body, err := io.ReadAll(rc)
 	if err != nil {
@@ -186,7 +186,7 @@ func decryptSymmetric(name string, ciphertext []byte) (string, error) {
 	if err != nil {
 		return "", errors.Errorf("failed to create kms client: %v", err)
 	}
-	defer client.Close()
+	defer client.Close() //nolint:errcheck
 
 	crc32c := func(data []byte) uint32 {
 		t := crc32.MakeTable(crc32.Castagnoli)

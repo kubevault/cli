@@ -121,13 +121,13 @@ func (ti *TokenKeyInfo) Get(key string) (string, error) {
 		return "", errors.New("version id not found")
 	}
 
-	resp, err := client.GetSecret(context.Background(), strings.Replace(key, ".", "-", -1), version[idx+1:], nil)
+	resp, err := client.GetSecret(context.Background(), strings.ReplaceAll(key, ".", "-"), version[idx+1:], nil)
 	if err != nil {
 		return "", err
 	}
 
-	if *resp.SecretBundle.ContentType != ContentTypePassword {
-		return "", errors.Errorf("content type not matched with %v", *resp.SecretBundle.ContentType)
+	if *resp.ContentType != ContentTypePassword {
+		return "", errors.Errorf("content type not matched with %v", *resp.ContentType)
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(*resp.Value)
@@ -139,7 +139,7 @@ func (ti *TokenKeyInfo) Get(key string) (string, error) {
 }
 
 func (ti *TokenKeyInfo) Delete(key string) error {
-	key = strings.Replace(key, ".", "-", -1)
+	key = strings.ReplaceAll(key, ".", "-")
 
 	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
 	client := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
@@ -161,7 +161,7 @@ func (ti *TokenKeyInfo) Delete(key string) error {
 }
 
 func (ti *TokenKeyInfo) Set(key, value string) error {
-	key = strings.Replace(key, ".", "-", -1)
+	key = strings.ReplaceAll(key, ".", "-")
 
 	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
 	client := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
@@ -178,7 +178,7 @@ func (ti *TokenKeyInfo) Set(key, value string) error {
 }
 
 func (ti *TokenKeyInfo) getLatestVersion(key string) (string, error) {
-	key = strings.Replace(key, ".", "-", -1)
+	key = strings.ReplaceAll(key, ".", "-")
 	vaultBaseUrl := ti.vs.Spec.Unsealer.Mode.AzureKeyVault.VaultBaseURL
 	client := azsecrets.NewClient(vaultBaseUrl, ti.cred, nil)
 
@@ -190,7 +190,7 @@ func (ti *TokenKeyInfo) getLatestVersion(key string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		for _, ver := range resp.SecretListResult.Value {
+		for _, ver := range resp.Value {
 			cur := time.Since(*ver.Attributes.Created)
 			if version == "" {
 				version = *ver.ID

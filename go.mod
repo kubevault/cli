@@ -1,8 +1,6 @@
 module kubevault.dev/cli
 
-go 1.24.0
-
-toolchain go1.24.3
+go 1.25.5
 
 require (
 	cloud.google.com/go/kms v1.15.8
