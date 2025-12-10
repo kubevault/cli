@@ -25,7 +25,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ VaultOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (e VaultOpsRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralVaultOpsRequest))
 }
 

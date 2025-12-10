@@ -22,7 +22,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ SecretAccessRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (d SecretAccessRequest) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceSecretAccessRequests))
 }
 

@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ PostgresRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r PostgresRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePostgresRoles))
 }
 

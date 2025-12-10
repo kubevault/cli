@@ -841,7 +841,7 @@ func rotateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) erro
 	}
 
 	client.SetToken(oldToken)
-	payload := map[string]interface{}{
+	payload := map[string]any{
 		"token": oldToken,
 	}
 	_, err = client.Logical().Write("auth/token/revoke", payload)

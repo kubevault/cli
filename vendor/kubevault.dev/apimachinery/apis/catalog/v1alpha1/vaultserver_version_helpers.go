@@ -22,7 +22,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ VaultServerVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (v VaultServerVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceVaultServerVersions))
 }
 

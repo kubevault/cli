@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ MongoDBRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r MongoDBRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceMongoDBRoles))
 }
 

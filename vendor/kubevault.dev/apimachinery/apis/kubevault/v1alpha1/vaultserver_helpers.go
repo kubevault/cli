@@ -35,17 +35,16 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 	apps_util "kmodules.xyz/client-go/apps/v1"
 	clustermeta "kmodules.xyz/client-go/cluster"
-	"kmodules.xyz/client-go/meta"
 	meta_util "kmodules.xyz/client-go/meta"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
-func (_ VaultServer) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (v VaultServer) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceVaultServers))
 }
 
-func (_ VaultServer) ResourceFQN() string {
+func (v VaultServer) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourceVaultServers, kubevault.GroupName)
 }
 
@@ -120,7 +119,7 @@ func (v VaultServer) StatsLabels() map[string]string {
 
 // Returns the default certificate secret name for given alias.
 func (vs *VaultServer) DefaultCertSecretName(alias string) string {
-	return meta.NameWithSuffix(fmt.Sprintf("%s-%s", vs.Name, alias), "certs")
+	return meta_util.NameWithSuffix(fmt.Sprintf("%s-%s", vs.Name, alias), "certs")
 }
 
 // Returns certificate secret name for given alias if exists,
@@ -145,7 +144,7 @@ type vaultServerStatsService struct {
 }
 
 func (v vaultServerStatsService) ServiceMonitorAdditionalLabels() map[string]string {
-	return v.VaultServer.OffshootLabels()
+	return v.OffshootLabels()
 }
 
 func (v vaultServerStatsService) GetNamespace() string {
@@ -178,12 +177,12 @@ func (v vaultServerStatsService) TLSConfig() *promapi.TLSConfig {
 				CA: promapi.SecretOrConfigMap{
 					Secret: &core.SecretKeySelector{
 						LocalObjectReference: core.LocalObjectReference{
-							Name: v.VaultServer.GetCertSecretName(string(VaultServerCert)),
+							Name: v.GetCertSecretName(string(VaultServerCert)),
 						},
 						Key: core.TLSCertKey,
 					},
 				},
-				ServerName: ptr.To(fmt.Sprintf("%s.%s.svc", v.VaultServer.ServiceName(VaultServerServiceVault), v.VaultServer.Namespace)),
+				ServerName: ptr.To(fmt.Sprintf("%s.%s.svc", v.VaultServer.ServiceName(VaultServerServiceVault), v.Namespace)),
 			},
 		}
 	}

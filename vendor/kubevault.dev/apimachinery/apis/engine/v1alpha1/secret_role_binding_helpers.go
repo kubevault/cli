@@ -25,7 +25,7 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 )
 
-func (_ SecretRoleBinding) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (d SecretRoleBinding) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceSecretRoleBindings))
 }
 

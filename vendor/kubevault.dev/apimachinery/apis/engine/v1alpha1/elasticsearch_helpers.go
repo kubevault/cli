@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ ElasticsearchRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r ElasticsearchRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceElasticsearchRoles))
 }
 

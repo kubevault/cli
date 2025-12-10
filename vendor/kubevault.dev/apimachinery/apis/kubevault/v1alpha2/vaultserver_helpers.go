@@ -43,11 +43,11 @@ import (
 
 func (*VaultServer) Hub() {}
 
-func (_ VaultServer) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (v VaultServer) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceVaultServers))
 }
 
-func (_ VaultServer) ResourceFQN() string {
+func (v VaultServer) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourceVaultServers, kubevault.GroupName)
 }
 
@@ -151,7 +151,7 @@ type vaultServerStatsService struct {
 }
 
 func (v vaultServerStatsService) ServiceMonitorAdditionalLabels() map[string]string {
-	return v.VaultServer.OffshootLabels()
+	return v.OffshootLabels()
 }
 
 func (v vaultServerStatsService) GetNamespace() string {
@@ -184,12 +184,12 @@ func (v vaultServerStatsService) TLSConfig() *promapi.TLSConfig {
 				CA: promapi.SecretOrConfigMap{
 					Secret: &core.SecretKeySelector{
 						LocalObjectReference: core.LocalObjectReference{
-							Name: v.VaultServer.GetCertSecretName(string(VaultServerCert)),
+							Name: v.GetCertSecretName(string(VaultServerCert)),
 						},
 						Key: core.TLSCertKey,
 					},
 				},
-				ServerName: ptr.To(fmt.Sprintf("%s.%s.svc", v.VaultServer.ServiceName(VaultServerServiceVault), v.VaultServer.Namespace)),
+				ServerName: ptr.To(fmt.Sprintf("%s.%s.svc", v.VaultServer.ServiceName(VaultServerServiceVault), v.Namespace)),
 			},
 		}
 	}

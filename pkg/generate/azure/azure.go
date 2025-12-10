@@ -40,11 +40,11 @@ var available = map[string]bool{
 }
 
 type SecretObject struct {
-	ObjectName string                 `json:"objectName,omitempty"`
-	SecretPath string                 `json:"secretPath,omitempty"`
-	SecretKey  string                 `json:"secretKey,omitempty"`
-	Method     string                 `json:"method,omitempty"`
-	SecretArgs map[string]interface{} `json:"secretArgs,omitempty"`
+	ObjectName string         `json:"objectName,omitempty"`
+	SecretPath string         `json:"secretPath,omitempty"`
+	SecretKey  string         `json:"secretKey,omitempty"`
+	Method     string         `json:"method,omitempty"`
+	SecretArgs map[string]any `json:"secretArgs,omitempty"`
 }
 
 type AzureGenerator struct {
