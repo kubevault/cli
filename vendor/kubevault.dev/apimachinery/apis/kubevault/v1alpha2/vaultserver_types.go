@@ -830,7 +830,7 @@ type UnsealerSpec struct {
 
 	// How often to attempt to unseal the vault instance
 	// +optional
-	RetryPeriodSeconds time.Duration `json:"retryPeriodSeconds,omitempty"`
+	RetryPeriodSeconds time.Duration `json:"retryPeriodSeconds,omitempty"` //nolint
 
 	// overwrite existing unseal keys and root tokens, possibly dangerous!
 	// +optional

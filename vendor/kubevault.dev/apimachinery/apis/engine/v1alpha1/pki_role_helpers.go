@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ PKIRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (p PKIRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePKIRoles))
 }
 

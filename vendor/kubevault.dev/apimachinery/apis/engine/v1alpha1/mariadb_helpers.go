@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ MariaDBRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r MariaDBRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceMariaDBRoles))
 }
 

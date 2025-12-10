@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ AzureRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r AzureRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceAzureRoles))
 }
 

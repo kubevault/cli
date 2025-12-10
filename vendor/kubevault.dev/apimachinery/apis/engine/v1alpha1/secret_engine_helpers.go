@@ -27,7 +27,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
 
-func (_ SecretEngine) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (e SecretEngine) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceSecretEngines))
 }
 

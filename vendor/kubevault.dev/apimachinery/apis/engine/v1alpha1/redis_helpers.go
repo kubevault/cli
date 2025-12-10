@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ RedisRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r RedisRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceRedisRoles))
 }
 

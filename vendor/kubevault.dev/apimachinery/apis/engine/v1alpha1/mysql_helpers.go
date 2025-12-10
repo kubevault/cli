@@ -25,7 +25,7 @@ import (
 	clustermeta "kmodules.xyz/client-go/cluster"
 )
 
-func (_ MySQLRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (r MySQLRole) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceMySQLRoles))
 }
 

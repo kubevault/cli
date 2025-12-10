@@ -27,7 +27,7 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 )
 
-func (_ VaultPolicyBinding) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (v VaultPolicyBinding) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceVaultPolicyBindings))
 }
 
@@ -71,58 +71,58 @@ func (v *VaultPolicyBinding) SetDefaults() {
 		v.Spec.VaultRoleName = v.PolicyBindingName()
 	}
 
-	if v.Spec.SubjectRef.Kubernetes != nil {
-		if v.Spec.SubjectRef.Kubernetes.Path == "" {
-			v.Spec.SubjectRef.Kubernetes.Path = "kubernetes"
+	if v.Spec.Kubernetes != nil {
+		if v.Spec.Kubernetes.Path == "" {
+			v.Spec.Kubernetes.Path = "kubernetes"
 		}
-		if v.Spec.SubjectRef.Kubernetes.Name == "" {
-			v.Spec.SubjectRef.Kubernetes.Name = v.PolicyBindingName()
-		}
-	}
-
-	if v.Spec.SubjectRef.AppRole != nil {
-		if v.Spec.SubjectRef.AppRole.Path == "" {
-			v.Spec.SubjectRef.AppRole.Path = "approle"
-		}
-		if v.Spec.SubjectRef.AppRole.RoleName == "" {
-			v.Spec.SubjectRef.AppRole.RoleName = v.PolicyBindingName()
+		if v.Spec.Kubernetes.Name == "" {
+			v.Spec.Kubernetes.Name = v.PolicyBindingName()
 		}
 	}
 
-	if v.Spec.SubjectRef.LdapGroup != nil {
-		if v.Spec.SubjectRef.LdapGroup.Path == "" {
-			v.Spec.SubjectRef.LdapGroup.Path = "ldap"
+	if v.Spec.AppRole != nil {
+		if v.Spec.AppRole.Path == "" {
+			v.Spec.AppRole.Path = "approle"
+		}
+		if v.Spec.AppRole.RoleName == "" {
+			v.Spec.AppRole.RoleName = v.PolicyBindingName()
 		}
 	}
 
-	if v.Spec.SubjectRef.LdapUser != nil {
-		if v.Spec.SubjectRef.LdapUser.Path == "" {
-			v.Spec.SubjectRef.LdapUser.Path = "ldap"
+	if v.Spec.LdapGroup != nil {
+		if v.Spec.LdapGroup.Path == "" {
+			v.Spec.LdapGroup.Path = "ldap"
 		}
 	}
 
-	if v.Spec.SubjectRef.JWT != nil {
-		if v.Spec.SubjectRef.JWT.Path == "" {
-			v.Spec.SubjectRef.JWT.Path = "jwt"
-		}
-		if v.Spec.SubjectRef.JWT.Name == "" {
-			v.Spec.SubjectRef.JWT.Name = v.PolicyBindingName()
+	if v.Spec.LdapUser != nil {
+		if v.Spec.LdapUser.Path == "" {
+			v.Spec.LdapUser.Path = "ldap"
 		}
 	}
 
-	if v.Spec.SubjectRef.OIDC != nil {
-		if v.Spec.SubjectRef.OIDC.Path == "" {
-			v.Spec.SubjectRef.OIDC.Path = "oidc"
+	if v.Spec.JWT != nil {
+		if v.Spec.JWT.Path == "" {
+			v.Spec.JWT.Path = "jwt"
 		}
-		if v.Spec.SubjectRef.OIDC.Name == "" {
-			v.Spec.SubjectRef.OIDC.Name = v.PolicyBindingName()
+		if v.Spec.JWT.Name == "" {
+			v.Spec.JWT.Name = v.PolicyBindingName()
+		}
+	}
+
+	if v.Spec.OIDC != nil {
+		if v.Spec.OIDC.Path == "" {
+			v.Spec.OIDC.Path = "oidc"
+		}
+		if v.Spec.OIDC.Name == "" {
+			v.Spec.OIDC.Name = v.PolicyBindingName()
 		}
 	}
 }
 
-func (v VaultPolicyBinding) GeneratePayload(i interface{}) (map[string]interface{}, error) {
+func (v VaultPolicyBinding) GeneratePayload(i any) (map[string]any, error) {
 	var err error
-	payload := make(map[string]interface{})
+	payload := make(map[string]any)
 	byte, err := json.Marshal(i)
 	if err == nil {
 		err = json.Unmarshal(byte, &payload)
