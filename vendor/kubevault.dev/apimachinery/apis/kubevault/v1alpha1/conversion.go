@@ -505,6 +505,12 @@ func Convert_v1alpha1_AuthMethod_To_v1alpha2_AuthMethod(in *AuthMethod, out *v1a
 	return nil
 }
 
+func Convert_v1alpha1_VaultServerSpec_To_v1alpha2_VaultServerSpec(in *VaultServerSpec, out *v1alpha2.VaultServerSpec, s conversion.Scope) error {
+	// WARNING: in.Namespace requires manual conversion: does not exist in peer-type
+	// The Namespace field is intentionally not converted as it doesn't exist in v1alpha2
+	return autoConvert_v1alpha1_VaultServerSpec_To_v1alpha2_VaultServerSpec(in, out, s)
+}
+
 func Convert_v1alpha2_VaultServerSpec_To_v1alpha1_VaultServerSpec(in *v1alpha2.VaultServerSpec, out *VaultServerSpec, s conversion.Scope) error {
 	return autoConvert_v1alpha2_VaultServerSpec_To_v1alpha1_VaultServerSpec(in, out, s)
 }

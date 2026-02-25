@@ -55,12 +55,15 @@ func GetDBNameFromAppBindingRef(dbAppRef *appcat.AppReference) string {
 }
 
 func (se SecretEngine) GetSecretEnginePath() string {
-	// Todo: update SecretEngine path
-	//  - k8s.{cluster-name or -}.{se-type}.se-ns.se-name
 	cluster := "-"
 	if clustermeta.ClusterName() != "" {
 		cluster = clustermeta.ClusterName()
 	}
+
+	// Format: k8s.{cluster-name}.{se-type}.{se-ns}.{se-name}
+	// The difference is WHERE this path exists in OpenBao:
+	//   - Root approach: path lives in OpenBao root namespace "/"
+	//   - Namespace approach: path lives in OpenBao namespace (e.g., "tenant-1")
 	return fmt.Sprintf("k8s.%s.%s.%s.%s", cluster, se.GetSecretEngineType(), se.Namespace, se.Name)
 }
 

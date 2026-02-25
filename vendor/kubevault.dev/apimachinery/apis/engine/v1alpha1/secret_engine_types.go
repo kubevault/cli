@@ -53,6 +53,14 @@ type SecretEngine struct {
 type SecretEngineSpec struct {
 	VaultRef kmapi.ObjectReference `json:"vaultRef"`
 
+	// Namespace specifies the OpenBao namespace for this SecretEngine.
+	// Only applicable when using OpenBao distribution.
+	// If specified, overrides the namespace from VaultServer.
+	// Empty string means use VaultServer's namespace (or root if VaultServer has none).
+	// Supports hierarchical namespaces (e.g., "tenant-1/project-a").
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+
 	SecretEngineConfiguration `json:",inline"`
 
 	DefaultLeaseTTL string `json:"defaultLeaseTTL,omitempty"`
