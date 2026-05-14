@@ -29,8 +29,6 @@ jobs:
 
       - name: Prepare Host
         run: |
-          sudo apt-get -qq update || true
-          sudo apt-get install -y bzr
 
       - name: Run checks
         run: |
