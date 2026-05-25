@@ -22,19 +22,22 @@ import (
 	"os"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
-	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	engineutil "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1/util"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 
 	"github.com/hashicorp/vault/api"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	cu "kmodules.xyz/client-go/client"
 	condutil "kmodules.xyz/client-go/conditions"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
@@ -69,7 +72,12 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, cond
 
 	builder := cmdutil.NewFactory(clientGetter).NewBuilder()
 
-	engineClient, err := enginecs.NewForConfig(cfg)
+	scheme := runtime.NewScheme()
+	utilruntime.Must(clientsetscheme.AddToScheme(scheme))
+	utilruntime.Must(engineapi.AddToScheme(scheme))
+	utilruntime.Must(vaultv1a2.AddToScheme(scheme))
+
+	kc, err := client.New(cfg, client.Options{Scheme: scheme})
 	if err != nil {
 		return err
 	}
@@ -95,12 +103,12 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, cond
 		case *engineapi.SecretAccessRequest:
 			obj := info.Object.(*engineapi.SecretAccessRequest)
 
-			if err = isApplicable(engineClient, obj, cond, obj.Status.Conditions); err != nil {
+			if err = isApplicable(kc, obj, cond, obj.Status.Conditions); err != nil {
 				return err
 			}
 
 			cond.ObservedGeneration = obj.Generation
-			err2 = UpdateSecretAccessRequestCondition(engineClient, obj.ObjectMeta, cond)
+			err2 = UpdateSecretAccessRequestCondition(kc, obj.ObjectMeta, cond)
 		default:
 			err2 = errors.New("unknown/unsupported type")
 		}
@@ -109,23 +117,26 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, cond
 	return err
 }
 
-func UpdateSecretAccessRequestCondition(c enginecs.EngineV1alpha1Interface, req metav1.ObjectMeta, cond kmapi.Condition) error {
-	_, err := engineutil.UpdateSecretAccessRequestStatus(
-		context.TODO(),
-		c,
-		req,
-		func(in *engineapi.SecretAccessRequestStatus) *engineapi.SecretAccessRequestStatus {
-			in.Conditions = condutil.SetCondition(in.Conditions, cond)
-			in.ObservedGeneration = req.Generation
-			return in
-		}, metav1.UpdateOptions{})
+func UpdateSecretAccessRequestCondition(kc client.Client, req metav1.ObjectMeta, cond kmapi.Condition) error {
+	obj := &engineapi.SecretAccessRequest{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: req.Namespace,
+			Name:      req.Name,
+		},
+	}
+	_, err := cu.PatchStatus(context.TODO(), kc, obj, func(o client.Object) client.Object {
+		in := o.(*engineapi.SecretAccessRequest)
+		in.Status.Conditions = condutil.SetCondition(in.Status.Conditions, cond)
+		in.Status.ObservedGeneration = req.Generation
+		return in
+	})
 	return err
 }
 
-func isApplicable(engineClient *enginecs.EngineV1alpha1Client, req *engineapi.SecretAccessRequest, cond kmapi.Condition, conditions []kmapi.Condition) error {
+func isApplicable(kc client.Client, req *engineapi.SecretAccessRequest, cond kmapi.Condition, conditions []kmapi.Condition) error {
 	if cond == secretAccessRevokeCond && !condutil.IsConditionTrue(conditions, engineapi.ConditionRequestExpired) && req.Spec.RoleRef.Kind == engineapi.ResourceKindGCPRole {
-		role, err := engineClient.GCPRoles(req.Namespace).Get(context.TODO(), req.Spec.RoleRef.Name, metav1.GetOptions{})
-		if err != nil {
+		role := &engineapi.GCPRole{}
+		if err := kc.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.Spec.RoleRef.Name}, role); err != nil {
 			return err
 		}
 		if role.Spec.SecretType == engineapi.GCPSecretAccessToken {
@@ -160,7 +171,7 @@ func isApplicable(engineClient *enginecs.EngineV1alpha1Client, req *engineapi.Se
 	return nil
 }
 
-func NewVaultClient(vs *vaultapi.VaultServer) (*api.Client, error) {
+func NewVaultClient(vs *vaultv1a2.VaultServer) (*api.Client, error) {
 	cfg := api.DefaultConfig()
 
 	tlsConfig := &api.TLSConfig{

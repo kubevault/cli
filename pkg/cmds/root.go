@@ -17,7 +17,9 @@ limitations under the License.
 package cmds
 
 import (
-	"kubevault.dev/apimachinery/client/clientset/versioned/scheme"
+	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	policyapi "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 
 	"github.com/spf13/cobra"
 	v "gomodules.xyz/x/version"
@@ -34,7 +36,9 @@ func NewRootCmd() *cobra.Command {
 		Short:             `KubeVault cli by AppsCode`,
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
-			utilruntime.Must(scheme.AddToScheme(clientsetscheme.Scheme))
+			utilruntime.Must(engineapi.AddToScheme(clientsetscheme.Scheme))
+			utilruntime.Must(vaultv1a2.AddToScheme(clientsetscheme.Scheme))
+			utilruntime.Must(policyapi.AddToScheme(clientsetscheme.Scheme))
 			utilruntime.Must(appcatscheme.AddToScheme(clientsetscheme.Scheme))
 		},
 	}

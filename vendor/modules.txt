@@ -1439,24 +1439,12 @@ kmodules.xyz/offshoot-api/api/v1
 # kubevault.dev/apimachinery v0.25.0-rc.1
 ## explicit; go 1.25.0
 kubevault.dev/apimachinery/apis
-kubevault.dev/apimachinery/apis/catalog
-kubevault.dev/apimachinery/apis/catalog/v1alpha1
-kubevault.dev/apimachinery/apis/config
-kubevault.dev/apimachinery/apis/config/v1alpha1
 kubevault.dev/apimachinery/apis/engine
 kubevault.dev/apimachinery/apis/engine/v1alpha1
 kubevault.dev/apimachinery/apis/kubevault
-kubevault.dev/apimachinery/apis/kubevault/v1alpha1
 kubevault.dev/apimachinery/apis/kubevault/v1alpha2
-kubevault.dev/apimachinery/apis/ops
-kubevault.dev/apimachinery/apis/ops/v1alpha1
 kubevault.dev/apimachinery/apis/policy
 kubevault.dev/apimachinery/apis/policy/v1alpha1
-kubevault.dev/apimachinery/client/clientset/versioned/scheme
-kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1
-kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1/util
-kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2
-kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1
 kubevault.dev/apimachinery/crds
 # sigs.k8s.io/controller-runtime v0.22.4 => github.com/kmodules/controller-runtime v0.22.5-0.20251227114913-f011264689cd
 ## explicit; go 1.24.0

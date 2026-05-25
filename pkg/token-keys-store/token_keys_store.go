@@ -19,7 +19,7 @@ package token_keys_store
 import (
 	"errors"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 	aws_kms_ssm "kubevault.dev/cli/pkg/token-keys-store/aws-kms-ssm"
 	azure_key_vault "kubevault.dev/cli/pkg/token-keys-store/azure-key-vault"
@@ -29,7 +29,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func NewTokenKeyInterface(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (api.TokenKeyInterface, error) {
+func NewTokenKeyInterface(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) (api.TokenKeyInterface, error) {
 	if vs.Spec.Unsealer == nil {
 		return nil, errors.New("vaultServer unsealer spec is empty")
 	}

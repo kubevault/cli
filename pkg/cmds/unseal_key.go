@@ -21,7 +21,7 @@ import (
 	"os"
 	"strings"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	token_key_store "kubevault.dev/cli/pkg/token-keys-store"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 
@@ -274,8 +274,8 @@ Examples:
 func syncUnsealKeys(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -314,8 +314,8 @@ func syncUnsealKeys(clientGetter genericclioptions.RESTClientGetter) error {
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = syncKeys(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -325,7 +325,7 @@ func syncUnsealKeys(clientGetter genericclioptions.RESTClientGetter) error {
 	return err
 }
 
-func syncKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func syncKeys(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -385,8 +385,8 @@ func syncKey(id int, ti api.TokenKeyInterface) error {
 func (o *getKeyOptions) list(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -425,8 +425,8 @@ func (o *getKeyOptions) list(clientGetter genericclioptions.RESTClientGetter) er
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			o.listUnsealKey(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -436,7 +436,7 @@ func (o *getKeyOptions) list(clientGetter genericclioptions.RESTClientGetter) er
 	return err
 }
 
-func (o *getKeyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) {
+func (o *getKeyOptions) listUnsealKey(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) {
 	cnt := vs.Spec.Unsealer.SecretShares
 	for i := 0; int64(i) < cnt; i++ {
 		o.keyId = i
@@ -450,8 +450,8 @@ func (o *getKeyOptions) listUnsealKey(vs *vaultapi.VaultServer, kubeClient kuber
 func (o *getKeyOptions) get(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -490,8 +490,8 @@ func (o *getKeyOptions) get(clientGetter genericclioptions.RESTClientGetter) err
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = o.getUnsealKey(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -501,7 +501,7 @@ func (o *getKeyOptions) get(clientGetter genericclioptions.RESTClientGetter) err
 	return err
 }
 
-func (o *getKeyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *getKeyOptions) getUnsealKey(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -533,8 +533,8 @@ func (o *getKeyOptions) getUnsealKey(vs *vaultapi.VaultServer, kubeClient kubern
 func (o *delKeyOptions) del(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -573,8 +573,8 @@ func (o *delKeyOptions) del(clientGetter genericclioptions.RESTClientGetter) err
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = o.deleteUnsealKey(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -584,7 +584,7 @@ func (o *delKeyOptions) del(clientGetter genericclioptions.RESTClientGetter) err
 	return err
 }
 
-func (o *delKeyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *delKeyOptions) deleteUnsealKey(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -616,8 +616,8 @@ func (o *delKeyOptions) deleteUnsealKey(vs *vaultapi.VaultServer, kubeClient kub
 func (o *setKeyOptions) set(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -656,8 +656,8 @@ func (o *setKeyOptions) set(clientGetter genericclioptions.RESTClientGetter) err
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = o.setUnsealKey(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -667,7 +667,7 @@ func (o *setKeyOptions) set(clientGetter genericclioptions.RESTClientGetter) err
 	return err
 }
 
-func (o *setKeyOptions) setUnsealKey(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *setKeyOptions) setUnsealKey(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err

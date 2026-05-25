@@ -22,15 +22,15 @@ import (
 	"strings"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
-	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2"
-	policycs "kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	policyapi "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate/api"
 
 	"github.com/go-errors/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/yaml"
 )
 
@@ -48,37 +48,37 @@ type SecretObject struct {
 }
 
 type MySQLGenerator struct {
-	role         []string
-	srb          *engineapi.SecretRoleBinding
-	se           *engineapi.SecretEngine
-	keys         map[string]string
-	engineClient *enginecs.EngineV1alpha1Client
-	vaultClient  *vaultcs.KubevaultV1alpha2Client
-	policyClient *policycs.PolicyV1alpha1Client
-	clusterName  string
+	role        []string
+	srb         *engineapi.SecretRoleBinding
+	se          *engineapi.SecretEngine
+	keys        map[string]string
+	kc          client.Client
+	clusterName string
 }
 
 var _ api.GeneratorInterface = &MySQLGenerator{}
 
-func NewMySQLGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha2Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (*MySQLGenerator, error) {
-	sqlRole, err := engineClient.MySQLRoles(srb.Namespace).Get(context.TODO(), role[1], metav1.GetOptions{})
-	if err != nil {
+func NewMySQLGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, kc client.Client, kubeClient *kubernetes.Clientset) (*MySQLGenerator, error) {
+	ctx := context.TODO()
+
+	sqlRole := &engineapi.MySQLRole{}
+	if err := kc.Get(ctx, types.NamespacedName{Namespace: srb.Namespace, Name: role[1]}, sqlRole); err != nil {
 		return nil, err
 	}
 
-	se, err := engineClient.SecretEngines(srb.Namespace).Get(context.TODO(), sqlRole.Spec.SecretEngineRef.Name, metav1.GetOptions{})
-	if err != nil {
+	se := &engineapi.SecretEngine{}
+	if err := kc.Get(ctx, types.NamespacedName{Namespace: srb.Namespace, Name: sqlRole.Spec.SecretEngineRef.Name}, se); err != nil {
 		return nil, err
 	}
 
-	sts, err := kubeClient.AppsV1().StatefulSets(se.Spec.VaultRef.Namespace).Get(context.TODO(), se.Spec.VaultRef.Name, metav1.GetOptions{})
+	sts, err := kubeClient.AppsV1().StatefulSets(se.Spec.VaultRef.Namespace).Get(ctx, se.Spec.VaultRef.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 
 	var clName string
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != vaultapi.VaultUnsealerContainerName {
+		if cont.Name != vaultv1a2.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {
@@ -89,20 +89,18 @@ func NewMySQLGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map
 	}
 
 	return &MySQLGenerator{
-		role:         role,
-		srb:          srb,
-		se:           se,
-		keys:         keys,
-		engineClient: engineClient,
-		vaultClient:  vaultClient,
-		policyClient: policyClient,
-		clusterName:  clName,
+		role:        role,
+		srb:         srb,
+		se:          se,
+		keys:        keys,
+		kc:          kc,
+		clusterName: clName,
 	}, nil
 }
 
 func (g *MySQLGenerator) Generate() (string, error) {
-	sqlRole, err := g.engineClient.MySQLRoles(g.srb.Namespace).Get(context.TODO(), g.role[1], metav1.GetOptions{})
-	if err != nil {
+	sqlRole := &engineapi.MySQLRole{}
+	if err := g.kc.Get(context.TODO(), types.NamespacedName{Namespace: g.srb.Namespace, Name: g.role[1]}, sqlRole); err != nil {
 		return "", err
 	}
 
@@ -131,8 +129,8 @@ func (g *MySQLGenerator) Generate() (string, error) {
 }
 
 func (g *MySQLGenerator) GetVaultServerURL() (string, error) {
-	vs, err := g.vaultClient.VaultServers(g.se.Spec.VaultRef.Namespace).Get(context.TODO(), g.se.Spec.VaultRef.Name, metav1.GetOptions{})
-	if err != nil {
+	vs := &vaultv1a2.VaultServer{}
+	if err := g.kc.Get(context.TODO(), types.NamespacedName{Namespace: g.se.Spec.VaultRef.Namespace, Name: g.se.Spec.VaultRef.Name}, vs); err != nil {
 		return "", err
 	}
 
@@ -141,8 +139,8 @@ func (g *MySQLGenerator) GetVaultServerURL() (string, error) {
 }
 
 func (g *MySQLGenerator) GetVaultRoleName() (string, error) {
-	vpb, err := g.policyClient.VaultPolicyBindings(g.se.Spec.VaultRef.Namespace).Get(context.TODO(), g.srb.VaultPolicyBindingName(), metav1.GetOptions{})
-	if err != nil {
+	vpb := &policyapi.VaultPolicyBinding{}
+	if err := g.kc.Get(context.TODO(), types.NamespacedName{Namespace: g.se.Spec.VaultRef.Namespace, Name: g.srb.VaultPolicyBindingName()}, vpb); err != nil {
 		return "", err
 	}
 

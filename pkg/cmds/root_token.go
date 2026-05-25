@@ -22,7 +22,7 @@ import (
 	"os"
 	"strings"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	token_key_store "kubevault.dev/cli/pkg/token-keys-store"
 
 	"github.com/hashicorp/vault/sdk/helper/xor"
@@ -215,8 +215,8 @@ Examples:
 func (o *getTokenOptions) get(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -255,8 +255,8 @@ func (o *getTokenOptions) get(clientGetter genericclioptions.RESTClientGetter) e
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = o.getRootToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -266,7 +266,7 @@ func (o *getTokenOptions) get(clientGetter genericclioptions.RESTClientGetter) e
 	return err
 }
 
-func (o *getTokenOptions) getRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *getTokenOptions) getRootToken(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -301,8 +301,8 @@ func (o *getTokenOptions) getRootToken(vs *vaultapi.VaultServer, kubeClient kube
 func (o *delTokenOptions) del(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -341,8 +341,8 @@ func (o *delTokenOptions) del(clientGetter genericclioptions.RESTClientGetter) e
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = o.deleteRootToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -352,7 +352,7 @@ func (o *delTokenOptions) del(clientGetter genericclioptions.RESTClientGetter) e
 	return err
 }
 
-func (o *delTokenOptions) deleteRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *delTokenOptions) deleteRootToken(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -380,8 +380,8 @@ func (o *delTokenOptions) deleteRootToken(vs *vaultapi.VaultServer, kubeClient k
 func (o *setTokenOptions) set(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -420,8 +420,8 @@ func (o *setTokenOptions) set(clientGetter genericclioptions.RESTClientGetter) e
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = o.setRootToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -464,8 +464,8 @@ Examples:
 func syncRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -504,8 +504,8 @@ func syncRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = syncToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -515,7 +515,7 @@ func syncRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	return err
 }
 
-func syncToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func syncToken(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -552,7 +552,7 @@ func syncToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error 
 	return nil
 }
 
-func (o *setTokenOptions) setRootToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func (o *setTokenOptions) setRootToken(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return err
@@ -619,8 +619,8 @@ Examples:
 func generateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -660,8 +660,8 @@ func generateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 		var token string
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			token, err2 = generateToken(obj, kubeClient)
 			if err2 == nil && len(token) > 0 {
 				fmt.Println("generated root-token:", token)
@@ -703,7 +703,7 @@ Examples:
 	return cmd
 }
 
-func generateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (string, error) {
+func generateToken(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) (string, error) {
 	// For root-token generation
 	// - threshold number of unseal-keys must be present
 	keys, err := getKeys(vs, kubeClient)
@@ -754,8 +754,8 @@ func generateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (s
 func rotateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	var resourceName string
 	switch ResourceName {
-	case strings.ToLower(vaultapi.ResourceVaultServer), strings.ToLower(vaultapi.ResourceVaultServers):
-		resourceName = vaultapi.ResourceVaultServer
+	case strings.ToLower(vaultv1a2.ResourceVaultServer), strings.ToLower(vaultv1a2.ResourceVaultServers):
+		resourceName = vaultv1a2.ResourceVaultServer
 	default:
 		return errors.New(fmt.Sprintf("unknown/unsupported resource %s", ResourceName))
 	}
@@ -794,8 +794,8 @@ func rotateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 
 		var err2 error
 		switch info.Object.(type) {
-		case *vaultapi.VaultServer:
-			obj := info.Object.(*vaultapi.VaultServer)
+		case *vaultv1a2.VaultServer:
+			obj := info.Object.(*vaultv1a2.VaultServer)
 			err2 = rotateToken(obj, kubeClient)
 		default:
 			err2 = errors.New("unknown/unsupported type")
@@ -805,7 +805,7 @@ func rotateRootToken(clientGetter genericclioptions.RESTClientGetter) error {
 	return err
 }
 
-func rotateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) error {
+func rotateToken(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) error {
 	// For root-token rotation:
 	// - new root-token generation must be successful
 	// - old root-token must be present
@@ -857,7 +857,7 @@ func rotateToken(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) erro
 	return nil
 }
 
-func getKeys(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) ([]string, error) {
+func getKeys(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) ([]string, error) {
 	ti, err := token_key_store.NewTokenKeyInterface(vs, kubeClient)
 	if err != nil {
 		return nil, err
