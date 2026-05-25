@@ -18,9 +18,6 @@ package generate
 
 import (
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2"
-	policycs "kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate/api"
 	"kubevault.dev/cli/pkg/generate/aws"
 	"kubevault.dev/cli/pkg/generate/azure"
@@ -34,28 +31,29 @@ import (
 
 	"github.com/go-errors/errors"
 	"k8s.io/client-go/kubernetes"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func NewGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha2Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (api.GeneratorInterface, error) {
+func NewGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, kc client.Client, kubeClient *kubernetes.Clientset) (api.GeneratorInterface, error) {
 	switch role[0] {
 	case engineapi.ResourceKindGCPRole:
-		return gcp.NewGCPGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return gcp.NewGCPGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindAWSRole:
-		return aws.NewAWSGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return aws.NewAWSGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindAzureRole:
-		return azure.NewAzureGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return azure.NewAzureGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindMongoDBRole:
-		return mongo.NewMongoGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return mongo.NewMongoGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindElasticsearchRole:
-		return es.NewElasticsearchGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return es.NewElasticsearchGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindMySQLRole:
-		return sql.NewMySQLGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return sql.NewMySQLGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindMariaDBRole:
-		return maria.NewMariaDBGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return maria.NewMariaDBGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindRedisRole:
-		return rd.NewRedisGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return rd.NewRedisGenerator(role, srb, keys, kc, kubeClient)
 	case engineapi.ResourceKindPostgresRole:
-		return pg.NewPostgresGenerator(role, srb, keys, engineClient, vaultClient, policyClient, kubeClient)
+		return pg.NewPostgresGenerator(role, srb, keys, kc, kubeClient)
 	default:
 		return nil, errors.New("unknown role")
 	}

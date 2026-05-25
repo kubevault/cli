@@ -23,14 +23,15 @@ import (
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
 	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
-	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2"
-	policycs "kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1"
+	policyapi "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate/api"
 
 	"github.com/go-errors/errors"
+	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/yaml"
 )
 
@@ -48,34 +49,47 @@ type SecretObject struct {
 }
 
 type PostgresGenerator struct {
-	role         []string
-	srb          *engineapi.SecretRoleBinding
-	se           *engineapi.SecretEngine
-	keys         map[string]string
-	engineClient *enginecs.EngineV1alpha1Client
-	vaultClient  *vaultcs.KubevaultV1alpha2Client
-	policyClient *policycs.PolicyV1alpha1Client
-	clusterName  string
+	role        []string
+	srb         *engineapi.SecretRoleBinding
+	se          *engineapi.SecretEngine
+	keys        map[string]string
+	kc          client.Client
+	clusterName string
 }
 
 var _ api.GeneratorInterface = &PostgresGenerator{}
 
-func NewPostgresGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha2Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (*PostgresGenerator, error) {
-	pgRole, err := engineClient.MongoDBRoles(srb.Namespace).Get(context.TODO(), role[1], metav1.GetOptions{})
+func NewPostgresGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map[string]string, kc client.Client, kubeClient *kubernetes.Clientset) (*PostgresGenerator, error) {
+	ctx := context.TODO()
+
+	pgRole := &engineapi.MongoDBRole{}
+	if err := kc.Get(ctx, types.NamespacedName{Namespace: srb.Namespace, Name: role[1]}, pgRole); err != nil {
+		return nil, err
+	}
+
+	se := &engineapi.SecretEngine{}
+	if err := kc.Get(ctx, types.NamespacedName{Namespace: srb.Namespace, Name: pgRole.Spec.SecretEngineRef.Name}, se); err != nil {
+		return nil, err
+	}
+
+	sts, err := kubeClient.AppsV1().StatefulSets(se.Spec.VaultRef.Namespace).Get(ctx, se.Spec.VaultRef.Name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
 
-	se, err := engineClient.SecretEngines(srb.Namespace).Get(context.TODO(), pgRole.Spec.SecretEngineRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
+	clName := extractClusterName(sts)
 
-	sts, err := kubeClient.AppsV1().StatefulSets(se.Spec.VaultRef.Namespace).Get(context.TODO(), se.Spec.VaultRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
+	return &PostgresGenerator{
+		role:        role,
+		srb:         srb,
+		se:          se,
+		keys:        keys,
+		kc:          kc,
+		clusterName: clName,
+	}, nil
+}
 
+func extractClusterName(sts *appsv1.StatefulSet) string {
 	var clName string
 	for _, cont := range sts.Spec.Template.Spec.Containers {
 		if cont.Name != vaultapi.VaultUnsealerContainerName {
@@ -87,22 +101,12 @@ func NewPostgresGenerator(role []string, srb *engineapi.SecretRoleBinding, keys 
 			}
 		}
 	}
-
-	return &PostgresGenerator{
-		role:         role,
-		srb:          srb,
-		se:           se,
-		keys:         keys,
-		engineClient: engineClient,
-		vaultClient:  vaultClient,
-		policyClient: policyClient,
-		clusterName:  clName,
-	}, nil
+	return clName
 }
 
 func (g *PostgresGenerator) Generate() (string, error) {
-	pgRole, err := g.engineClient.PostgresRoles(g.srb.Namespace).Get(context.TODO(), g.role[1], metav1.GetOptions{})
-	if err != nil {
+	pgRole := &engineapi.PostgresRole{}
+	if err := g.kc.Get(context.TODO(), types.NamespacedName{Namespace: g.srb.Namespace, Name: g.role[1]}, pgRole); err != nil {
 		return "", err
 	}
 
@@ -131,8 +135,8 @@ func (g *PostgresGenerator) Generate() (string, error) {
 }
 
 func (g *PostgresGenerator) GetVaultServerURL() (string, error) {
-	vs, err := g.vaultClient.VaultServers(g.se.Spec.VaultRef.Namespace).Get(context.TODO(), g.se.Spec.VaultRef.Name, metav1.GetOptions{})
-	if err != nil {
+	vs := &vaultapi.VaultServer{}
+	if err := g.kc.Get(context.TODO(), types.NamespacedName{Namespace: g.se.Spec.VaultRef.Namespace, Name: g.se.Spec.VaultRef.Name}, vs); err != nil {
 		return "", err
 	}
 
@@ -141,8 +145,8 @@ func (g *PostgresGenerator) GetVaultServerURL() (string, error) {
 }
 
 func (g *PostgresGenerator) GetVaultRoleName() (string, error) {
-	vpb, err := g.policyClient.VaultPolicyBindings(g.se.Spec.VaultRef.Namespace).Get(context.TODO(), g.srb.VaultPolicyBindingName(), metav1.GetOptions{})
-	if err != nil {
+	vpb := &policyapi.VaultPolicyBinding{}
+	if err := g.kc.Get(context.TODO(), types.NamespacedName{Namespace: g.se.Spec.VaultRef.Namespace, Name: g.srb.VaultPolicyBindingName()}, vpb); err != nil {
 		return "", err
 	}
 

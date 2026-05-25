@@ -23,19 +23,24 @@ import (
 	"os"
 	"strings"
 
-	enginecs "kubevault.dev/apimachinery/client/clientset/versioned/typed/engine/v1alpha1"
-	vaultcs "kubevault.dev/apimachinery/client/clientset/versioned/typed/kubevault/v1alpha2"
-	policycs "kubevault.dev/apimachinery/client/clientset/versioned/typed/policy/v1alpha1"
+	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
+	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	policyapi "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/kubernetes"
+	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	secretsstore "sigs.k8s.io/secrets-store-csi-driver/apis/v1"
 	"sigs.k8s.io/yaml"
 )
@@ -165,14 +170,14 @@ func (o *generateOption) generate(clientGetter genericclioptions.RESTClientGette
 		return errors.Wrap(err, "failed to read kubeconfig")
 	}
 
-	engineClient, vaultClient, policyClient, kubeClient, err := initClients(cfg)
+	kc, kubeClient, err := initClients(cfg)
 	if err != nil {
 		return err
 	}
 
 	spc := NewSecretProviderClassOptions(o, namespace, ObjectNames[0])
 
-	objectsList, err := spc.generateSecretObjects(engineClient, vaultClient, policyClient, kubeClient)
+	objectsList, err := spc.generateSecretObjects(kc, kubeClient)
 	if err != nil {
 		return err
 	}
@@ -184,9 +189,9 @@ func (o *generateOption) generate(clientGetter genericclioptions.RESTClientGette
 	return nil
 }
 
-func (s *SecretProviderClassOptions) generateSecretObjects(engineClient *enginecs.EngineV1alpha1Client, vaultClient *vaultcs.KubevaultV1alpha2Client, policyClient *policycs.PolicyV1alpha1Client, kubeClient *kubernetes.Clientset) (string, error) {
-	if engineClient == nil || vaultClient == nil || policyClient == nil || kubeClient == nil {
-		return "", errors.New("engineClient/vaultClient/policyClient/kubeClient is nil")
+func (s *SecretProviderClassOptions) generateSecretObjects(kc client.Client, kubeClient *kubernetes.Clientset) (string, error) {
+	if kc == nil || kubeClient == nil {
+		return "", errors.New("kc/kubeClient is nil")
 	}
 
 	var srbNs, srbName string
@@ -199,8 +204,8 @@ func (s *SecretProviderClassOptions) generateSecretObjects(engineClient *enginec
 		srbName = srb[1]
 	}
 
-	srbObj, err := engineClient.SecretRoleBindings(srbNs).Get(context.TODO(), srbName, metav1.GetOptions{})
-	if err != nil {
+	srbObj := &engineapi.SecretRoleBinding{}
+	if err := kc.Get(context.TODO(), types.NamespacedName{Namespace: srbNs, Name: srbName}, srbObj); err != nil {
 		return "", err
 	}
 
@@ -220,7 +225,7 @@ func (s *SecretProviderClassOptions) generateSecretObjects(engineClient *enginec
 		return "", errors.Errorf("%s/%s not found in secretrolebinding", role[0], role[1])
 	}
 
-	gen, err := generate.NewGenerator(role, srbObj, s.options.keys, engineClient, vaultClient, policyClient, kubeClient)
+	gen, err := generate.NewGenerator(role, srbObj, s.options.keys, kc, kubeClient)
 	if err != nil {
 		return "", err
 	}
@@ -290,26 +295,22 @@ func (s *SecretProviderClassOptions) generateSecretProviderClass(objectsList str
 	return nil
 }
 
-func initClients(cfg *rest.Config) (*enginecs.EngineV1alpha1Client, *vaultcs.KubevaultV1alpha2Client, *policycs.PolicyV1alpha1Client, *kubernetes.Clientset, error) {
-	engineClient, err := enginecs.NewForConfig(cfg)
-	if err != nil {
-		return nil, nil, nil, nil, err
-	}
+func initClients(cfg *rest.Config) (client.Client, *kubernetes.Clientset, error) {
+	scheme := runtime.NewScheme()
+	utilruntime.Must(clientsetscheme.AddToScheme(scheme))
+	utilruntime.Must(engineapi.AddToScheme(scheme))
+	utilruntime.Must(vaultapi.AddToScheme(scheme))
+	utilruntime.Must(policyapi.AddToScheme(scheme))
 
-	vaultClient, err := vaultcs.NewForConfig(cfg)
+	kc, err := client.New(cfg, client.Options{Scheme: scheme})
 	if err != nil {
-		return nil, nil, nil, nil, err
-	}
-
-	policyClient, err := policycs.NewForConfig(cfg)
-	if err != nil {
-		return nil, nil, nil, nil, err
+		return nil, nil, err
 	}
 
 	kubeClient, err := kubernetes.NewForConfig(cfg)
 	if err != nil {
-		return nil, nil, nil, nil, err
+		return nil, nil, err
 	}
 
-	return engineClient, vaultClient, policyClient, kubeClient, nil
+	return kc, kubeClient, nil
 }
