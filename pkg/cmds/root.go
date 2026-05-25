@@ -18,7 +18,7 @@ package cmds
 
 import (
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	policyapi "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 
 	"github.com/spf13/cobra"
@@ -37,7 +37,7 @@ func NewRootCmd() *cobra.Command {
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
 			utilruntime.Must(engineapi.AddToScheme(clientsetscheme.Scheme))
-			utilruntime.Must(vaultapi.AddToScheme(clientsetscheme.Scheme))
+			utilruntime.Must(vaultv1a2.AddToScheme(clientsetscheme.Scheme))
 			utilruntime.Must(policyapi.AddToScheme(clientsetscheme.Scheme))
 			utilruntime.Must(appcatscheme.AddToScheme(clientsetscheme.Scheme))
 		},

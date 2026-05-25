@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	policyapi "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate"
 
@@ -299,7 +299,7 @@ func initClients(cfg *rest.Config) (client.Client, *kubernetes.Clientset, error)
 	scheme := runtime.NewScheme()
 	utilruntime.Must(clientsetscheme.AddToScheme(scheme))
 	utilruntime.Must(engineapi.AddToScheme(scheme))
-	utilruntime.Must(vaultapi.AddToScheme(scheme))
+	utilruntime.Must(vaultv1a2.AddToScheme(scheme))
 	utilruntime.Must(policyapi.AddToScheme(scheme))
 
 	kc, err := client.New(cfg, client.Options{Scheme: scheme})

@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	policyapi "kubevault.dev/apimachinery/apis/policy/v1alpha1"
 	"kubevault.dev/cli/pkg/generate/api"
 
@@ -78,7 +78,7 @@ func NewMySQLGenerator(role []string, srb *engineapi.SecretRoleBinding, keys map
 
 	var clName string
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != vaultapi.VaultUnsealerContainerName {
+		if cont.Name != vaultv1a2.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {
@@ -129,7 +129,7 @@ func (g *MySQLGenerator) Generate() (string, error) {
 }
 
 func (g *MySQLGenerator) GetVaultServerURL() (string, error) {
-	vs := &vaultapi.VaultServer{}
+	vs := &vaultv1a2.VaultServer{}
 	if err := g.kc.Get(context.TODO(), types.NamespacedName{Namespace: g.se.Spec.VaultRef.Namespace, Name: g.se.Spec.VaultRef.Name}, vs); err != nil {
 		return "", err
 	}

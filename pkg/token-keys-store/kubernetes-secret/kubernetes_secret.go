@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"strings"
 
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 	"kubevault.dev/cli/pkg/token-keys-store/api"
 
 	"github.com/pkg/errors"
@@ -32,12 +32,12 @@ import (
 
 type TokenKeyInfo struct {
 	kubeClient kubernetes.Interface
-	vs         *vaultapi.VaultServer
+	vs         *vaultv1a2.VaultServer
 }
 
 var _ api.TokenKeyInterface = &TokenKeyInfo{}
 
-func New(vs *vaultapi.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyInfo, error) {
+func New(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyInfo, error) {
 	if vs == nil {
 		return nil, errors.New("vs spec is empty")
 	}
@@ -116,7 +116,7 @@ func (ti *TokenKeyInfo) NewTokenName() string {
 
 	var keyPrefix string
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != vaultapi.VaultUnsealerContainerName {
+		if cont.Name != vaultv1a2.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {
@@ -145,7 +145,7 @@ func (ti *TokenKeyInfo) NewUnsealKeyName(id int) (string, error) {
 
 	var keyPrefix string
 	for _, cont := range sts.Spec.Template.Spec.Containers {
-		if cont.Name != vaultapi.VaultUnsealerContainerName {
+		if cont.Name != vaultv1a2.VaultUnsealerContainerName {
 			continue
 		}
 		for _, arg := range cont.Args {

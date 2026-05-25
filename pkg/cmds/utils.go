@@ -22,7 +22,7 @@ import (
 	"os"
 
 	engineapi "kubevault.dev/apimachinery/apis/engine/v1alpha1"
-	vaultapi "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
+	vaultv1a2 "kubevault.dev/apimachinery/apis/kubevault/v1alpha2"
 
 	"github.com/hashicorp/vault/api"
 	"github.com/pkg/errors"
@@ -75,7 +75,7 @@ func modifyStatusCondition(clientGetter genericclioptions.RESTClientGetter, cond
 	scheme := runtime.NewScheme()
 	utilruntime.Must(clientsetscheme.AddToScheme(scheme))
 	utilruntime.Must(engineapi.AddToScheme(scheme))
-	utilruntime.Must(vaultapi.AddToScheme(scheme))
+	utilruntime.Must(vaultv1a2.AddToScheme(scheme))
 
 	kc, err := client.New(cfg, client.Options{Scheme: scheme})
 	if err != nil {
@@ -171,7 +171,7 @@ func isApplicable(kc client.Client, req *engineapi.SecretAccessRequest, cond kma
 	return nil
 }
 
-func NewVaultClient(vs *vaultapi.VaultServer) (*api.Client, error) {
+func NewVaultClient(vs *vaultv1a2.VaultServer) (*api.Client, error) {
 	cfg := api.DefaultConfig()
 
 	tlsConfig := &api.TLSConfig{
