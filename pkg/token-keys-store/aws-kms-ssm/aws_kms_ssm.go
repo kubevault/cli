@@ -90,13 +90,14 @@ func New(vs *vaultv1a2.VaultServer, kubeClient kubernetes.Interface) (*TokenKeyI
 		}
 	}
 
-	sess, err := session.NewSession(&aws.Config{
-		CredentialsChainVerboseErrors: func() *bool {
-			f := true
-			return &f
-		}(),
-		Region: aws.String(vs.Spec.Unsealer.Mode.AwsKmsSsm.Region),
-	},
+	sess, err := session.NewSession(
+		&aws.Config{
+			CredentialsChainVerboseErrors: func() *bool {
+				f := true
+				return &f
+			}(),
+			Region: aws.String(vs.Spec.Unsealer.Mode.AwsKmsSsm.Region),
+		},
 	)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create session")
