@@ -55,6 +55,10 @@ func GetDBNameFromAppBindingRef(dbAppRef *appcat.AppReference) string {
 }
 
 func (se SecretEngine) GetSecretEnginePath() string {
+	if se.Status.Path != "" {
+		return se.Status.Path
+	}
+
 	cluster := "-"
 	if clustermeta.ClusterName() != "" {
 		cluster = clustermeta.ClusterName()

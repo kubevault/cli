@@ -91,6 +91,78 @@ const (
 	// health check constants
 	VaultHealthCheckPaused = "HealthCheckPaused"
 	RaftLeaderHealthy      = "RaftLeaderHealthy"
+
+	// ClientTrafficPinned latches the <vault-name>-primary Service to the active
+	// (leader) node when spec.exposePrimary is true. It is set True once the
+	// operator observes at least one vault pod carrying the active-node label, at
+	// which point GetPrimaryService narrows the -primary Service selector to that
+	// label. It is one-way: once True it stays True until exposePrimary is cleared
+	// (false), so a leader election that momentarily leaves no pod labelled never
+	// widens the -primary Service back to the standbys (which would serve stale
+	// reads). The always-all-nodes <vault-name> Service is unaffected either way.
+	// False with reason NoActiveNodeLabelled means exposePrimary is true but no pod
+	// is labelled while a node is unsealed and ready: the pin did not take effect,
+	// and the -primary Service is still selecting every node. See
+	// design/primary-service-routing.md.
+	ClientTrafficPinned = "ClientTrafficPinned"
+
+	// NoActiveNodeLabelled is the reason on ClientTrafficPinned=False:
+	// spec.exposePrimary is true but no vault pod carries the active-node label
+	// while a node is unsealed and ready. The usual cause is the vault
+	// ServiceAccount missing the pods get,patch grant, which the webhook cannot
+	// catch. It is the only signal a user gets that the pin silently failed to
+	// turn on.
+	NoActiveNodeLabelled = "NoActiveNodeLabelled"
+
+	// OCM spoke relay placement constants
+	VaultServerRelayPlacementResolved    = "RelayPlacementResolved"
+	VaultServerRelayHubInitialized       = "RelayHubInitialized"
+	VaultServerRelayManifestWorksApplied = "RelayManifestWorksApplied"
+	VaultServerRelaysReady               = "RelaysReady"
+
+	// Tenant-isolation constants (see design/tenant-namespace-design.md).
+	// VaultServerTenantIsolationReady is set when spec.isolateTenants is on and the
+	// backend is confirmed namespace-capable (OpenBao / Vault Enterprise).
+	VaultServerTenantIsolationReady = "TenantIsolationReady"
+	// VaultServerTenantIsolationUnsupported is set when spec.isolateTenants is on but
+	// the backend does not support namespaces; isolation is inert and SecretEngines
+	// resolve to the root namespace.
+	VaultServerTenantIsolationUnsupported = "TenantIsolationUnsupported"
+)
+
+const (
+	// SpokeRelayFinalizer guards hub-side cleanup of per-cluster spoke relay
+	// resources (ManifestWorks, ServiceAccounts, bootstrap tokens).
+	SpokeRelayFinalizer = "kubevault.com/spoke-relays"
+
+	// ManagedByHubLabelValue marks resources authored on the hub and delivered
+	// to managed clusters via ManifestWork. Spoke-side controllers must not
+	// mutate objects carrying app.kubernetes.io/managed-by with this value.
+	ManagedByHubLabelValue = "kubevault-hub"
+
+	// Labels stamped on ManifestWorks (and other per-cluster hub resources)
+	// to map them back to the owning VaultServer. Cross-namespace owner
+	// references are not allowed, so labels replace ownership.
+	LabelVaultServerName      = "kubevault.com/vaultserver-name"
+	LabelVaultServerNamespace = "kubevault.com/vaultserver-namespace"
+)
+
+const (
+	// VaultRelayGRPCProxyPort is the hub-side gRPC proxy port used by spoke relays.
+	VaultRelayGRPCProxyPort = 50053
+
+	// AnnotationMigrateNamespace authorizes a one-time, lease-dropping move of a single
+	// already-provisioned SecretEngine to its newly-desired OpenBao namespace. Set the
+	// value to "true" on the SecretEngine; the operator clears it after migrating.
+	// See design/tenant-namespace-design.md §5.2.
+	AnnotationMigrateNamespace = "kubevault.com/migrate-namespace"
+
+	// AnnotationMigrateVaultSecrets authorizes bulk migration of every SecretEngine whose
+	// database lives in a client-org Namespace and whose spec.vaultRef matches one of the
+	// listed Vault-server AppBindings. The value is a JSON array of AppBinding refs in
+	// "namespace/name" form, e.g. ["kv/vault","kv/vault-2"]. Set on the client-org
+	// Namespace; the operator prunes processed refs (removing the annotation once empty).
+	AnnotationMigrateVaultSecrets = "kubevault.com/migrate-vault-secrets"
 )
 
 const (

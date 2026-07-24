@@ -465,6 +465,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.FileSpec":                      schema_apimachinery_apis_kubevault_v1alpha2_FileSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.GcsSpec":                       schema_apimachinery_apis_kubevault_v1alpha2_GcsSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.GoogleKmsGcsSpec":              schema_apimachinery_apis_kubevault_v1alpha2_GoogleKmsGcsSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.HubVaultReference":             schema_apimachinery_apis_kubevault_v1alpha2_HubVaultReference(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.InmemSpec":                     schema_apimachinery_apis_kubevault_v1alpha2_InmemSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.JWTOIDCConfig":                 schema_apimachinery_apis_kubevault_v1alpha2_JWTOIDCConfig(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.KubernetesConfig":              schema_apimachinery_apis_kubevault_v1alpha2_KubernetesConfig(ref),
@@ -472,13 +473,29 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ModeSpec":                      schema_apimachinery_apis_kubevault_v1alpha2_ModeSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MySQLSpec":                     schema_apimachinery_apis_kubevault_v1alpha2_MySQLSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamedServiceTemplateSpec":      schema_apimachinery_apis_kubevault_v1alpha2_NamedServiceTemplateSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSlice":                schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSlice(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceConditions":      schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceConditions(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceEntry":           schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceEntry(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceList":            schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceList(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceSpec":            schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceStatus":          schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceStatus(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.PostgreSQLSpec":                schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RaftSpec":                      schema_apimachinery_apis_kubevault_v1alpha2_RaftSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ReconnectConfig":               schema_apimachinery_apis_kubevault_v1alpha2_ReconnectConfig(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RelayBootstrapConfig":          schema_apimachinery_apis_kubevault_v1alpha2_RelayBootstrapConfig(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RelayPlacementStatus":          schema_apimachinery_apis_kubevault_v1alpha2_RelayPlacementStatus(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.S3Spec":                        schema_apimachinery_apis_kubevault_v1alpha2_S3Spec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SecretEngineNamespaces":        schema_apimachinery_apis_kubevault_v1alpha2_SecretEngineNamespaces(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SpokeClusterStatus":            schema_apimachinery_apis_kubevault_v1alpha2_SpokeClusterStatus(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SwiftSpec":                     schema_apimachinery_apis_kubevault_v1alpha2_SwiftSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.TLSPolicy":                     schema_apimachinery_apis_kubevault_v1alpha2_TLSPolicy(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.UnsealerSpec":                  schema_apimachinery_apis_kubevault_v1alpha2_UnsealerSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelay":                    schema_apimachinery_apis_kubevault_v1alpha2_VaultRelay(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayList":                schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayList(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelaySpec":                schema_apimachinery_apis_kubevault_v1alpha2_VaultRelaySpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayStatus":              schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayStatus(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayTLSConfig":           schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayTLSConfig(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayTemplate":            schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayTemplate(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultServer":                   schema_apimachinery_apis_kubevault_v1alpha2_VaultServer(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultServerList":               schema_apimachinery_apis_kubevault_v1alpha2_VaultServerList(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultServerSpec":               schema_apimachinery_apis_kubevault_v1alpha2_VaultServerSpec(ref),
@@ -24291,6 +24308,58 @@ func schema_apimachinery_apis_kubevault_v1alpha2_GoogleKmsGcsSpec(ref common.Ref
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_HubVaultReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HubVaultReference contains information to connect to hub vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the VaultServer in hub cluster",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the VaultServer in hub cluster",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Address is the hub vault URL (e.g., http://10.2.0.88:30820)",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"grpcPort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GRPCPort is the port for gRPC proxy communication",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"caBundle": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CABundle is the PEM bundle used to verify the hub Vault API endpoint. Takes precedence over the caBundle key of bootstrap.joinSecretRef.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+				},
+				Required: []string{"name", "namespace", "address"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_InmemSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24770,6 +24839,226 @@ func schema_apimachinery_apis_kubevault_v1alpha2_NamedServiceTemplateSpec(ref co
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSlice(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceConditions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NamespaceSliceConditions is the readiness of one NamespaceSliceEntry.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ready is true when the namespace is validated and required (as reported by the authoring spoke operator). A nil value means the condition is unknown.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceEntry(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NamespaceSliceEntry is one required OpenBao namespace — the analogue of a single Endpoint in an EndpointSlice.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is the effective OpenBao namespace to provision (the org-id, in the current tenant-isolation model where the namespace is keyed on the org identity).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"externalID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExternalID is the external identity this namespace maps to — the KubeDB Platform org-id, in string form. It lets the effective namespace name diverge from the org-id in the future without changing the association.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions carries the readiness of this single namespace entry, mirroring the EndpointConditions shape on EndpointSlice.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceConditions"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceConditions"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSlice"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSlice"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hubVaultRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HubVaultRef identifies the hub VaultServer whose namespaces this slice tracks — the same VaultServer the kubevault.com/vaultserver-name + -namespace labels group this slice to, so the ref and the labels always agree. It is set by the hub (which owns those labels); the spoke fills only spec.namespaces. Optional for non-spoke uses.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"namespaces": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespaces is this slice's shard of required OpenBao namespaces, keyed on name.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceEntry"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceEntry"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObservedGeneration is the most recent generation observed for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"namespaceCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NamespaceCount mirrors len(spec.namespaces) for a cheap print column and a bounded status-feedback scalar.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24903,6 +25192,120 @@ func schema_apimachinery_apis_kubevault_v1alpha2_RaftSpec(ref common.ReferenceCa
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_ReconnectConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ReconnectConfig contains automatic reconnection settings",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled indicates whether auto-reconnect is enabled",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"backoffSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackoffSeconds is the initial backoff duration in seconds",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxBackoffSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxBackoffSeconds is the maximum backoff duration in seconds",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_RelayBootstrapConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RelayBootstrapConfig configures the automated `bao relay join` trust bootstrap.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"joinSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JoinSecretRef references a Secret with the join parameters:\n - token:       hub bootstrap token (<id>.<secret>)\n - hubCertHash: \"sha256:<hex>\" SPKI pin of the spoke-CA\n - caBundle:    optional PEM CA bundle for the hub Vault API endpoint",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+				Required: []string{"joinSecretRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_RelayPlacementStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RelayPlacementStatus summarizes the rollout of spoke relays to managed clusters.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"placement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Placement is the resolved Placement name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"selected": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selected is the number of clusters currently listed in the PlacementDecisions.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"applied": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Applied is the number of clusters whose ManifestWork has condition Applied=True.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ready is the number of clusters whose VaultRelay reports phase Connected (scraped via ManifestWork status feedback).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"clusters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Clusters holds per-cluster detail.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SpokeClusterStatus"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SpokeClusterStatus"},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_S3Spec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24993,6 +25396,49 @@ func schema_apimachinery_apis_kubevault_v1alpha2_SecretEngineNamespaces(ref comm
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_SpokeClusterStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SpokeClusterStatus is the per managed cluster rollout state.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the ManagedCluster name.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase mirrors the spoke VaultRelay phase (Pending|Connected|Disconnected|Error) plus hub-side values (WorkApplied, WorkProgressing, WorkDegraded).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tokenExpiry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TokenExpiry is when the current bootstrap token for this spoke expires.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"certExpiry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CertExpiry is when this spoke's mTLS client certificate expires, as observed by the hub relay backend (relay/spokes). Nil when unknown: the spoke is not connected, or the hub captured no verified peer cert.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"clusterName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -25173,6 +25619,317 @@ func schema_apimachinery_apis_kubevault_v1alpha2_UnsealerSpec(ref common.Referen
 		},
 		Dependencies: []string{
 			"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ModeSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelay(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelaySpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelaySpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelay"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelay"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelaySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hubVaultRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HubVaultRef references the hub VaultServer",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.HubVaultReference"),
+						},
+					},
+					"spokeName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SpokeName is the unique identifier for this spoke cluster",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"isolateTenants": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IsolateTenants opts this spoke into per-tenant OpenBao namespace isolation against the hub. Hub-managed (placement-driven) spokes inherit this from the hub VaultServer.spec.isolateTenants automatically; a standalone VaultRelay sets it explicitly. It is stamped into the hub AppBinding's VaultServerConfiguration (design/tenant-namespace-design.md §5.2). Default false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tokenSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TokenSecretRef references a secret containing vault token for authentication Secret data:\n - token: <vault-token>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Image is the spoke-relay container image",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configuration for gRPC connection",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayTLSConfig"),
+						},
+					},
+					"reconnect": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reconnect settings for automatic reconnection",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ReconnectConfig"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for the spoke-relay pod",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"bootstrap": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Bootstrap configures the automated `bao relay join` flow. When set, the spoke-relay pod runs a join init container that exchanges the bootstrap token for mTLS client credentials before the long-running relay starts. Exactly one of Bootstrap or TLS.CertSecret (pre-provisioned credentials) should be used.",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RelayBootstrapConfig"),
+						},
+					},
+				},
+				Required: []string{"hubVaultRef", "spokeName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.HubVaultReference", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ReconnectConfig", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RelayBootstrapConfig", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayTLSConfig"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObservedGeneration is the most recent generation observed",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase indicates the current state of the VaultRelay",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastHeartbeat": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastHeartbeat is the timestamp of the last successful heartbeat",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"appBindingRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AppBindingRef references the created AppBinding for hub vault",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"podName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodName is the name of the spoke-relay pod",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"certExpiry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CertExpiry of the current spoke client certificate, if known.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions represent the latest available observations of the VaultRelay's state",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VaultRelayTLSConfig contains TLS configuration for spoke-relay",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled indicates whether TLS is enabled",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"caSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CASecret contains the CA certificate Secret data:\n - ca.crt: <value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"certSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CertSecret contains the client certificate and key Secret data:\n - tls.crt: <value>\n - tls.key: <value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayTemplate(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VaultRelayTemplate is the subset of VaultRelaySpec a hub admin may pre-set for placement-driven spoke relay deployments.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace on the managed cluster where the VaultRelay and its companion resources are created. Defaults to the VaultServer's namespace.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Image overrides the spoke-relay container image.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for the spoke-relay pods.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"bootstrapTokenTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BootstrapTokenTTL controls the TTL of hub bootstrap tokens minted per spoke (and therefore their rotation period). Default 24h, minimum 1h.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"},
 	}
 }
 
@@ -25397,12 +26154,38 @@ func schema_apimachinery_apis_kubevault_v1alpha2_VaultServerSpec(ref common.Refe
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"exposePrimary": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExposePrimary, when true, makes the operator create an additional <vault-name>-primary Service whose selector narrows to the active (leader) node, alongside the always-all-nodes <vault-name> Service. A client that requires strict read-after-write consistency, and cannot tolerate reading from a lagging standby, binds to the primary Service; everything else, including the default AppBinding, keeps using the all-nodes Service and is unaffected.\n\nRequires an HA-capable storage backend and a supported distribution; the admission webhook rejects it otherwise. The primary Service has no endpoints during a leader election (the brief window with no active node), which is the cost of the guarantee. Defaults to false. See design/primary-service-routing.md.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"isolateTenants": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IsolateTenants is the master opt-in for per-tenant OpenBao namespace isolation. When true (and the backend is namespace-capable, i.e. OpenBao / Vault Enterprise), SecretEngines on this server whose referenced database lives in a client-org namespace are provisioned in a matching OpenBao namespace keyed on the org-id, and an explicit SecretEngine.spec.namespace is also honored. When false (the default), everything stays in the root namespace and any SecretEngine.spec.namespace is rejected. Enabling this on a running server is safe: existing mounts are never moved on their own (migration is admin-authorized). See design/tenant-namespace-design.md.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"relayPlacementRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RelayPlacementRef points to an OCM Placement object (cluster.open-cluster-management.io/v1beta1) in the same namespace as the VaultServer. When set, the operator deploys a VaultRelay to every managed cluster selected by the Placement, using one ManifestWork per cluster. Requires the OCM hub CRDs (Placement, PlacementDecision, ManifestWork) to be installed; the field is ignored with a warning condition otherwise.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"relayTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RelayTemplate customizes the VaultRelays stamped out for clusters selected by RelayPlacementRef. Per-cluster fields (spokeName, hubVaultRef, join material) are filled in by the operator.",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayTemplate"),
+						},
+					},
 				},
 				Required: []string{"version", "backend"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AllowedSecretEngines", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethod", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.BackendStorageSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamedServiceTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.UnsealerSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.VolumeSource", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AllowedSecretEngines", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethod", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.BackendStorageSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamedServiceTemplateSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.UnsealerSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultRelayTemplate"},
 	}
 }
 
@@ -25497,11 +26280,17 @@ func schema_apimachinery_apis_kubevault_v1alpha2_VaultServerStatus(ref common.Re
 							},
 						},
 					},
+					"relayPlacement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RelayPlacement summarizes spoke relay rollout when spec.relayPlacementRef is set.",
+							Ref:         ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RelayPlacementStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethodStatus", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethodStatus", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RelayPlacementStatus", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultStatus"},
 	}
 }
 
@@ -25513,7 +26302,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_VaultStatus(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"active": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PodName of the active Vault node. Active node is unsealed. Only active node can serve requests. Vault service only points to the active node.",
+							Description: "PodName of the active (leader) Vault node. The active node is unsealed and every write is committed there. Standby nodes serve reads and forward writes to it. The <vault-name>-primary Service, created when spec.exposePrimary is true, points at this node alone; the <vault-name> Service always points at all nodes. Empty while no node is active, for example during a leader election.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

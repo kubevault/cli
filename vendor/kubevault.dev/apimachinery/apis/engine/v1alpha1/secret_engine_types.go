@@ -385,4 +385,12 @@ type SecretEngineStatus struct {
 	// Path defines the path used to enable this secret engine
 	// Visible to user but immutable
 	Path string `json:"path,omitempty"`
+
+	// EffectiveNamespace is the OpenBao namespace this secret engine is actually
+	// provisioned in (empty means the root namespace). It is the single source of truth
+	// that every dependent {db}Role inherits, and the sticky anchor that prevents an
+	// accidental re-mount when the desired namespace changes — migration to a new
+	// namespace is admin-authorized. See design/tenant-namespace-design.md §5.2.
+	// +optional
+	EffectiveNamespace string `json:"effectiveNamespace,omitempty"`
 }

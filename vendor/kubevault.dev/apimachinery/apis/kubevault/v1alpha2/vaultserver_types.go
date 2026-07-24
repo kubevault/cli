@@ -140,6 +140,67 @@ type VaultServerSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// ExposePrimary, when true, makes the operator create an additional
+	// <vault-name>-primary Service whose selector narrows to the active (leader)
+	// node, alongside the always-all-nodes <vault-name> Service. A client that
+	// requires strict read-after-write consistency, and cannot tolerate reading from
+	// a lagging standby, binds to the primary Service; everything else, including the
+	// default AppBinding, keeps using the all-nodes Service and is unaffected.
+	//
+	// Requires an HA-capable storage backend and a supported distribution; the
+	// admission webhook rejects it otherwise. The primary Service has no endpoints
+	// during a leader election (the brief window with no active node), which is the
+	// cost of the guarantee. Defaults to false. See design/primary-service-routing.md.
+	// +optional
+	ExposePrimary bool `json:"exposePrimary,omitempty"`
+
+	// IsolateTenants is the master opt-in for per-tenant OpenBao namespace isolation.
+	// When true (and the backend is namespace-capable, i.e. OpenBao / Vault Enterprise),
+	// SecretEngines on this server whose referenced database lives in a client-org
+	// namespace are provisioned in a matching OpenBao namespace keyed on the org-id, and
+	// an explicit SecretEngine.spec.namespace is also honored. When false (the default),
+	// everything stays in the root namespace and any SecretEngine.spec.namespace is rejected.
+	// Enabling this on a running server is safe: existing mounts are never moved on their own
+	// (migration is admin-authorized). See design/tenant-namespace-design.md.
+	// +optional
+	IsolateTenants bool `json:"isolateTenants,omitempty"`
+
+	// RelayPlacementRef points to an OCM Placement object (cluster.open-cluster-management.io/v1beta1)
+	// in the same namespace as the VaultServer. When set, the operator deploys a VaultRelay to
+	// every managed cluster selected by the Placement, using one ManifestWork per cluster.
+	// Requires the OCM hub CRDs (Placement, PlacementDecision, ManifestWork) to be installed;
+	// the field is ignored with a warning condition otherwise.
+	// +optional
+	RelayPlacementRef *core.LocalObjectReference `json:"relayPlacementRef,omitempty"`
+
+	// RelayTemplate customizes the VaultRelays stamped out for clusters selected by
+	// RelayPlacementRef. Per-cluster fields (spokeName, hubVaultRef, join material)
+	// are filled in by the operator.
+	// +optional
+	RelayTemplate *VaultRelayTemplate `json:"relayTemplate,omitempty"`
+}
+
+// VaultRelayTemplate is the subset of VaultRelaySpec a hub admin may pre-set for
+// placement-driven spoke relay deployments.
+type VaultRelayTemplate struct {
+	// Namespace on the managed cluster where the VaultRelay and its companion
+	// resources are created. Defaults to the VaultServer's namespace.
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+
+	// Image overrides the spoke-relay container image.
+	// +optional
+	Image string `json:"image,omitempty"`
+
+	// PodTemplate is an optional configuration for the spoke-relay pods.
+	// +optional
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// BootstrapTokenTTL controls the TTL of hub bootstrap tokens minted per spoke
+	// (and therefore their rotation period). Default 24h, minimum 1h.
+	// +optional
+	BootstrapTokenTTL *metav1.Duration `json:"bootstrapTokenTTL,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -190,6 +251,55 @@ type VaultServerStatus struct {
 	// Status of the vault auth methods
 	// +optional
 	AuthMethodStatus []AuthMethodStatus `json:"authMethodStatus,omitempty"`
+
+	// RelayPlacement summarizes spoke relay rollout when spec.relayPlacementRef is set.
+	// +optional
+	RelayPlacement *RelayPlacementStatus `json:"relayPlacement,omitempty"`
+}
+
+// RelayPlacementStatus summarizes the rollout of spoke relays to managed clusters.
+type RelayPlacementStatus struct {
+	// Placement is the resolved Placement name.
+	// +optional
+	Placement string `json:"placement,omitempty"`
+
+	// Selected is the number of clusters currently listed in the PlacementDecisions.
+	// +optional
+	Selected int32 `json:"selected,omitempty"`
+
+	// Applied is the number of clusters whose ManifestWork has condition Applied=True.
+	// +optional
+	Applied int32 `json:"applied,omitempty"`
+
+	// Ready is the number of clusters whose VaultRelay reports phase Connected
+	// (scraped via ManifestWork status feedback).
+	// +optional
+	Ready int32 `json:"ready,omitempty"`
+
+	// Clusters holds per-cluster detail.
+	// +optional
+	Clusters []SpokeClusterStatus `json:"clusters,omitempty"`
+}
+
+// SpokeClusterStatus is the per managed cluster rollout state.
+type SpokeClusterStatus struct {
+	// ClusterName is the ManagedCluster name.
+	ClusterName string `json:"clusterName"`
+
+	// Phase mirrors the spoke VaultRelay phase (Pending|Connected|Disconnected|Error)
+	// plus hub-side values (WorkApplied, WorkProgressing, WorkDegraded).
+	// +optional
+	Phase string `json:"phase,omitempty"`
+
+	// TokenExpiry is when the current bootstrap token for this spoke expires.
+	// +optional
+	TokenExpiry *metav1.Time `json:"tokenExpiry,omitempty"`
+
+	// CertExpiry is when this spoke's mTLS client certificate expires, as
+	// observed by the hub relay backend (relay/spokes). Nil when unknown: the
+	// spoke is not connected, or the hub captured no verified peer cert.
+	// +optional
+	CertExpiry *metav1.Time `json:"certExpiry,omitempty"`
 }
 
 // AllowedSecretEngines defines which Secret Engines may be attached to this Listener.
@@ -265,9 +375,12 @@ type SecretEngineNamespaces struct {
 }
 
 type VaultStatus struct {
-	// PodName of the active Vault node. Active node is unsealed.
-	// Only active node can serve requests.
-	// Vault service only points to the active node.
+	// PodName of the active (leader) Vault node. The active node is unsealed and
+	// every write is committed there. Standby nodes serve reads and forward
+	// writes to it. The <vault-name>-primary Service, created when
+	// spec.exposePrimary is true, points at this node alone; the <vault-name>
+	// Service always points at all nodes.
+	// Empty while no node is active, for example during a leader election.
 	// +optional
 	Active string `json:"active,omitempty"`
 
