@@ -121,6 +121,13 @@ type KubernetesSubjectRef struct {
 
 	// Optional Audience claim to verify in the JWT.
 	Audience string `json:"audience,omitempty"`
+
+	// NoDefaultPolicy, when true, sets token_no_default_policy on the kubernetes auth role
+	// so tokens issued for it do not receive Vault's built-in `default` policy — only the
+	// policies explicitly bound. Used to minimize the token surface for machine identities
+	// such as spoke agents (design/tenant-namespace-design.md §11.5).
+	// +optional
+	NoDefaultPolicy bool `json:"noDefaultPolicy,omitempty"`
 }
 
 // More info: https://www.vaultproject.io/api-docs/auth/approle#create-update-approle

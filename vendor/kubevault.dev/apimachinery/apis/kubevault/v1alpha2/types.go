@@ -25,6 +25,7 @@ const (
 	VaultUnsealerContainerName = "vault-unsealer"
 	VaultInitContainerName     = "vault-config"
 	VaultExporterContainerName = "vault-exporter"
+	VaultRelayContainerName    = "spoke-relay"
 )
 
 // +kubebuilder:validation:Enum=Initializing;Unsealing;Sealed;Ready;NotReady;Critical
@@ -59,13 +60,18 @@ const (
 	TerminationPolicyDoNotTerminate TerminationPolicy = "DoNotTerminate"
 )
 
-// +kubebuilder:validation:Enum=internal;vault;stats
+// +kubebuilder:validation:Enum=internal;vault;stats;primary
 type ServiceAlias string
 
 const (
 	VaultServerServiceInternal ServiceAlias = "internal"
 	VaultServerServiceVault    ServiceAlias = "vault"
 	VaultServerServiceStats    ServiceAlias = "stats"
+	// VaultServerServicePrimary is the client Service that selects only the active
+	// (leader) node. The operator creates it only when spec.exposePrimary is true;
+	// consumers that need strict read-after-write bind to it, while the vault
+	// Service keeps selecting all nodes.
+	VaultServerServicePrimary ServiceAlias = "primary"
 )
 
 type NamedServiceTemplateSpec struct {

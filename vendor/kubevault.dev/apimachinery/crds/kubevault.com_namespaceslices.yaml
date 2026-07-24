@@ -1,0 +1,129 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: kubevault
+  name: namespaceslices.kubevault.com
+spec:
+  group: kubevault.com
+  names:
+    categories:
+    - vault
+    - appscode
+    - all
+    kind: NamespaceSlice
+    listKind: NamespaceSliceList
+    plural: namespaceslices
+    shortNames:
+    - nss
+    singular: namespaceslice
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.namespaceCount
+      name: NamespaceCount
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              hubVaultRef:
+                description: |-
+                  HubVaultRef identifies the hub VaultServer whose namespaces this slice tracks —
+                  the same VaultServer the kubevault.com/vaultserver-name + -namespace labels group
+                  this slice to, so the ref and the labels always agree. It is set by the hub (which
+                  owns those labels); the spoke fills only spec.namespaces. Optional for non-spoke uses.
+                properties:
+                  name:
+                    description: |-
+                      Name of the referent.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                  namespace:
+                    description: |-
+                      Namespace of the referent.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                    type: string
+                required:
+                - name
+                type: object
+              namespaces:
+                description: Namespaces is this slice's shard of required OpenBao
+                  namespaces, keyed on name.
+                items:
+                  description: |-
+                    NamespaceSliceEntry is one required OpenBao namespace — the analogue of a single
+                    Endpoint in an EndpointSlice.
+                  properties:
+                    conditions:
+                      description: |-
+                        Conditions carries the readiness of this single namespace entry, mirroring the
+                        EndpointConditions shape on EndpointSlice.
+                      properties:
+                        ready:
+                          description: |-
+                            Ready is true when the namespace is validated and required (as reported by the
+                            authoring spoke operator). A nil value means the condition is unknown.
+                          type: boolean
+                      type: object
+                    externalID:
+                      description: |-
+                        ExternalID is the external identity this namespace maps to — the KubeDB Platform
+                        org-id, in string form. It lets the effective namespace name diverge from the
+                        org-id in the future without changing the association.
+                      type: string
+                    name:
+                      description: |-
+                        Name is the effective OpenBao namespace to provision (the org-id, in the current
+                        tenant-isolation model where the namespace is keyed on the org identity).
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+            type: object
+          status:
+            properties:
+              namespaceCount:
+                description: |-
+                  NamespaceCount mirrors len(spec.namespaces) for a cheap print column and a
+                  bounded status-feedback scalar.
+                format: int32
+                type: integer
+              observedGeneration:
+                description: ObservedGeneration is the most recent generation observed
+                  for this resource.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -83,6 +83,69 @@ func (v VaultServer) AppBindingName() string {
 	return v.Name
 }
 
+// SpokeRelayName is the shared name for per-cluster spoke relay resources on
+// the hub: the ServiceAccount and its token Secret in the managed cluster
+// namespace, and the ManifestWork. It embeds the VaultServer namespace and
+// name because those hub resources live outside the VaultServer namespace.
+func (v VaultServer) SpokeRelayName() string {
+	return meta_util.NameWithPrefix("kv", fmt.Sprintf("%s-%s-relay", v.Namespace, v.Name))
+}
+
+// SpokeRelayJoinSecretName is the per-cluster Secret (hub copy lives in the
+// managed cluster namespace, spoke copy in the relay namespace) holding the
+// bootstrap token, the spoke-CA SPKI pin, and the Vault API CA bundle.
+func (v VaultServer) SpokeRelayJoinSecretName() string {
+	return meta_util.NameWithSuffix(v.SpokeRelayName(), "join")
+}
+
+// SpokeRelayHubTokenSecretName is the spoke-side Secret carrying the hub
+// ServiceAccount JWT used for kubernetes-auth logins against the hub Vault.
+func (v VaultServer) SpokeRelayHubTokenSecretName() string {
+	return meta_util.NameWithSuffix(v.SpokeRelayName(), "hub-token")
+}
+
+// SpokeRelayResourceName is the name of the VaultRelay and AppBinding created
+// on the managed cluster.
+func (v VaultServer) SpokeRelayResourceName() string {
+	return meta_util.NameWithSuffix(v.Name, "relay")
+}
+
+// SpokeRelayAppBindingName is the AppBinding created on the managed cluster
+// that points back at the hub VaultServer.
+func (v VaultServer) SpokeRelayAppBindingName() string {
+	return meta_util.NameWithSuffix(v.SpokeRelayResourceName(), "hub-vault")
+}
+
+// PolicyNameForSpoke is the VaultPolicy / VaultPolicyBinding name (in the
+// VaultServer namespace) for one managed cluster.
+func (v VaultServer) PolicyNameForSpoke(cluster string) string {
+	return meta_util.NameWithSuffix(v.Name, "spoke-"+cluster)
+}
+
+// VaultRoleNameForSpoke is the Vault kubernetes-auth role bound to the spoke's
+// hub ServiceAccount; referenced by the spoke AppBinding parameters.vaultRole.
+func (v VaultServer) VaultRoleNameForSpoke(cluster string) string {
+	return fmt.Sprintf("k8s-%s-%s", cluster, v.Name)
+}
+
+// SpokeRelayNamespace is the namespace on the managed cluster where the
+// VaultRelay and its companion resources are created.
+func (v VaultServer) SpokeRelayNamespace() string {
+	if v.Spec.RelayTemplate != nil && v.Spec.RelayTemplate.Namespace != "" {
+		return v.Spec.RelayTemplate.Namespace
+	}
+	return v.Namespace
+}
+
+// SpokeRelayLabels are stamped on hub-side per-cluster resources to map them
+// back to the owning VaultServer (cross-namespace owner refs are not allowed).
+func (v VaultServer) SpokeRelayLabels() map[string]string {
+	return map[string]string{
+		apis.LabelVaultServerName:      v.Name,
+		apis.LabelVaultServerNamespace: v.Namespace,
+	}
+}
+
 func (v VaultServer) OffshootSelectors() map[string]string {
 	return map[string]string{
 		meta_util.NameLabelKey:      v.ResourceFQN(),

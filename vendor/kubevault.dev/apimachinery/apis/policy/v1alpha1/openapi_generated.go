@@ -23933,6 +23933,13 @@ func schema_apimachinery_apis_policy_v1alpha1_KubernetesSubjectRef(ref common.Re
 							Format:      "",
 						},
 					},
+					"noDefaultPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NoDefaultPolicy, when true, sets token_no_default_policy on the kubernetes auth role so tokens issued for it do not receive Vault's built-in `default` policy — only the policies explicitly bound. Used to minimize the token surface for machine identities such as spoke agents (design/tenant-namespace-design.md §11.5).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"serviceAccountNames", "serviceAccountNamespaces"},
 			},

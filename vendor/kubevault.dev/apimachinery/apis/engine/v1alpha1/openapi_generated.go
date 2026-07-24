@@ -26659,6 +26659,13 @@ func schema_apimachinery_apis_engine_v1alpha1_SecretEngineStatus(ref common.Refe
 							Format:      "",
 						},
 					},
+					"effectiveNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EffectiveNamespace is the OpenBao namespace this secret engine is actually provisioned in (empty means the root namespace). It is the single source of truth that every dependent {db}Role inherits, and the sticky anchor that prevents an accidental re-mount when the desired namespace changes — migration to a new namespace is admin-authorized. See design/tenant-namespace-design.md §5.2.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
