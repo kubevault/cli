@@ -110,9 +110,6 @@ spec:
                 - name
                 - namespace
                 type: object
-              image:
-                description: Image is the spoke-relay container image
-                type: string
               isolateTenants:
                 description: |-
                   IsolateTenants opts this spoke into per-tenant OpenBao namespace isolation against

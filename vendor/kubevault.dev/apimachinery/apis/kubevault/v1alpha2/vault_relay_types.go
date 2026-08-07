@@ -67,10 +67,6 @@ type VaultRelaySpec struct {
 	// +optional
 	TokenSecretRef *core.LocalObjectReference `json:"tokenSecretRef,omitempty"`
 
-	// Image is the spoke-relay container image
-	// +optional
-	Image string `json:"image,omitempty"`
-
 	// TLS configuration for gRPC connection
 	// +optional
 	TLS *VaultRelayTLSConfig `json:"tls,omitempty"`
