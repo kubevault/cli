@@ -65,6 +65,7 @@ spec:
                 enum:
                 - Vault
                 - OpenBao
+                - Sigilr
                 type: string
               exporter:
                 description: Exporter Image

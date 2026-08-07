@@ -25749,13 +25749,6 @@ func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelaySpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Image is the spoke-relay container image",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS configuration for gRPC connection",
@@ -25901,13 +25894,6 @@ func schema_apimachinery_apis_kubevault_v1alpha2_VaultRelayTemplate(ref common.R
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace on the managed cluster where the VaultRelay and its companion resources are created. Defaults to the VaultServer's namespace.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Image overrides the spoke-relay container image.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
