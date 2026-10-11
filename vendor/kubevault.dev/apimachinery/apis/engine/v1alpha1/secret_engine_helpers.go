@@ -73,28 +73,54 @@ func (se SecretEngine) GetSecretEnginePath() string {
 
 func (se SecretEngine) GetSecretEngineType() api.SecretEngineType {
 	switch seSpec := se.Spec; {
-	case seSpec.GCP != nil:
-		return api.SecretEngineTypeGCP
 	case seSpec.AWS != nil:
 		return api.SecretEngineTypeAWS
 	case seSpec.Azure != nil:
 		return api.SecretEngineTypeAzure
+	case seSpec.Druid != nil:
+		return api.SecretEngineTypeDruid
 	case seSpec.Elasticsearch != nil:
 		return api.SecretEngineTypeElasticsearch
-	case seSpec.MongoDB != nil:
-		return api.SecretEngineTypeMongoDB
-	case seSpec.Redis != nil:
-		return api.SecretEngineTypeRedis
-	case seSpec.MySQL != nil:
-		return api.SecretEngineTypeMySQL
-	case seSpec.Postgres != nil:
-		return api.SecretEngineTypePostgres
-	case seSpec.MariaDB != nil:
-		return api.SecretEngineTypeMariaDB
+	case seSpec.Etcd != nil:
+		return api.SecretEngineTypeEtcd
+	case seSpec.GCP != nil:
+		return api.SecretEngineTypeGCP
+	case seSpec.HanaDB != nil:
+		return api.SecretEngineTypeHanaDB
+	case seSpec.Ignite != nil:
+		return api.SecretEngineTypeIgnite
+	case seSpec.Kafka != nil:
+		return api.SecretEngineTypeKafka
 	case seSpec.KV != nil:
 		return api.SecretEngineTypeKV
+	case seSpec.MariaDB != nil:
+		return api.SecretEngineTypeMariaDB
+	case seSpec.Milvus != nil:
+		return api.SecretEngineTypeMilvus
+	case seSpec.MongoDB != nil:
+		return api.SecretEngineTypeMongoDB
+	case seSpec.MSSQLServer != nil:
+		return api.SecretEngineTypeMSSQLServer
+	case seSpec.MySQL != nil:
+		return api.SecretEngineTypeMySQL
+	case seSpec.Neo4j != nil:
+		return api.SecretEngineTypeNeo4j
+	case seSpec.Oracle != nil:
+		return api.SecretEngineTypeOracle
 	case seSpec.PKI != nil:
 		return api.SecretEngineTypePKI
+	case seSpec.Postgres != nil:
+		return api.SecretEngineTypePostgres
+	case seSpec.Qdrant != nil:
+		return api.SecretEngineTypeQdrant
+	case seSpec.RabbitMQ != nil:
+		return api.SecretEngineTypeRabbitMQ
+	case seSpec.Redis != nil:
+		return api.SecretEngineTypeRedis
+	case seSpec.Solr != nil:
+		return api.SecretEngineTypeSolr
+	case seSpec.Weaviate != nil:
+		return api.SecretEngineTypeWeaviate
 	default:
 		return ""
 	}

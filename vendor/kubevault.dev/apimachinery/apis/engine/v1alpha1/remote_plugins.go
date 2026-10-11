@@ -23,10 +23,23 @@ import "fmt"
 // operations over mTLS gRPC to the in-process built-in plugin running on
 // the named spoke.
 const (
-	RemotePostgresDatabasePlugin = "remote-postgres-plugin"
-	RemoteMySQLDatabasePlugin    = "remote-mysql-plugin"
-	RemoteRedisDatabasePlugin    = "remote-redis-plugin"
-	RemoteValkeyDatabasePlugin   = "remote-valkey-plugin"
+	RemotePostgresDatabasePlugin    = "remote-postgres-plugin"
+	RemoteMySQLDatabasePlugin       = "remote-mysql-plugin"
+	RemoteRedisDatabasePlugin       = "remote-redis-plugin"
+	RemoteValkeyDatabasePlugin      = "remote-valkey-plugin"
+	RemoteDruidDatabasePlugin       = "remote-druid-plugin"
+	RemoteEtcdDatabasePlugin        = "remote-etcd-plugin"
+	RemoteHanaDBDatabasePlugin      = "remote-hana-plugin"
+	RemoteIgniteDatabasePlugin      = "remote-ignite-plugin"
+	RemoteKafkaDatabasePlugin       = "remote-kafka-plugin"
+	RemoteMilvusDatabasePlugin      = "remote-milvus-plugin"
+	RemoteMSSQLServerDatabasePlugin = "remote-mssql-plugin"
+	RemoteNeo4jDatabasePlugin       = "remote-neo4j-plugin"
+	RemoteOracleDatabasePlugin      = "remote-oracle-plugin"
+	RemoteQdrantDatabasePlugin      = "remote-qdrant-plugin"
+	RemoteRabbitMQDatabasePlugin    = "remote-rabbitmq-plugin"
+	RemoteSolrDatabasePlugin        = "remote-solr-plugin"
+	RemoteWeaviateDatabasePlugin    = "remote-weaviate-plugin"
 )
 
 // RemoteDatabasePlugin maps a database engine kind to the hub-side proxy
@@ -36,16 +49,42 @@ const (
 // local plugin name into a hub mount.
 func RemoteDatabasePlugin(engineKind string) (string, error) {
 	switch engineKind {
-	case "postgres":
-		return RemotePostgresDatabasePlugin, nil
-	case "mysql", "mariadb":
+	case "druid":
+		return RemoteDruidDatabasePlugin, nil
+	case "etcd":
+		return RemoteEtcdDatabasePlugin, nil
+	case "hanadb":
+		return RemoteHanaDBDatabasePlugin, nil
+	case "ignite":
+		return RemoteIgniteDatabasePlugin, nil
+	case "kafka":
+		return RemoteKafkaDatabasePlugin, nil
+	case "mariadb", "mysql":
 		// MariaDB uses the MySQL plugin locally and remotely.
 		return RemoteMySQLDatabasePlugin, nil
+	case "milvus":
+		return RemoteMilvusDatabasePlugin, nil
+	case "mssqlserver":
+		return RemoteMSSQLServerDatabasePlugin, nil
+	case "neo4j":
+		return RemoteNeo4jDatabasePlugin, nil
+	case "oracle":
+		return RemoteOracleDatabasePlugin, nil
+	case "postgres":
+		return RemotePostgresDatabasePlugin, nil
+	case "qdrant":
+		return RemoteQdrantDatabasePlugin, nil
+	case "rabbitmq":
+		return RemoteRabbitMQDatabasePlugin, nil
 	case "redis":
 		return RemoteRedisDatabasePlugin, nil
+	case "solr":
+		return RemoteSolrDatabasePlugin, nil
 	case "valkey":
 		return RemoteValkeyDatabasePlugin, nil
+	case "weaviate":
+		return RemoteWeaviateDatabasePlugin, nil
 	default:
-		return "", fmt.Errorf("database engine %q is not supported through the OpenBao spoke relay; supported: postgres, mysql, mariadb, redis, valkey", engineKind)
+		return "", fmt.Errorf("database engine %q is not supported through the OpenBao spoke relay; supported: druid, etcd, hanadb, ignite, kafka, mariadb, milvus, mssqlserver, mysql, neo4j, oracle, postgres, qdrant, rabbitmq, redis, solr, valkey, weaviate", engineKind)
 	}
 }

@@ -59,11 +59,11 @@ const (
 type RoleStatus struct {
 	Phase RolePhase `json:"phase,omitempty"`
 
-	// ObservedGeneration is the most recent generation observed for this MySQLRole. It corresponds to the
-	// MySQLRole's generation, which is updated on mutation by the API Server.
+	// ObservedGeneration is the most recent generation observed for this role. It corresponds to the
+	// roles's generation, which is updated on mutation by the API Server.
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
-	// Represents the latest available observations of a MySQLRole current state.
+	// Represents the latest available observations of a role's current state.
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 
 	PolicyRef *kmapi.ObjectReference `json:"policyRef,omitempty"`

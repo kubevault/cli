@@ -1,7 +1,6 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubevault
   name: vaultservers.kubevault.com
@@ -10865,6 +10864,19 @@ spec:
                       - mariadb
                       - elasticsearch
                       - redis
+                      - druid
+                      - etcd
+                      - hanadb
+                      - ignite
+                      - kafka
+                      - milvus
+                      - mssqlserver
+                      - neo4j
+                      - oracle
+                      - qdrant
+                      - rabbitmq
+                      - solr
+                      - weaviate
                       type: string
                     type: array
                 type: object
