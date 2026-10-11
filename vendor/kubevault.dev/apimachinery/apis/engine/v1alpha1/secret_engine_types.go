@@ -89,6 +89,331 @@ type SecretEngineConfiguration struct {
 	KV            *KVConfiguration            `json:"kv,omitempty"`
 	Elasticsearch *ElasticsearchConfiguration `json:"elasticsearch,omitempty"`
 	PKI           *PKIConfiguration           `json:"pki,omitempty"`
+	Druid         *DruidConfiguration         `json:"druid,omitempty"`
+	Etcd          *EtcdConfiguration          `json:"etcd,omitempty"`
+	HanaDB        *HanaDBConfiguration        `json:"hanadb,omitempty"`
+	Ignite        *IgniteConfiguration        `json:"ignite,omitempty"`
+	Kafka         *KafkaConfiguration         `json:"kafka,omitempty"`
+	Milvus        *MilvusConfiguration        `json:"milvus,omitempty"`
+	MSSQLServer   *MSSQLServerConfiguration   `json:"mssqlserver,omitempty"`
+	Neo4j         *Neo4jConfiguration         `json:"neo4j,omitempty"`
+	Oracle        *OracleConfiguration        `json:"oracle,omitempty"`
+	Qdrant        *QdrantConfiguration        `json:"qdrant,omitempty"`
+	RabbitMQ      *RabbitMQConfiguration      `json:"rabbitmq,omitempty"`
+	Solr          *SolrConfiguration          `json:"solr,omitempty"`
+	Weaviate      *WeaviateConfiguration      `json:"weaviate,omitempty"`
+}
+
+// DruidConfiguration defines an Apache Druid app configuration. The
+// OpenBao `druid-database-plugin` (sigilr/openbao#12) provisions
+// credentials via Druid's BasicSecurity coordinator API
+// (authenticator user + role bindings), so the connection payload
+// uses `url` (Druid coordinator REST endpoint) rather than a
+// connection_url. Druid is dynamic: NewUser/UpdateUser/DeleteUser
+// are all supported.
+// https://druid.apache.org/docs/latest/operations/security-overview/
+type DruidConfiguration struct {
+	// Specifies the Druid database appbinding reference. The
+	// AppBinding URL points at the Druid coordinator REST endpoint
+	// (e.g. `http://druid-coordinator.demo.svc:8081`); the secret
+	// contributes username/password used to authenticate against
+	// Druid's BasicSecurity coordinator API.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for druid: druid-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+
+	// Authenticator is the Druid BasicSecurity authenticator that will hold
+	// dynamically issued credentials. Defaults to MyBasicMetadataAuthenticator
+	// (Druid's Quick Start name).
+	// +optional
+	Authenticator string `json:"authenticator,omitempty"`
+
+	// Authorizer is the Druid BasicSecurity authorizer that holds the roles
+	// referenced by creationStatements. Defaults to MyBasicMetadataAuthorizer.
+	// +optional
+	Authorizer string `json:"authorizer,omitempty"`
+}
+
+// EtcdConfiguration defines an etcd app configuration. The OpenBao
+// `etcd-database-plugin` (sigilr/openbao#50) issues dynamic credentials
+// against etcd's built-in v3 Auth API: NewUser creates a native etcd
+// user and grants it every role named in creationStatements. The
+// connection payload uses `endpoints` (comma-separated etcd client
+// URLs) rather than a connection_url. Etcd is dynamic:
+// NewUser/UpdateUser/DeleteUser are all supported.
+// https://etcd.io/docs/latest/op-guide/authentication/
+type EtcdConfiguration struct {
+	// Specifies the etcd database appbinding reference. The AppBinding's
+	// URL is forwarded as the etcd client endpoint (`endpoints=`); the
+	// secret contributes the root username/password used to
+	// authenticate against etcd's v3 Auth API.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for etcd: etcd-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+}
+
+// HanaDBConfiguration defines a SAP HANA app configuration. The OpenBao
+// `hana-database-plugin` (sigilr/openbao#3) was ported from pre-BUSL
+// HashiCorp Vault and is a dynamic SQL-statement based plugin
+// (postgres-style): the connection payload is the HANA DSN
+// (`connection_url`) plus pool-tuning knobs.
+// https://www.vaultproject.io/api/secret/databases/hanadb.html
+type HanaDBConfiguration struct {
+	// Specifies the HANA database appbinding reference. The AppBinding
+	// URL is the HANA DSN (e.g. `hdb://<host>:<port>`); the secret
+	// contributes username/password.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for hanadb: hana-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+
+	// Specifies the maximum number of open connections to the database.
+	// +optional
+	MaxOpenConnections int64 `json:"maxOpenConnections,omitempty"`
+
+	// Specifies the maximum number of idle connections to the database.
+	// A zero uses the value of max_open_connections and a negative value disables idle connections.
+	// If larger than max_open_connections it will be reduced to be equal.
+	// +optional
+	MaxIdleConnections int64 `json:"maxIdleConnections,omitempty"`
+
+	// Specifies the maximum amount of time a connection may be reused.
+	// If <= 0s connections are reused forever.
+	// +optional
+	MaxConnectionLifetime string `json:"maxConnectionLifetime,omitempty"`
+}
+
+// IgniteConfiguration defines an Apache Ignite app configuration. The OpenBao
+// `ignite-database-plugin` (sigilr/openbao#14) executes dynamic SQL DDL
+// (`CREATE USER` / `ALTER USER` / `DROP USER`) over Ignite's REST API
+// (`cmd=qryfldexe`). The connection payload is the Ignite REST endpoint
+// (`url`) plus Basic Auth username/password sourced from the AppBinding
+// secret. Pool-tuning knobs are intentionally omitted because the REST API
+// does not expose them.
+// https://ignite.apache.org/docs/latest/security/authentication
+type IgniteConfiguration struct {
+	// Specifies the Ignite database appbinding reference. The AppBinding URL
+	// is the Ignite REST endpoint (e.g. `http://ignite.demo.svc:8080`); the
+	// secret contributes username/password.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for ignite: ignite-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+}
+
+// KafkaConfiguration defines an Apache Kafka app configuration. The
+// OpenBao `kafka-database-plugin` (sigilr/openbao#15) writes SCRAM
+// user records via the franz-go AdminClient, so the connection
+// payload uses `brokers` (a comma-separated broker list) rather than
+// `connection_url`. Kafka is dynamic: NewUser/UpdateUser/DeleteUser are
+// all supported. ACLs are not yet implemented — the `acls` field on
+// the role JSON is reserved and must currently be empty.
+// https://kafka.apache.org/documentation/#security_sasl_scram
+type KafkaConfiguration struct {
+	// Specifies the Kafka cluster appbinding reference. The AppBinding
+	// URL is the broker CSV (e.g. `broker1:9092,broker2:9092`) and the
+	// referenced Secret contributes username/password for the SASL
+	// principal used to manage SCRAM user records.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for kafka: kafka-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+}
+
+// MSSQLServerConfiguration defines a Microsoft SQL Server app
+// configuration. The OpenBao `mssql-database-plugin` (sigilr/openbao#5)
+// was ported from pre-BUSL HashiCorp Vault and is a dynamic
+// SQL-statement based plugin (postgres-style): the connection payload is
+// the SQL Server DSN (`connection_url`) plus pool-tuning knobs and the
+// MSSQL-specific `contained_db` toggle.
+// https://www.vaultproject.io/api/secret/databases/mssql.html
+type MSSQLServerConfiguration struct {
+	// Specifies the SQL Server database appbinding reference. The
+	// AppBinding URL is the SQL Server DSN
+	// (`sqlserver://<user>:<pass>@<host>:1433`); the secret contributes
+	// username/password.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for mssqlserver: mssql-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+
+	// Specifies the maximum number of open connections to the database.
+	// +optional
+	MaxOpenConnections int64 `json:"maxOpenConnections,omitempty"`
+
+	// Specifies the maximum number of idle connections to the database.
+	// A zero uses the value of max_open_connections and a negative value disables idle connections.
+	// If larger than max_open_connections it will be reduced to be equal.
+	// +optional
+	MaxIdleConnections int64 `json:"maxIdleConnections,omitempty"`
+
+	// Specifies the maximum amount of time a connection may be reused.
+	// If <= 0s connections are reused forever.
+	// +optional
+	MaxConnectionLifetime string `json:"maxConnectionLifetime,omitempty"`
+
+	// ContainedDB enables SQL Server contained-database authentication mode
+	// (CREATE USER ... WITH PASSWORD against the user database). Defaults to
+	// false (logins on the master DB).
+	// +optional
+	ContainedDB bool `json:"containedDB,omitempty"`
+}
+
+// OracleConfiguration defines an Oracle Database app configuration. The
+// OpenBao `oracle-database-plugin` (sigilr/openbao#6) uses the pure-Go
+// `sijms/go-ora/v2` driver and is a dynamic SQL-statement based plugin
+// (postgres-style): the connection payload is the Oracle DSN
+// (`connection_url`) plus pool-tuning knobs.
+// https://docs.oracle.com/en/database/
+type OracleConfiguration struct {
+	// Specifies the Oracle database appbinding reference. The AppBinding
+	// URL is the Oracle DSN (e.g. `oracle://<user>:<pass>@<host>:1521/<service>`);
+	// the secret contributes username/password.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for oracle: oracle-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+
+	// Specifies the maximum number of open connections to the database.
+	// +optional
+	MaxOpenConnections int64 `json:"maxOpenConnections,omitempty"`
+
+	// Specifies the maximum number of idle connections to the database.
+	// A zero uses the value of max_open_connections and a negative value disables idle connections.
+	// If larger than max_open_connections it will be reduced to be equal.
+	// +optional
+	MaxIdleConnections int64 `json:"maxIdleConnections,omitempty"`
+
+	// Specifies the maximum amount of time a connection may be reused.
+	// If <= 0s connections are reused forever.
+	// +optional
+	MaxConnectionLifetime string `json:"maxConnectionLifetime,omitempty"`
+}
+
+// QdrantConfiguration defines a Qdrant app configuration.
+type QdrantConfiguration struct {
+	// Specifies the Qdrant database appbinding reference. The
+	// AppBinding's URL is forwarded as the Qdrant HTTP endpoint
+	// (`url=`); the secret's `api_key` (or `password`) field is
+	// forwarded as the Qdrant API key (`api_key=`).
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for qdrant: qdrant-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+}
+
+// SolrConfiguration defines an Apache Solr app configuration. The
+// OpenBao `solr-database-plugin` (sigilr/openbao#11) provisions
+// credentials via Solr's Security Plugin API (Basic Auth Plugin user
+// + Rule-Based Authorization role bindings), so the connection
+// payload uses `url` (Solr HTTP endpoint) rather than a
+// connection_url. Solr is dynamic: NewUser/UpdateUser/DeleteUser
+// are all supported.
+// https://solr.apache.org/guide/solr/latest/deployment-guide/authentication-and-authorization-plugins.html
+type SolrConfiguration struct {
+	// Specifies the Solr database appbinding reference. The
+	// AppBinding URL points at the Solr HTTP endpoint
+	// (e.g. `http://solr.demo.svc:8983`); the secret contributes
+	// username/password used to authenticate against Solr's
+	// Security Plugin API.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for solr: solr-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+}
+
+// WeaviateConfiguration defines a Weaviate app configuration.
+type WeaviateConfiguration struct {
+	// Specifies the Weaviate database appbinding reference. The
+	// AppBinding's URL is forwarded as the Weaviate HTTP endpoint
+	// (`url=`); the secret's `AUTHENTICATION_APIKEY_ALLOWED_KEYS` field
+	// is forwarded as the Weaviate API key (`api_key=`).
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for weaviate: weaviate-database-plugin
+	// +optional
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	// +optional
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
 }
 
 // https://developer.hashicorp.com/vault/api-docs/secret/pki#generate-root
@@ -258,6 +583,21 @@ type RedisConfiguration struct {
 	AllowedRoles []string `json:"allowedRoles,omitempty"`
 }
 
+// RabbitMQConfiguration defines a RabbitMQ app configuration.
+type RabbitMQConfiguration struct {
+	// Specifies the primary RabbitMQ database AppBinding reference.
+	DatabaseRef appcat.AppReference `json:"databaseRef"`
+
+	// Specifies the name of the plugin to use for this connection.
+	// Default plugin:
+	//  - for rabbitmq: rabbitmq-database-plugin
+	PluginName string `json:"pluginName,omitempty"`
+
+	// List of the roles allowed to use this connection.
+	// Defaults to empty (no roles), if contains a "*" any role can use this connection.
+	AllowedRoles []string `json:"allowedRoles,omitempty"`
+}
+
 // MySQLConfiguration defines a MySQL app configuration.
 // https://www.vaultproject.io/api/secret/databases/index.html
 // https://www.vaultproject.io/api/secret/databases/mysql-maria.html#configure-connection
@@ -352,25 +692,6 @@ type ElasticsearchConfiguration struct {
 	// Default plugin:
 	//  - for elasticsearch: elasticsearch-database-plugin
 	PluginName string `json:"pluginName,omitempty"`
-
-	// The path to a PEM-encoded CA cert file to use to verify the Elasticsearch server's identity.
-	CACert string `json:"caCert,omitempty"`
-
-	// The path to a directory of PEM-encoded CA cert files to use to verify the Elasticsearch server's identity.
-	CAPath string `json:"caPath,omitempty"`
-
-	// The path to the certificate for the Elasticsearch client to present for communication.
-	ClientCert string `json:"clientCert,omitempty"`
-
-	// The path to the key for the Elasticsearch client to use for communication.
-	ClientKey string `json:"clientKey,omitempty"`
-
-	// This, if set, is used to set the SNI host when connecting via 1TLS.
-	TLSServerName string `json:"tlsServerName,omitempty"`
-
-	// Not recommended. Default to false. Can be set to true to disable SSL verification.
-	// +kubebuilder:default:=false
-	Insecure bool `json:"insecure,omitempty"`
 }
 
 type SecretEnginePhase string
