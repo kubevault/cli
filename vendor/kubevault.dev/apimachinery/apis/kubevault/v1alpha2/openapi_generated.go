@@ -377,6 +377,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.Condition":                                          schema_kmodulesxyz_client_go_api_v1_Condition(ref),
 		"kmodules.xyz/client-go/api/v1.HealthCheckSpec":                                    schema_kmodulesxyz_client_go_api_v1_HealthCheckSpec(ref),
 		"kmodules.xyz/client-go/api/v1.ImageInfo":                                          schema_kmodulesxyz_client_go_api_v1_ImageInfo(ref),
+		"kmodules.xyz/client-go/api/v1.LicenseInfo":                                        schema_kmodulesxyz_client_go_api_v1_LicenseInfo(ref),
 		"kmodules.xyz/client-go/api/v1.Lineage":                                            schema_kmodulesxyz_client_go_api_v1_Lineage(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectID":                                           schema_kmodulesxyz_client_go_api_v1_ObjectID(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectInfo":                                         schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref),
@@ -450,6 +451,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                             schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                          schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                    schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AerospikeSpec":                 schema_apimachinery_apis_kubevault_v1alpha2_AerospikeSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AlicloudOSSSpec":               schema_apimachinery_apis_kubevault_v1alpha2_AlicloudOSSSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AllowedSecretEngines":          schema_apimachinery_apis_kubevault_v1alpha2_AllowedSecretEngines(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethod":                    schema_apimachinery_apis_kubevault_v1alpha2_AuthMethod(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AuthMethodStatus":              schema_apimachinery_apis_kubevault_v1alpha2_AuthMethodStatus(ref),
@@ -457,7 +460,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AzureKeyVault":                 schema_apimachinery_apis_kubevault_v1alpha2_AzureKeyVault(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AzureSpec":                     schema_apimachinery_apis_kubevault_v1alpha2_AzureSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.BackendStorageSpec":            schema_apimachinery_apis_kubevault_v1alpha2_BackendStorageSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CassandraSpec":                 schema_apimachinery_apis_kubevault_v1alpha2_CassandraSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CockroachDBSpec":               schema_apimachinery_apis_kubevault_v1alpha2_CockroachDBSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ConsulSpec":                    schema_apimachinery_apis_kubevault_v1alpha2_ConsulSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CouchDBSpec":                   schema_apimachinery_apis_kubevault_v1alpha2_CouchDBSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.DynamoDBSpec":                  schema_apimachinery_apis_kubevault_v1alpha2_DynamoDBSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.EtcdSpec":                      schema_apimachinery_apis_kubevault_v1alpha2_EtcdSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.FileSpec":                      schema_apimachinery_apis_kubevault_v1alpha2_FileSpec(ref),
@@ -468,6 +474,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.JWTOIDCConfig":                 schema_apimachinery_apis_kubevault_v1alpha2_JWTOIDCConfig(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.KubernetesConfig":              schema_apimachinery_apis_kubevault_v1alpha2_KubernetesConfig(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.KubernetesSecretSpec":          schema_apimachinery_apis_kubevault_v1alpha2_KubernetesSecretSpec(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MSSQLSpec":                     schema_apimachinery_apis_kubevault_v1alpha2_MSSQLSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ModeSpec":                      schema_apimachinery_apis_kubevault_v1alpha2_ModeSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MySQLSpec":                     schema_apimachinery_apis_kubevault_v1alpha2_MySQLSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamedServiceTemplateSpec":      schema_apimachinery_apis_kubevault_v1alpha2_NamedServiceTemplateSpec(ref),
@@ -477,6 +484,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceList":            schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceList(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceSpec":            schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.NamespaceSliceStatus":          schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceStatus(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.OCISpec":                       schema_apimachinery_apis_kubevault_v1alpha2_OCISpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.PostgreSQLSpec":                schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RaftSpec":                      schema_apimachinery_apis_kubevault_v1alpha2_RaftSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ReconnectConfig":               schema_apimachinery_apis_kubevault_v1alpha2_ReconnectConfig(ref),
@@ -484,6 +492,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RelayPlacementStatus":          schema_apimachinery_apis_kubevault_v1alpha2_RelayPlacementStatus(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.S3Spec":                        schema_apimachinery_apis_kubevault_v1alpha2_S3Spec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SecretEngineNamespaces":        schema_apimachinery_apis_kubevault_v1alpha2_SecretEngineNamespaces(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SpannerSpec":                   schema_apimachinery_apis_kubevault_v1alpha2_SpannerSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SpokeClusterStatus":            schema_apimachinery_apis_kubevault_v1alpha2_SpokeClusterStatus(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SwiftSpec":                     schema_apimachinery_apis_kubevault_v1alpha2_SwiftSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.TLSPolicy":                     schema_apimachinery_apis_kubevault_v1alpha2_TLSPolicy(ref),
@@ -499,6 +508,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultServerSpec":               schema_apimachinery_apis_kubevault_v1alpha2_VaultServerSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultServerStatus":             schema_apimachinery_apis_kubevault_v1alpha2_VaultServerStatus(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.VaultStatus":                   schema_apimachinery_apis_kubevault_v1alpha2_VaultStatus(ref),
+		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ZookeeperSpec":                 schema_apimachinery_apis_kubevault_v1alpha2_ZookeeperSpec(ref),
 		"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.vaultServerStatsService":       schema_apimachinery_apis_kubevault_v1alpha2_vaultServerStatsService(ref),
 	}
 }
@@ -19687,10 +19697,17 @@ func schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref common.ReferenceCal
 							Format: "",
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.LicenseInfo"),
+						},
+					},
 				},
 				Required: []string{"uid"},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.LicenseInfo"},
 	}
 }
 
@@ -19838,6 +19855,37 @@ func schema_kmodulesxyz_client_go_api_v1_ImageInfo(ref common.ReferenceCallback)
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Lineage", "kmodules.xyz/client-go/api/v1.PullCredentials"},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_LicenseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"distributor": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoint is the platform-api to acquire licenses from, when Distributor is selfhosted.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"orgID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -23524,6 +23572,141 @@ func schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_AerospikeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/aerospike/\n\nAerospikeSpec defines configuration to set up Aerospike as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the hostname of the Aerospike server to connect to, when HostList is not set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the port of the Aerospike server to connect to, when HostList is not set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostList": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A comma-separated list of host[:port] entries describing the Aerospike cluster's seed nodes. Takes precedence over Hostname/Port when set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Aerospike namespace to store data in. The namespace must already exist on the server; Vault does not create it.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"set": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Aerospike set to store data in, within Namespace.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing username and password to authenticate to the Aerospike cluster with, if it has security enabled. secret data:\n - username=<value>\n - password=<value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"authMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Either INTERNAL (Aerospike's own credential store) or EXTERNAL (e.g. LDAP).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If set, the client verifies it is connected to a cluster with this name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Socket connection timeout, in milliseconds.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"idleTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Idle connection timeout, in milliseconds. 0 disables idle connection trimming.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef contains the info of a KubeDB managed Aerospike. If set, Hostname will be generated from the referenced AppBinding.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_AlicloudOSSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/alicloudoss/\n\nAlicloudOSSSpec defines configuration to set up Alicloud OSS as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the OSS endpoint to connect to, e.g. \"http://oss-us-east-1.aliyuncs.com\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the OSS bucket to store data in. It must already exist; Vault does not create it.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing the Alicloud access key ID and secret to connect with. Required: Vault does not start without them. secret data:\n - access_key=<value>\n - secret_key=<value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"maxParallel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of concurrent requests to OSS.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"endpoint", "bucket", "credentialSecretRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_AllowedSecretEngines(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23833,7 +24016,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_BackendStorageSpec(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "BackendStorageSpec defines storage backend configuration of vault",
+				Description: "BackendStorageSpec defines storage backend configuration of vault\n\nFoundationDB is intentionally not represented here: unlike every other backend, it requires CGo and the native libfdb_c client library, so it isn't compiled into standard OpenBao/Vault images and can't be assumed available in a generic VaultServer deployment.\n\nNew backends added here (CockroachDB, Cassandra, Zookeeper, CouchDB, MSSQL, Spanner, Aerospike, OCI, AlicloudOSS) are v1alpha2-only for now; v1alpha1 already predates several v1alpha2-only conventions used by their spec types (SecretRef-typed credentials, DatabaseRef, HAEnabled), so mirroring them would need bespoke field-mapping conversion functions rather than the mechanical 1:1 copy used elsewhere. v1alpha2 is the storage/hub version and the only one the operator's storage package consumes; a v1alpha1 backport can follow the existing Convert_v1alpha1_<X>Spec_To_v1alpha2_<X>Spec pattern if ever needed.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"inmem": {
@@ -23897,11 +24080,270 @@ func schema_apimachinery_apis_kubevault_v1alpha2_BackendStorageSpec(ref common.R
 							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RaftSpec"),
 						},
 					},
+					"cockroachdb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CockroachDBSpec"),
+						},
+					},
+					"cassandra": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CassandraSpec"),
+						},
+					},
+					"zookeeper": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ZookeeperSpec"),
+						},
+					},
+					"couchdb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CouchDBSpec"),
+						},
+					},
+					"mssql": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MSSQLSpec"),
+						},
+					},
+					"spanner": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SpannerSpec"),
+						},
+					},
+					"aerospike": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AerospikeSpec"),
+						},
+					},
+					"oci": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.OCISpec"),
+						},
+					},
+					"alicloudoss": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AlicloudOSSSpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AzureSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ConsulSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.DynamoDBSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.EtcdSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.FileSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.GcsSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.InmemSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MySQLSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.PostgreSQLSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RaftSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.S3Spec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SwiftSpec"},
+			"kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AerospikeSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AlicloudOSSSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.AzureSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CassandraSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CockroachDBSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ConsulSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.CouchDBSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.DynamoDBSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.EtcdSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.FileSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.GcsSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.InmemSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MSSQLSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.MySQLSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.OCISpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.PostgreSQLSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.RaftSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.S3Spec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SpannerSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.SwiftSpec", "kubevault.dev/apimachinery/apis/kubevault/v1alpha2.ZookeeperSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_CassandraSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/cassandra/\n\nCassandraSpec defines configuration to set up Cassandra as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hosts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a comma-separated list of Cassandra hosts to connect to. All hosts must listen on the same port; include the port in each host as \"<host>:<port>\" if it is not the CQL native protocol default.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"keyspace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the keyspace that is used for storing the Vault data. The keyspace must already exist, be reachable, and writable.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the table in the keyspace that is used for storing the Vault data. The table must already exist.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"consistency": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the consistency level for read and write operations. Must be one of ANY, ONE, TWO, THREE, QUORUM, ALL, LOCAL_QUORUM, EACH_QUORUM, or LOCAL_ONE.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"protocolVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the CQL protocol version to use. Set to \"3\" or higher to use username/password authentication with a proto version that requires it.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing username and password to use for authentication (PasswordAuthenticator). Requires protocolVersion of \"2\" or higher. secret data:\n - username=<value>\n - password=<value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"simpleRetryPolicyRetries": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When set to a positive integer, enables Cassandra's SimpleRetryPolicy with the given number of retries for queries that time out or fail.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"initialConnectionTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the timeout, in seconds, for the initial connection to the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"connectionTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the timeout, in seconds, for individual queries against the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Set to enable a TLS connection to Cassandra.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tlsSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name that contains a PEM-encoded certificate bundle (and, optionally, a private key) used for the TLS connection to Cassandra. secret data:\n - pem_bundle=<value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"tlsSkipVerify": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Disables verification of the Cassandra server's certificate chain and host name. Not recommended for production use.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tlsMinVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the minimum acceptable TLS version. One of tls10, tls11, tls12, or tls13.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsServerName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name to verify the certificate of every Cassandra node against. By default each node is checked against the host name it was reached by, which, for nodes discovered from the cluster, is their IP address. Set it when the nodes share a certificate that lists DNS names but not the node IPs. If DatabaseRef is set and the TLS material comes from the AppBinding, it defaults to the AppBinding's host.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef contains the info of a KubeDB managed Cassandra. If set, Hosts will be generated from the referenced AppBinding.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_CockroachDBSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/cockroachdb/\n\nCockroachDBSpec defines configuration to set up CockroachDB as backend storage in vault. CockroachDB speaks the PostgreSQL wire protocol, but is configured as a dedicated backend (rather than reusing PostgreSQLSpec) so its schema and locking queries can account for CockroachDB-specific behavior.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the address of the CockroachDB host. if DatabaseRef is set then Address will be generated from it This must be set if DatabaseRef is empty, validate from ValidatingWebhook",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the database in which the tables for Vault data are created. The database must already exist: Vault creates the tables, not the database.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing the username and the password to connect to the CockroachDB cluster. The password can be left out when the user logs in with a client certificate (see tlsSecretRef). Optionally, the secret holds a full connection_url, which then replaces address, database and sslMode. secret data:\n - username=<value>\n - password=<value>\n - connection_url=\"postgresql://<username>:<password>@<host>:<port>/<db_name>?sslmode=<sslMode>\"",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef contains the info of KubeDB managed Database This will be used to generate the \"Address\" field",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+					"sslMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SSLMode for both standalone and clusters. [disable;require;verify-ca;verify-full]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the table in which to write Vault data.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxParallel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of concurrent requests to take place.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"transactionMaxParallel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of concurrent interactive transactions to take place.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"skipCreateTable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When set, Vault will not attempt to create the storage table(s); they must already exist.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"haEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "High Availability Parameter Specifies if high availability mode is enabled.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"haTable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the table to use for storing high availability information.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing the TLS material used to connect to CockroachDB. secret data:\n - ca.crt:  CA certificate used to verify the server (required)\n - tls.crt: client certificate (optional, for mutual TLS; needs tls.key)\n - tls.key: client private key (optional, for mutual TLS; needs tls.crt)\nIf DatabaseRef is set and this is empty, it is generated from the CA bundle and client certificate of the referenced AppBinding.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 
@@ -24030,6 +24472,54 @@ func schema_apimachinery_apis_kubevault_v1alpha2_ConsulSpec(ref common.Reference
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_CouchDBSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/couchdb/\n\nCouchDBSpec defines configuration to set up CouchDB as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the full URL to the CouchDB database to use, including the database name. The database must already exist; Vault does not create it.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing the CouchDB username and password to connect with. secret data:\n - username=<value>\n - password=<value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"maxParallel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of concurrent requests to CouchDB.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the CouchDB database to store data in. Only used with DatabaseRef, where the endpoint is generated as <appbinding url>/<database>.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef contains the info of a CouchDB database exposed through an AppBinding. If set, Endpoint will be generated from the referenced AppBinding.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_DynamoDBSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24110,7 +24600,6 @@ func schema_apimachinery_apis_kubevault_v1alpha2_EtcdSpec(ref common.ReferenceCa
 					"address": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the addresses of the etcd instances",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24122,7 +24611,7 @@ func schema_apimachinery_apis_kubevault_v1alpha2_EtcdSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
-					"haEnable": {
+					"haEnabled": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies if high availability should be enabled",
 							Type:        []string{"boolean"},
@@ -24162,12 +24651,17 @@ func schema_apimachinery_apis_kubevault_v1alpha2_EtcdSpec(ref common.ReferenceCa
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef contains the info of a KubeDB managed Etcd. If set, Address will be generated from the referenced AppBinding.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
 				},
-				Required: []string{"address"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 
@@ -24678,6 +25172,130 @@ func schema_apimachinery_apis_kubevault_v1alpha2_KubernetesSecretSpec(ref common
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_MSSQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/mssql/\n\nMSSQLSpec defines configuration to set up Microsoft SQL Server as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the address of the MSSQL host.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the port of the MSSQL host. Defaults to the driver's standard port (1433) when unset.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing the MSSQL username and password to connect with. secret data:\n - username=<value>\n - password=<value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the database to use. Vault will attempt to create it if it does not already exist.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the table in which to write Vault data. Vault will attempt to create it if missing.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the schema within the database that the table lives in. Vault will attempt to create it if missing (requires permission to run CREATE SCHEMA).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"appName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the application name to report to the server.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"connectionTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the connection timeout, in seconds.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the driver's internal log level bitmask.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxParallel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of concurrent requests to MSSQL.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef contains the info of a KubeDB managed MSSQLServer. If set, Server will be generated from the referenced AppBinding.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+					"encrypt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies how the connection is encrypted:\n - true:    encrypt the whole connection, and fail if the server doesn't support it\n - false:   encrypt only the login packet, unless the server forces encryption\n - strict:  use TDS 8.0, where TLS is set up before any TDS traffic (SQL Server 2022+)\n - disable: don't encrypt anything\nUnless it is disable, the server certificate is verified (see TrustServerCertificate). When unset, it is true if a CA is available (from TLSSecretRef or the DatabaseRef AppBinding) or any other TLS option is set, and otherwise left to the driver, which encrypts only the login packet and does not verify the server certificate.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing the CA certificate used to verify the server. secret data:\n - ca.crt=<value>\nIf DatabaseRef is set and this is empty, it is generated from the CA bundle of the referenced AppBinding.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"trustServerCertificate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies whether to skip verifying the server certificate. Not recommended in production.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tlsServerName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name the server certificate must be valid for. Defaults to Server.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsMinVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the minimum TLS version to use.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_ModeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25066,6 +25684,72 @@ func schema_apimachinery_apis_kubevault_v1alpha2_NamespaceSliceStatus(ref common
 	}
 }
 
+func schema_apimachinery_apis_kubevault_v1alpha2_OCISpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/oci/\n\nOCISpec defines configuration to set up OCI Object Storage as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bucketName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the OCI Object Storage bucket to store data in. It must already exist; Vault does not create it.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespaceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Object Storage namespace the bucket belongs to.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the OCI region to use. Defaults to the region configured in the resolved OCI configuration provider.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authTypeAPIKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When true, authenticates using an OCI API-key configuration file (see CredentialSecretRef). When false (the default), authenticates using instance principal credentials, intended for Vault instances running on an OCI compute instance.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing an OCI API-key configuration file (in the same format as the default \"~/.oci/config\" file) and the private key it references. Required when AuthTypeAPIKey is true, and only consulted then. Every key of the secret is mounted in /etc/vault/storage/oci/.oci, so key_file in the config must point there by full path, e.g. key_file=/etc/vault/storage/oci/.oci/oci_api_key.pem. secret data:\n - config=<value>\n - <key file name>=<private key, PEM>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"haEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enables High Availability support. Requires LockBucketName to also be set.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"lockBucketName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of a second bucket used to store HA lock records. Required when HAEnabled is true. Must already exist and should generally be a different bucket than BucketName.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"bucketName", "namespaceName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25133,6 +25817,12 @@ func schema_apimachinery_apis_kubevault_v1alpha2_PostgreSQLSpec(ref common.Refer
 							Description: "Specifies the name of the table to use for storing high availability information. This table must already exist (Vault will not attempt to create it).",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"tlsSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing the TLS material used to connect to PostgreSQL. secret data:\n - ca.crt:  CA certificate used to verify the server (required)\n - tls.crt: client certificate (optional, for mutual TLS; needs tls.key)\n - tls.key: client private key (optional, for mutual TLS; needs tls.crt)\nIf DatabaseRef is set and this is empty, it is generated from the CA bundle and client certificate of the referenced AppBinding.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 				},
@@ -25403,6 +26093,64 @@ func schema_apimachinery_apis_kubevault_v1alpha2_SecretEngineNamespaces(ref comm
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_SpannerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/google-cloud-spanner/\n\nSpannerSpec defines configuration to set up Google Cloud Spanner as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the full name of the Spanner database, in the form projects/<project>/instances/<instance>/databases/<database>.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the table to use for Vault data.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"haEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "High Availability Parameter Specifies if high availability mode is enabled.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"haTable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the name of the table used for HA leader election. Defaults to the value of Table suffixed with \"HA\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxParallel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the maximum number of concurrent requests to Spanner.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"credentialSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Secret containing the Google application credential used to reach Spanner. secret data:\n - sa.json:<value>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+				Required: []string{"database"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -26348,6 +27096,88 @@ func schema_apimachinery_apis_kubevault_v1alpha2_VaultStatus(ref common.Referenc
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_kubevault_v1alpha2_ZookeeperSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "vault doc: https://openbao.org/docs/configuration/storage/zookeeper/\n\nZookeeperSpec defines configuration to set up ZooKeeper as backend storage in vault",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the addresses of the ZooKeeper instances as a comma-separated list.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the path in ZooKeeper's tree where Vault data will be stored.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"znodeOwner": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the ACL scheme:id applied to every znode Vault creates. Defaults to \"world:anyone\", i.e. unrestricted access.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authInfoSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name containing a scheme:auth pair passed to ZooKeeper's AddAuth API immediately after connecting, so the client authenticates as a specific principal. secret data:\n - authInfo=<scheme:auth>",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"tlsEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enables a TLS connection to ZooKeeper.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tlsSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the secret name that contains ca.crt, tls.crt and tls.key for ZooKeeper communication. secret data:\n - ca.crt\n - tls.crt\n - tls.key",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"tlsSkipVerify": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Disables verification of the ZooKeeper server's certificate chain and host name. Not recommended for production use.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tlsVerifyIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When set, verifies the server's IP address against the certificate instead of its DNS name. Only consulted when TLSSkipVerify is false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tlsMinVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the minimum acceptable TLS version. One of tls10, tls11, tls12, or tls13.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef contains the info of a KubeDB managed ZooKeeper. If set, Address will be generated from the referenced AppBinding.",
+							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppReference"},
 	}
 }
 

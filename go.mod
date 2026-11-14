@@ -14,12 +14,12 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/pflag v1.0.10
-	golang.org/x/text v0.42.0
+	golang.org/x/text v0.44.0
 	gomodules.xyz/logs v0.0.7
 	gomodules.xyz/password-generator v0.2.9
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
-	gomodules.xyz/x v0.0.17
+	gomodules.xyz/x v0.0.18
 	google.golang.org/api v0.264.0
 	google.golang.org/protobuf v1.36.11
 	k8s.io/api v0.34.3
@@ -28,9 +28,9 @@ require (
 	k8s.io/client-go v0.34.3
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kubectl v0.30.2
-	kmodules.xyz/client-go v0.34.3
+	kmodules.xyz/client-go v0.34.7
 	kmodules.xyz/custom-resources v0.34.0
-	kubevault.dev/apimachinery v0.26.0
+	kubevault.dev/apimachinery v0.27.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/secrets-store-csi-driver v1.5.1
 	sigs.k8s.io/yaml v1.6.0
@@ -171,12 +171,12 @@ require (
 	go.opentelemetry.io/otel/sdk v1.45.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v1.45.0 // indirect
 	go.opentelemetry.io/otel/trace v1.45.0 // indirect
-	golang.org/x/crypto v0.57.0 // indirect
-	golang.org/x/net v0.60.0 // indirect
+	golang.org/x/crypto v0.59.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
-	golang.org/x/sync v0.23.0 // indirect
-	golang.org/x/sys v0.48.0 // indirect
-	golang.org/x/term v0.46.0 // indirect
+	golang.org/x/sync v0.25.0 // indirect
+	golang.org/x/sys v0.50.0 // indirect
+	golang.org/x/term v0.48.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
 	gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f // indirect
 	gomodules.xyz/flags v0.1.3 // indirect

@@ -290,30 +290,48 @@ func (vs *VaultServer) KeyPrefix() string {
 
 func (vsb *BackendStorageSpec) GetBackendType() (VaultServerBackend, error) {
 	switch {
-	case vsb.Inmem != nil:
-		return VaultServerInmem, nil
-	case vsb.Etcd != nil:
-		return VaultServerEtcd, nil
-	case vsb.Gcs != nil:
-		return VaultServerGcs, nil
-	case vsb.S3 != nil:
-		return VaultServerS3, nil
+	case vsb.Aerospike != nil:
+		return VaultServerAerospike, nil
+	case vsb.AlicloudOSS != nil:
+		return VaultServerAlicloudOSS, nil
 	case vsb.Azure != nil:
 		return VaultServerAzure, nil
-	case vsb.PostgreSQL != nil:
-		return VaultServerPostgreSQL, nil
-	case vsb.MySQL != nil:
-		return VaultServerMySQL, nil
-	case vsb.File != nil:
-		return VaultServerFile, nil
-	case vsb.DynamoDB != nil:
-		return VaultServerDynamoDB, nil
-	case vsb.Swift != nil:
-		return VaultServerSwift, nil
+	case vsb.Cassandra != nil:
+		return VaultServerCassandra, nil
+	case vsb.CockroachDB != nil:
+		return VaultServerCockroachDB, nil
 	case vsb.Consul != nil:
 		return VaultServerConsul, nil
+	case vsb.CouchDB != nil:
+		return VaultServerCouchDB, nil
+	case vsb.DynamoDB != nil:
+		return VaultServerDynamoDB, nil
+	case vsb.Etcd != nil:
+		return VaultServerEtcd, nil
+	case vsb.File != nil:
+		return VaultServerFile, nil
+	case vsb.Gcs != nil:
+		return VaultServerGcs, nil
+	case vsb.Inmem != nil:
+		return VaultServerInmem, nil
+	case vsb.MSSQL != nil:
+		return VaultServerMSSQL, nil
+	case vsb.MySQL != nil:
+		return VaultServerMySQL, nil
+	case vsb.OCI != nil:
+		return VaultServerOCI, nil
+	case vsb.PostgreSQL != nil:
+		return VaultServerPostgreSQL, nil
 	case vsb.Raft != nil:
 		return VaultServerRaft, nil
+	case vsb.S3 != nil:
+		return VaultServerS3, nil
+	case vsb.Spanner != nil:
+		return VaultServerSpanner, nil
+	case vsb.Swift != nil:
+		return VaultServerSwift, nil
+	case vsb.Zookeeper != nil:
+		return VaultServerZookeeper, nil
 	default:
 		return "", errors.New("unknown backened type")
 	}
