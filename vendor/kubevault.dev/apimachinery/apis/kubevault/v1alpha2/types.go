@@ -93,20 +93,29 @@ const (
 	VaultStorageCert VaultCertificateAlias = "storage"
 )
 
-// +kubebuilder:validation:Enum=inmem;etcd;gcs;s3;azure;postgresql;mysql;file;dynamodb;swift;consul;raft
+// +kubebuilder:validation:Enum=aerospike;alicloudoss;azure;cassandra;cockroachdb;consul;couchdb;dynamodb;etcd;file;gcs;inmem;mssql;mysql;oci;postgresql;raft;s3;spanner;swift;zookeeper
 type VaultServerBackend string
 
 const (
-	VaultServerInmem      VaultServerBackend = "inmem"
-	VaultServerEtcd       VaultServerBackend = "etcd"
-	VaultServerGcs        VaultServerBackend = "gcs"
-	VaultServerS3         VaultServerBackend = "s3"
-	VaultServerAzure      VaultServerBackend = "azure"
-	VaultServerPostgreSQL VaultServerBackend = "postgresql"
-	VaultServerMySQL      VaultServerBackend = "mysql"
-	VaultServerFile       VaultServerBackend = "file"
-	VaultServerDynamoDB   VaultServerBackend = "dynamodb"
-	VaultServerSwift      VaultServerBackend = "swift"
-	VaultServerConsul     VaultServerBackend = "consul"
-	VaultServerRaft       VaultServerBackend = "raft"
+	VaultServerAerospike   VaultServerBackend = "aerospike"
+	VaultServerAlicloudOSS VaultServerBackend = "alicloudoss"
+	VaultServerAzure       VaultServerBackend = "azure"
+	VaultServerCassandra   VaultServerBackend = "cassandra"
+	VaultServerCockroachDB VaultServerBackend = "cockroachdb"
+	VaultServerConsul      VaultServerBackend = "consul"
+	VaultServerCouchDB     VaultServerBackend = "couchdb"
+	VaultServerDynamoDB    VaultServerBackend = "dynamodb"
+	VaultServerEtcd        VaultServerBackend = "etcd"
+	VaultServerFile        VaultServerBackend = "file"
+	VaultServerGcs         VaultServerBackend = "gcs"
+	VaultServerInmem       VaultServerBackend = "inmem"
+	VaultServerMSSQL       VaultServerBackend = "mssql"
+	VaultServerMySQL       VaultServerBackend = "mysql"
+	VaultServerOCI         VaultServerBackend = "oci"
+	VaultServerPostgreSQL  VaultServerBackend = "postgresql"
+	VaultServerRaft        VaultServerBackend = "raft"
+	VaultServerS3          VaultServerBackend = "s3"
+	VaultServerSpanner     VaultServerBackend = "spanner"
+	VaultServerSwift       VaultServerBackend = "swift"
+	VaultServerZookeeper   VaultServerBackend = "zookeeper"
 )
